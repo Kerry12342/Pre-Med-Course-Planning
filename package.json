@@ -1,0 +1,19 @@
+{
+  "name": "pre-med-course-planning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kerry12342/Pre-Med-Course-Planning.git"
+  },
+  "author": "Jayden, Kerry, David, Jacob",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kerry12342/Pre-Med-Course-Planning/issues"
+  },
+  "homepage": "https://github.com/Kerry12342/Pre-Med-Course-Planning#readme"
+}
