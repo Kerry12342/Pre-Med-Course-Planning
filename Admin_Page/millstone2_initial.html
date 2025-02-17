@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Pre-Health Planning</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+        }
+        header {
+            width: 100%;
+            background-color: #002D72;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 20px;
+        }
+        .dashboard {
+            display: flex;
+            justify-content: space-around;
+            width: 90%;
+            margin-top: 80px;
+        }
+        section {
+            flex: 1;
+            background: #f4f4f4;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .course-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .calendar-container {
+            overflow-x: auto;
+            overflow-y: auto;
+            max-height: 300px;
+            white-space: nowrap;
+        }
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .calendar th, .calendar td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+            min-width: 100px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            text-align: center;
+            z-index: 2000;
+        }
+        .modal button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1 style="color: white;">Hamilton College Premed Planning</h1>
+    <div class="admin-info">
+        <span>Admin Name</span>
+        <img src="admin-icon.png" alt="Admin Icon">
+    </div>
+</header>
+
+<main class="dashboard">
+    <section class="enrollment">
+        <h2>Enrollment by Course</h2>
+        <div class="search-bar">
+            <input type="text" id="searchCourse" placeholder="Search for Courses">
+            <button onclick="showError()">🔍</button>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchSemester" placeholder="Search by Semester">
+            <button onclick="showError()">🔍</button>
+        </div>
+        <div class="course-list">
+            <ul>
+                <li><strong>BIO-100LAB</strong> <br> <span class="note">Num of Students Planned</span> <input type="text" value="3" disabled></li>
+                <li><strong>BIO-100</strong> <br> <span class="note">Num of Students Planned</span> <input type="text" value="5" disabled></li>
+                <li><strong>Chem-400</strong> <br> <span class="note">Num of Students Planned</span> <input type="text" value="5" disabled></li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="student-schedule">
+        <h2>View Student Schedule</h2>
+        <div class="search-bar">
+            <input type="text" id="searchStudent" placeholder="Search for Students">
+            <button onclick="showError()">🔍</button>
+        </div>
+        <div class="calendar-wrapper">
+            <div class="calendar-container">
+                <table class="calendar">
+                    <thead>
+                    <tr>
+                        <th>Fall 2025</th>
+                        <th>Spring 2025</th>
+                        <th>Fall 2026</th>
+                        <th>Spring 2026</th>
+                        <th>Fall 2027</th>
+                        <th>Spring 2027</th>
+                        <th>Fall 2028</th>
+                        <th>Spring 2028</th>
+                        <th>Fall 2029</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="course-management">
+        <h2 id="courseTitle">Add Course</h2>
+        <button id="toggleCourse" onclick="toggleCourseMode()">Switch to Delete Course</button>
+        <input type="text" id="courseName" placeholder="Enter Course Title Here" style="display: block; margin-bottom: 10px;">
+        <select id="track" style="display: block; margin-bottom: 10px;">
+            <option value="">Track</option>
+            <option value="pre-dental-medicine">Pre-Dental-Medicine</option>
+            <option value="pre-medicine">Pre-Medicine</option>
+            <option value="pre-nursing">Pre-Nursing</option>
+            <option value="pre-physical-assistant">Pre-Physical-Assistant</option>
+            <option value="pre-physical-therapy">Pre-Physical-Therapy</option>
+            <option value="pre-veterinary-medicine">Pre-Veterinary-Medicine</option>
+        </select>
+        <select id="major" style="display: block; margin-bottom: 10px;">
+            <option value="">Major</option>
+            <option value="Biology">Biology</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Biochemistry">Biochemistry</option>
+            <option value="Physics">Biochemistry</option>
+        </select>
+        <select id="semester" style="display: block; margin-bottom: 10px;">
+            <option value="">Semester</option>
+            <option value="Fall 2025">Fall 2025</option>
+            <option value="Spring 2026">Spring 2026</option>
+        </select>
+        <button onclick="showError()" style="display: block; margin-top: 10px;">Submit</button>
+    </section>
+</main>
+
+<div id="popupModal" class="modal">
+    <p>Error occurred!</p>
+    <button onclick="closePopup()">Close</button>
+</div>
+
+<script>
+    function showError() {
+        document.getElementById('popupModal').style.display = 'block';
+    }
+    function closePopup() {
+        document.getElementById('popupModal').style.display = 'none';
+    }
+    function toggleCourseMode() {
+        let courseTitle = document.getElementById("courseTitle");
+        let toggleButton = document.getElementById("toggleCourse");
+        if (courseTitle.innerText === "Add Course") {
+            courseTitle.innerText = "Delete Course";
+            toggleButton.innerText = "Switch to Add Course";
+        } else {
+            courseTitle.innerText = "Add Course";
+            toggleButton.innerText = "Switch to Delete Course";
+        }
+    }
+</script>
+
+</body>
+</html>

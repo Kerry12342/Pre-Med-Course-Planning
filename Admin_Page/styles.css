@@ -1,0 +1,41 @@
+.calendar-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-width: 400px; /* Adjust this to fit 3 columns properly */
+    max-height: 300px; /* Adjust height based on your needs */
+    border: 1px solid #ccc;
+}
+
+.calendar-container {
+    display: block;
+    white-space: nowrap; /* Prevent columns from wrapping */
+}
+
+.calendar {
+    border-collapse: collapse;
+    width: auto; /* Keep table width dynamic */
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-width: 120px; /* Adjust column width */
+    text-align: center;
+}
+
+thead {
+    background-color: #f4f4f4;
+    position: sticky;
+    top: 0;
+}
+
+#toggleCourse {
+    display: block;
+    margin-bottom: 10px; /* Adds space below the button */
+}
+
+#courseName {
+    display: block;
+    margin-bottom: 10px; /* Adds space below the input field */
+}
