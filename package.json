@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Kerry12342/Pre-Med-Course-Planning/issues"
   },
-  "homepage": "https://github.com/Kerry12342/Pre-Med-Course-Planning#readme"
+  "homepage": "https://github.com/Kerry12342/Pre-Med-Course-Planning#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
 }
