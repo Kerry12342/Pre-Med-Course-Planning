@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale: 1.0">
+    <title>Course Selection and Calendar</title>
+    <style>
+
+        .main_body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .banner {
+            filter: drop-shadow(0 3mm 4mm rgb(150, 150, 150));
+            width: 100%;
+            height: 100px;
+            border: 0px inset grey;
+            border-radius: 20px;
+            background-image: url('hamilton.png'); /* Replace with your banner image URL */
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 0px;
+        }
+
+        .filters, .calendar, .completed-courses {
+            filter: drop-shadow(0 3mm 4mm rgb(150, 150, 150));
+            border-radius: 20px;
+            flex: 1;
+            padding: 10px;
+            border: 0px groove lightgrey;
+            background-image: linear-gradient(white, #c7d3ff);
+        }
+
+        select, button {
+            margin: 5px 0;
+            padding: 5px;
+        }
+
+        .calendar-wrapper {
+            border: 5px groove lightgrey;
+            border-radius: 20px;
+            width: 400px;
+            overflow-x: scroll;
+            justify-content: center;
+        }
+
+        .calendar-table {
+            border-collapse: collapse;
+            width: 600px;
+        }
+
+            .calendar-table td, .calendar-table th {
+                padding: 10px;
+                background-color: lightgrey;
+                text-align: center;
+            }
+
+            .calendar-table td {
+                background-image: linear-gradient(whitesmoke, white);
+                cursor: pointer;
+                vertical-align: top;
+                min-height: 50px;
+            }
+
+                .calendar-table td.selected {
+                    background-color: lightgreen;
+                }
+
+        .completed-courses ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+            .completed-courses ul li {
+                padding: 5px;
+                background-color: #f0f0f0;
+                margin: 5px 0;
+            }
+
+        .course-name {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner"></div>
+
+    <div class="main_body">
+
+        <div class="filters">
+            <h2>Filter Courses</h2>
+            <label for="track">Track:</label>
+            <select id="track">
+                <option value="">All Tracks</option>
+                <option value="track1">Track 1</option>
+                <option value="track2">Track 2</option>
+                <option value="track3">Track 3</option>
+            </select>
+            <br>
+            <label for="major">Major:</label>
+            <select id="major">
+                <option value="">All Majors</option>
+                <option value="major1">Major 1</option>
+                <option value="major2">Major 2</option>
+                <option value="major3">Major 3</option>
+            </select>
+            <br>
+            <label for="year">Year/Semester:</label>
+            <select id="year">
+                <option value="">All Years/Semesters</option>
+                <option value="2025-Fall">2025 Fall</option>
+                <option value="2025-Spring">2025 Spring</option>
+                <option value="2025-Summer">2025 Summer</option>
+            </select>
+            <br>
+            <button id="filterButton">Filter Courses</button>
+
+            <h2>Available Courses</h2>
+            <div id="courseList"></div>
+        </div>
+
+        <div class="calendar">
+            <h2>Course Calendar</h2>
+            <div class="calendar-wrapper">
+                <table class="calendar-table" id="calendarTable">
+                    <thead>
+                        <tr>
+                            <th>2025 Fall</th>
+                            <th>2025 Spring</th>
+                            <th>2025 Summer</th>
+                            <th>2026 Fall</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="fall" class="calendar-cell" data-semester="2025-Fall"></td>
+                            <td id="spring" class="calendar-cell" data-semester="2025-Spring"></td>
+                            <td id="summer" class="calendar-cell" data-semester="2025-Summer"></td>
+                            <td id="fall" class="calendar-cell" data-semester="2025-fall3"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="completed-courses">
+            <h2>Completed Courses</h2>
+            <ul id="completedCoursesList"></ul>
+        </div>
+
+        <script>
+
+            const availableCourses = [
+                { id: 1, name: 'Course 1', track: 'track1', major: 'major1', semester: '2025-Fall' },
+                { id: 2, name: 'Course 2', track: 'track1', major: 'major2', semester: '2025-Spring' },
+                { id: 3, name: 'Course 3', track: 'track2', major: 'major3', semester: '2025-Summer' },
+                { id: 4, name: 'Course 4', track: 'track2', major: 'major1', semester: '2025-Fall' },
+                { id: 5, name: 'Course 5', track: 'track3', major: 'major2', semester: '2025-Spring' }
+            ];
+
+            const completedCourses = [
+                { id: 6, name: 'Course 6', track: 'track1', major: 'major3', semester: '2025-Spring' },
+                { id: 7, name: 'Course 7', track: 'track2', major: 'major1', semester: '2025-Summer' }
+            ];
+
+            const courseList = document.getElementById('courseList');
+            const filterButton = document.getElementById('filterButton');
+            const calendarTable = document.getElementById('calendarTable');
+            const completedCoursesList = document.getElementById('completedCoursesList');
+            const trackFilter = document.getElementById('track');
+            const majorFilter = document.getElementById('major');
+            const yearFilter = document.getElementById('year');
+
+            function displayCourses(courses) {
+                courseList.innerHTML = '';
+                courses.forEach(course => {
+                    const li = document.createElement('div');
+                    li.textContent = course.name;
+                    li.class = "highlight_hover";
+                    li.style = "text-align: center; width: 100px; background-color: lightgreen; padding: 10px; border: 0px solid #ccc; border-radius: 10px; margin: 20px;"
+                    li.setAttribute('data-id', course.id);
+                    li.addEventListener('click', () => addCourseToCalendar(course));
+                    courseList.appendChild(li);
+                });
+            }
+
+            function displayCompletedCourses() {
+                completedCoursesList.innerHTML = '';
+                completedCourses.forEach(course => {
+                    const li = document.createElement('li');
+                    li.textContent = course.name + ' (Completed)';
+                    completedCoursesList.appendChild(li);
+                });
+            }
+
+            function addCourseToCalendar(course) {
+                const cell = calendarTable.querySelector(`td[data-semester="${course.semester}"]`);
+                if (cell) {
+                    // Create a new div for the course to be added to the calendar cell
+                    const courseDiv = document.createElement('div');
+                    courseDiv.textContent = course.name;
+                    courseDiv.style = "background-color: lightgreen; padding: 10px; border: 0px solid #ccc; border-radius: 10px;"
+                    courseDiv.classList.add('course-name');
+                    courseDiv.setAttribute('data-id', course.id);
+                    courseDiv.addEventListener('click', (e) => removeCourseFromCalendar(e, course, cell));
+                    cell.appendChild(courseDiv);
+                }
+            }
+
+            function removeCourseFromCalendar(e, course, cell) {
+                e.stopPropagation(); // Prevent event propagation to the cell
+                const courseDiv = e.target;
+                if (courseDiv) {
+                    cell.removeChild(courseDiv); // Remove course from the calendar cell
+                }
+            }
+
+            filterButton.addEventListener('click', () => {
+                const filteredCourses = availableCourses.filter(course => {
+                    return (
+                        (trackFilter.value === '' || course.track === trackFilter.value) &&
+                        (majorFilter.value === '' || course.major === majorFilter.value) &&
+                        (yearFilter.value === '' || course.semester === yearFilter.value)
+                    );
+                });
+                displayCourses(filteredCourses);
+            });
+
+            displayCourses(availableCourses);
+            displayCompletedCourses();</script>
+    </div>
+
+</body>
+</html>
