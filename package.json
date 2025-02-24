@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Kerry12342/Pre-Med-Course-Planning#readme",
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "pg": "^8.13.3"
   }
 }
