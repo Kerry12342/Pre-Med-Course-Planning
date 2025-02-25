@@ -88,7 +88,25 @@ class Student {
     }
   }
 
+
+
+
   class TestDatabase extends Database {
+
+
+    build_class_object(choice) {
+      if (choice == 1) {
+        const bio101 = new Course("BIO101", [["M", "1:00-1:50"],["F", "2:00-2:50"]], "FALL2025", "NONE", 60, 12);
+        return bio101
+      }
+      const chem201 = new Course("CHEM201", [["M", "1:00-1:50"],["W", "2:00-2:50"]], "SPRING2025", "CHEM101", 24, 11);
+      return chem201
+    }
+
+    build_student_object() {
+      const jacob = new Student("SPRING25", "BIOLOGY", "jhelzner@hamilton.edu", "thelmuth@hamilton.edu", ["BIO101", "CS240", "CHEM315", "BIO202"], []);
+    }
+
 
     build_list_of_all_courses() {
         
