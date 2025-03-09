@@ -10,8 +10,8 @@ class Student {
 
     plan_course(target_course) {
         this.planned_courses.push(target_course)
-        for (track_or_major in this.track_or_major_list) {
-            for (requirement in track_or_major) {
+        for (track_or_major of this.track_or_major_list) {
+            for (requirement of track_or_major.requirements) {
                 if (target_course.fulfills(requirement)) {
                     requirement.fulfilled = true;
                 }
@@ -21,13 +21,13 @@ class Student {
     }
 
     can_plan_course(target_course) {
-        return has_prerequisites_for_course(target_course) && target_course.has_availability();
+        return this.has_prerequisites_for_course(target_course) && target_course.has_availability();
     }
 
     has_prerequisites_for_course(target_course) {
         number_unfulfilled = target_course.prerequisites.length;
-        for (course in self.completed_courses) {
-            if (course in target_course.prerequisites) {
+        for (course of this.completed_courses) {
+            if (course of target_course.prerequisites) {
                 number_unfulfilled -= 1;
             }
         }
@@ -50,7 +50,7 @@ class Student {
     }
 
     fulfills(requirement) {
-        for (course in requirement.possible_courses_to_fulfill) {
+        for (course of requirement.possible_courses_to_fulfill) {
             if (course.name == this.name) {
                 return true;
             }
@@ -96,15 +96,16 @@ class Student {
 
     build_class_object(choice) {
       if (choice == 1) {
-        const bio101 = new Course("BIO101", [["M", "1:00-1:50"],["F", "2:00-2:50"]], "FALL2025", "NONE", 60, 12);
-        return bio101
+        const bio101 = new Course("BIO101", [["M", "1:00-1:50"],["F", "2:00-2:50"]], "FALL2025", [], 60, 12);
+          return bio101;
       }
-      const chem201 = new Course("CHEM201", [["M", "1:00-1:50"],["W", "2:00-2:50"]], "SPRING2025", "CHEM101", 24, 11);
-      return chem201
+      const chem201 = new Course("CHEM201", [["M", "1:00-1:50"],["W", "2:00-2:50"]], "SPRING2025", ["CHEM101"], 24, 11);
+        return chem201;
     }
 
     build_student_object() {
-      const jacob = new Student("SPRING25", "BIOLOGY", "jhelzner@hamilton.edu", "thelmuth@hamilton.edu", ["BIO101", "CS240", "CHEM315", "BIO202"], []);
+        const jacob = new Student("SPRING25", "BIOLOGY", "jhelzner@hamilton.edu", "thelmuth@hamilton.edu", ["BIO101", "CS240", "CHEM315", "BIO202"], []);
+        return jacob;
     }
 
 
