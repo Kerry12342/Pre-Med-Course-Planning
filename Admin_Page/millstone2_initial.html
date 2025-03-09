@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
 </head>
-<!--Below from Ham Soc website inspection-->
+<!--Below from Ham Soc website inspection: https://hamilton.smartcatalogiq.com/current/college-catalogue/academicprograms/sociology/sociology-courses/-->
 <body class="fs-grid theme-default body_theme_microsite body_theme_my_hamilton loaded">
-  
+
   <div id="skiptocontent1">
     <a id="skip_link" class="skiplink" href="#middle">Skip to main content</a>
   </div>
-  <form method="post" action="/current/college-catalogue/academicprograms/<PLACEHOLDER for link if need any>"
+  <form method="post" action="/current/college-catalogue/academicprograms/<PLACEHOLDER for link if need any>">
     <div class="aspNetHidden">
       <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="2X77z0pjVbrZjTVi+hP0pv7UCqS2pher8cSSTREjz6MEemiAGTdwf8c+QfXHjrzjolyecVql20YwhMyvimlNenazJsGhMC0t5DDuj4rIxj53hnMhq+KJWCRi1GYrtcjg">
     </div>
@@ -95,6 +95,7 @@
       </div>
     </header>
     <!--Above from Ham Soc website inspection-->
+
     <a href="./../student-interface-demo/interface.html">
       <button style="width: 200px; display: block; margin-top: 10px;">Student Interface</button>
     </a>
@@ -103,11 +104,11 @@
           <h2>Enrollment by Course</h2>
           <div class="search-bar">
               <input type="text" id="searchCourse" placeholder="Search for Courses">
-              <button onclick="showError()">🔍</button>
+              <button type="button" onclick="showError()">🔍</button>
             </div>
             <div class="search-bar">
               <input type="text" id="searchSemester" placeholder="Search by Semester">
-              <button onclick="showError()">🔍</button>
+              <button type="button" onclick="showError()">🔍</button>
             </div>
             <div class="course-list">
               <ul>
@@ -122,7 +123,7 @@
             <h2>View Student Schedule</h2>
             <div class="search-bar">
               <input type="text" id="searchStudent" placeholder="Search for Students">
-              <button onclick="showError()">🔍</button>
+              <button type="button" onclick="showError()">🔍</button>
             </div>
             <div class="calendar-wrapper">
               <div class="calendar-container">
@@ -155,7 +156,7 @@
 
               <section class="course-management">
                 <h2 id="courseTitle">Add Course</h2>
-                <button id="toggleCourse" onclick="toggleCourseMode()">Switch to Delete Course</button>
+                <button id="toggleCourse" type="button" onclick="toggleCourseMode()">Switch to Delete Course</button>
                 <input type="text" id="courseName" placeholder="Enter Course Title Here" style="display: block; margin-bottom: 10px;">
                 <select id="track" style="display: block; margin-bottom: 10px;">
                   <option value="">Track</option>
@@ -178,16 +179,15 @@
                   <option value="Fall 2025">Fall 2025</option>
                   <option value="Spring 2026">Spring 2026</option>
                 </select>
-                <button onclick="showError()" style="display: block; margin-top: 10px;">Submit</button>
+                <button type="button" onclick="showError()" style="display: block; margin-top: 10px;">Submit</button>
               </section>
             </main>
           </div>
           </div>
 
-<div id="popupModal" class="modal">
-    <p>Error occurred!</p>
-    <button onclick="closePopup()">Close</button>
-</div>
-
+          <div id="popupModal" class="modal" style="display: none;">
+            <p id="popupMessage">Error occurred!</p>
+            <button id="closePopupBtn" type="button">Close</button>
+          </div>
 </body>
 </html>
