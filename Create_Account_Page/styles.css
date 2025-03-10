@@ -1,0 +1,199 @@
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Banner styling */
+.banner {
+    background-color: #002f86;
+    color: white;
+    padding: 15px 0;
+    width: 100%;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+.hamburger-menu {
+    cursor: pointer;
+    font-size: 24px;
+    background-color: white;
+    color: #002f86;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+}
+
+.logo-section h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.separator {
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.subtitle {
+    font-size: 18px;
+}
+
+/* Container for centered content */
+.container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Create account form */
+.create-account-form {
+    background: linear-gradient(to bottom, #002f86, #1a56c4);
+    border-radius: 10px;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.create-account-form h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.password-requirements {
+    font-size: 16px;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: white;
+}
+
+.error-message {
+    color: #ffcccc;
+    margin-top: 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.error-message i {
+    margin-right: 5px;
+}
+
+.submit-button {
+    width: 100%;
+    max-width: 200px;
+    padding: 15px;
+    background-color: white;
+    color: #002f86;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 20px auto;
+    display: block;
+}
+
+.submit-button:hover {
+    background-color: #f0f0f0;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.login-link a {
+    color: white;
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .create-account-form {
+        padding: 30px 20px;
+    }
+
+    .form-group label {
+        font-size: 20px;
+    }
+
+    .banner-content {
+        padding: 0 15px;
+    }
+
+    .logo-section h1 {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .logo-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .separator {
+        display: none;
+    }
+
+    .subtitle {
+        margin-top: 5px;
+    }
+}
