@@ -26,6 +26,14 @@
       <button style="width: 200px; display: block; margin-top: 10px;">Student Interface</button>
     </a>
     <main class="dashboard">
+
+      <h2>Upload a CSV File</h2>
+      <input type="file" id="csvFile" accept=".csv">
+      <button onclick="convertCSVtoJSON()">Convert to JSON</button>
+      <pre id="output"></pre>
+
+
+
       <section class="enrollment">
           <h2>Enrollment by Course</h2>
           <div class="search-bar">
@@ -115,5 +123,62 @@
             <p id="popupMessage">Error occurred!</p>
             <button id="closePopupBtn" type="button">Close</button>
           </div>
+
+
+
+
+
+
+
+          <script>
+            function convertCSVtoJSON() {
+              const fileInput = document.getElementById('csvFile');
+              const output = document.getElementById('output');
+              const file = fileInput.files[0];
+              console.log("hello");
+
+          
+                if (!file) {
+                    alert("Please select a CSV file first.");
+                    return;
+                }
+                console.log("File selected:", file.name);
+          
+                const reader = new FileReader();
+                reader.onload = function (e) {
+
+                  console.log("File read successfully!");
+                    const csv = e.target.result;
+                    const lines = csv.split("\n");
+                    const headers = lines[0].split(",").map(header => header.trim());
+                    const jsonData = [];
+          
+                    for (let i = 1; i < lines.length; i++) {
+                        const values = lines[i].split(",").map(value => value.trim());
+                        if (values.length === headers.length) {
+                            let obj = {};
+                            headers.forEach((header, index) => {
+                                obj[header] = values[index];
+                            });
+                            jsonData.push(obj);
+                        }
+                    }
+                    
+                    output.textContent = JSON.stringify(jsonData, null, 2);
+                };
+                reader.readAsText(file);
+            }
+          </script>
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>
