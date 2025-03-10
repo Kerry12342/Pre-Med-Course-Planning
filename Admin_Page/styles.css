@@ -1,33 +1,61 @@
-.modal {
-    display: none; /* Default is hidden */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
-    text-align: center;
-    z-index: 1000;
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.modal.show {
-    display: block; /* Only shows when .show class is added */
+/* Page and Body */
+html {
+    --header-height: 80px;
+    --header-background-color: #002f86;
+    --header-color: #fff;
+    background-color: #002f86;
+    scroll-behavior: smooth;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
 }
 
-.modal button {
-    margin-top: 10px;
-    cursor: pointer;
+body {
+    height: 100%;
+    width: 100%;
+    font-family: "miller-text", serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 32px;
+    color: #4F5971;
+    background-color: #fff;
 }
 
-.admin-info {
+.page_wrapper {
+    width: 100%;
+    min-height: 100vh;
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-right: 20px;
+    flex-direction: column;
 }
 
+/* Header */
+.header {
+    background: var(--header-background-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--header-color);
+}
+
+.logo_link {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding: 20px 0;
+    transition: color 0.25s;
+    white-space: nowrap;
+}
+
+.logo_link_icon {
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* Dashboard Layout */
 .dashboard {
     display: flex;
     justify-content: space-around;
@@ -44,48 +72,25 @@ section {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+h2 {
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    font-weight: bold;
+}
+
+p {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+/* Course List */
 .course-list {
     max-height: 300px;
     overflow-y: auto;
 }
 
-.calendar-container {
-    overflow-x: auto;
-    overflow-y: auto;
-    max-height: 300px;
-    white-space: nowrap;
-}
-
-.calendar {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.calendar th, .calendar td {
-    border: 1px solid black;
-    padding: 10px;
-    text-align: center;
-    min-width: 100px;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
-    text-align: center;
-    z-index: 2000;
-}
-
-.modal button {
-    margin-top: 10px;
-}
-
+/* Calendar */
 .calendar-wrapper {
     width: 100%;
     overflow-x: auto;
@@ -98,6 +103,7 @@ section {
 .calendar-container {
     display: block;
     white-space: nowrap;
+    overflow: auto;
 }
 
 .calendar {
@@ -118,135 +124,27 @@ thead {
     top: 0;
 }
 
-#toggleCourse {
+/* Buttons and Inputs */
+#toggleCourse, #courseName {
     display: block;
     margin-bottom: 10px;
 }
 
-#courseName {
-    display: block;
-    margin-bottom: 10px;
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    text-align: center;
+    z-index: 2000;
 }
 
-.logo_link_icon {
-    display: inline-block;
-    vertical-align: top;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.logo_link {
-    position: relative;
-    color: inherit;
-    display: block;
-    overflow: hidden;
-    padding: 20px 0;
-    transition: color 0.25s;
-    white-space: nowrap;
-}
-
-.header {
-    background: var(--header-background-color);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    color: var(--header-color);
-}
-
-body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    z-index: 1;
-    font-family: "miller-text", serif;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 32px;
-}
-
-.page_wrapper {
-    width: 100%;
-    min-height: 100vh;
-    background-color: #fff;
-    color: #4F5971;
-    display: flex;
-    flex-direction: column;
-}
-
-html {
-    --header-height: 80px;
-    --header-background-color: #002f86;
-    --header-color: #fff;
-    background-color: #002f86;
-    scroll-behavior: smooth;
-    line-height: 1.15;
-    -webkit-text-size-adjust: 100%;
-}
-
-:root {
-    --wmcolor-asphalt: #353b48;
-    --wmcolor-blueberry: #667eed;
-    --wmcolor-charcoal: #4a4a4a;
-    --wmcolor-cowboyjeans: #18314e;
-    --wmcolor-cyan: #19a1a9;
-    --wmcolor-cyan-dark: #15868d;
-    --wmcolor-cyan-darker: #116b71;
-    --wmcolor-cyber: #ddf1f2;
-    --wmcolor-dadjeans: #244974;
-    --wmcolor-firetruck: #c0392b;
-    --wmcolor-firetruck-dark: #9a2e22;
-    --wmcolor-firetruck-light: #f6e1df;
-    --wmcolor-forest: #088000;
-    --wmcolor-forest-dark: #054d00;
-    --wmcolor-forest-light: #daecd9;
-    --wmcolor-gray: #6b6b6b;
-    --wmcolor-gray-light: #a6a6a6;
-    --wmcolor-linen: #e1e9f3;
-    --wmcolor-meteorite: #454b57;
-    --wmcolor-midnight: #2e1b46;
-    --wmcolor-momjeans: #366dae;
-    --wmcolor-orangutan: #ea8500;
-    --wmcolor-orchid: #b36dcd;
-    --wmcolor-palelilacgray: #e9e7ec;
-    --wmcolor-palelilacgray-dark: #d2d0d4;
-    --wmcolor-paleviolet: #eeedf7;
-    --wmcolor-periwinkle: #575195;
-    --wmcolor-periwinkle-dark: #464177;
-    --wmcolor-quartz: #dbd9ef;
-    --wmcolor-salmon-dark: #cc4c3e;
-    --wmcolor-salmon-darker: #a33d32;
-    --wmcolor-sleet-lighter: #eceff3;
-    --wmcolor-snow: #fafafa;
-    --wmcolor-tobiasblue: #0089e4;
-    --wmcolor-transparent: rgba(255, 255, 255, 0);
-    --wmcolor-white: #ffffff;
-    --wmcolor-whitesmoke: #f4f4f4;
-    --wmcolor-background: var(--wmcolor-white);
-    --wmcolor-background-dark: var(--wmcolor-asphalt);
-    --wmcolor-background-disabled: var(--wmcolor-whitesmoke);
-    --wmcolor-background-error: var(--wmcolor-firetruck-light);
-    --wmcolor-background-highlight: var(--wmcolor-cyber);
-    --wmcolor-background-positive: var(--wmcolor-forest-light);
-    --wmcolor-background-selected: var(--wmcolor-paleviolet);
-    --wmcolor-border: var(--wmcolor-palelilacgray-dark);
-    --wmcolor-border-dark: var(--wmcolor-charcoal);
-    --wmcolor-border-error: var(--wmcolor-firetruck);
-}
-
-h2 {
-    display: block;
-    font-size: 1.5em;
-    margin-block-start: 0.83em;
-    margin-block-end: 0.83em;
-    font-weight: bold;
-}
-
-p {
-    display: block;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    unicode-bidi: isolate;
+.modal button {
+    margin-top: 10px;
 }
