@@ -1,109 +1,84 @@
 
 // Student class. Is able to plan courses and add them to their schedule
 
+test_course_format = {
+    title: "CS101",
+    prerequisites: ["CHEM101"],
+    currentCount: 0
+}
+
+major_track_format = {
+    title: "CS",
+    requisites: ["CS101", "CS102", "CS220"]
+}
+
+
+
 class Student {
-    constructor(start_term, track_or_major_list, contact_info, advisor_contact_info, completed_courses, planned_courses) {
-        this.start_term = start_term;
-        this.track_or_major_list = track_or_major_list;
-        this.contact_info = contact_info;
-        this.advisor_contact_info = advisor_contact_info;
-        this.completed_courses = completed_courses;
-        this.planned_courses = planned_courses;
+    constructor(start_term, track_or_major_list, contact_info, advisor_contact_info, completed_courses, completed_req_courses, planned_courses) {
+        this.start_term = start_term; //String
+        this.track_or_major_list = track_or_major_list; // Array
+        this.contact_info = contact_info; // Object
+        this.advisor_contact_info = advisor_contact_info; // Object
+        this.planned_courses = planned_courses; //array of arrays. 1st is title 2nd is term
+
+
+        this.completed_courses = completed_courses; // Array
+        this.completed_req_courses = completed_req_courses; // Array
+    }
+
+    has_prereqs_for_course(target_course, target_term) {
+        course_prereqs = target_course.prerequisites;
+        completed_and_planned = self.completed_courses.concat(planned_courses)   
+        for (const course of completed_and_planned) {
+            if (course_prereqs.includes(course.title)) {
+                const course_index = course_prereqs.indexOf(course.title);
+                if (course_index > -1) { // only splice array when item is found
+                    course_prereqs.splice(course_index, 1); // 2nd parameter means remove one item only
+                }
+            }
+        }
+        if (length(course_prereqs) === 0) {
+            return true;
+        }
+    }
+
+    able_to_plan_course(target_course, target_term) {
+        return (has_prereqs_for_course(target_course, target_term) && (!this.planned_courses.includes(target_course) && !this.completed_courses.includes(target_course)))
     }
 
     //add a given course to the schedule and fulfil the relevant requirements in
-    this students tracks / majors
-plan_course(target_course) {
-    this.planned_courses.push(target_course)
-    for (track_or_major of this.track_or_major_list) {
-        for (requirement of track_or_major.requirements) {
-            if (target_course.fulfills(requirement)) {
-                requirement.fulfilled = true;
-            }
+    // this students tracks / majors
+    plan_course(target_course, term) {
+        // If time isn't conflicted, and not in completed or planned, add to planned.
+
+        if (this.able_to_plan_course(target_course, term)) {
+            target_course.currentCount += 1
+            // 
+        }
+        else {
+            console.log("Could not plan course")
         }
     }
-    target_course.number_of_students_who_planned += 1;
 }
 
-//if the course is available and the student has the prerequisites,
-//it can be planned.
-can_plan_course(target_course) {
-    return this.has_prerequisites_for_course(target_course) && target_course.has_availability();
-}
 
-//check if there are enough completed courses that fulfil the prerequisite
-//(may need to redo this because its not technically how prerequisites work)
-has_prerequisites_for_course(target_course) {
-    number_unfulfilled = target_course.prerequisites.length;
-    for (course of this.completed_courses) {
-        if (course of target_course.prerequisites) {
-            number_unfulfilled -= 1;
-        }
-    }
-    return (number_unfulfilled == 0);
-}
-  }
-
-//courses can be available and fill requirements, and also store other
-//relevant data like the term, prerequisites, capacity, name etc.
-class Course {
-    constructor(name, weekly_schedule, term, prerequisites, capacity, number_of_students_who_planned) {
-        this.name = name;
-        this.weekly_schedule = weekly_schedule;
-        this.term = term;
-        this.prerequisites = prerequisites;
-        this.capacity = capacity;
-        this.number_of_students_who_planned = number_of_students_who_planned;
-    }
-
-    //the course is available if the student count is strictly below capacity
-    has_availability() {
-        return (this.number_of_students_who_planned < this.capacity);
-    }
-
-    //if this course is in the requirement, it fulfills it
-    fulfills(requirement) {
-        for (course of requirement.possible_courses_to_fulfill) {
-            if (course.name == this.name) {
-                return true;
-            }
-        }
-        return false
-    }
-}
-
-//a requirement may only be fulfilled by some courses, and has a term due date
-class Requirement {
-    constructor(possible_courses_to_fulfill, term_due) {
-        this.possible_courses_to_fulfill = possible_courses_to_fulfill;
-        this.term_due = term_due;
-        this.fulfilled = false;
-    }
-}
-
-//base class for tracks and majors, which are just named lists of requirements.
-class TrackOrMajor {
-    constructor(name, requirements) {
-        this.name = name;
-        this.requirements = requirements;
-    }
-}
 
 //Interface with the remote database (in progress)
 
-class Database {
-    build_list_of_all_courses() {
+// class Database {
+//     build_list_of_all_courses() {
 
-    }
+//     }
 
-    build_list_of_all_tracks_and_majors() {
+//     build_list_of_all_tracks_and_majors() {
+        
+//     }
 
-    }
+//     build_student_object(student_identifier) {
 
-    build_student_object(student_identifier) {
-
-    }
-}
+//     }
+// }
 
 
 //test database that returns some dummy data
@@ -113,7 +88,7 @@ class TestDatabase extends Database {
 
     build_class_object(choice) {
         if (choice == 1) {
-            const bio101 = new Course("BIO101", [["M", "1:00-1:50"], ["F", "2:00-2:50"]], "FALL2025", [], 60, 12);
+            const bio101 = new Course("BIO101", [["M", "13:00-13:50"], ["F", "14:00-14:50"]], "FALL2025", [], 60, 12);
             return bio101;
         }
         const chem201 = new Course("CHEM201", [["M", "1:00-1:50"], ["W", "2:00-2:50"]], "SPRING2025", ["CHEM101"], 24, 11);
