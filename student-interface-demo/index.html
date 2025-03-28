@@ -1,0 +1,221 @@
+<!--CITE: In collaboration with ChatGPT for html starter code and debugging.-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Pre-Health Planning</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<!-- Banner Header -->
+<header class="banner">
+    <div class="banner-content">
+        <div class="hamburger-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="logo-section">
+            <h1>Hamilton</h1>
+            <span class="separator">•</span>
+            <span class="subtitle">Hamilton College Premed Planning</span>
+        </div>
+    </div>
+</header>
+<a href="./../student-interface-demo/interface.html" style="display: inline-block; width: 200px; margin-top: 10px; text-decoration: none;">
+    <button type="button" class="student-interface-button" style="width: 100%; display: block; cursor: pointer;">Student Interface</button>
+</a>
+<main class="dashboard">
+    <!-- Plan Course Section -->
+    <section class="plan-course">
+        <h2>Plan Course</h2>
+        <div class="search-bar">
+            <input type="text" id="searchCourse" placeholder="Search for Courses">
+            <button type="button" onclick="searchCourses()">🔍</button>
+        </div>
+        <div id="courseList" class="course-list">
+            <!-- Dynamic list of courses will appear here -->
+        </div>
+        <div class="semester-selection">
+            <label for="semester">Select Semester:</label>
+            <select id="semester">
+                <option value="Fall 2025">Fall 2025</option>
+                <option value="Spring 2026">Spring 2026</option>
+                <option value="Fall 2026">Fall 2026</option>
+                <option value="Spring 2027">Spring 2027</option>
+            </select>
+            <button type="button" onclick="addCoursesToSchedule()">Add to Schedule</button>
+        </div>
+    </section>
+
+    <!-- Student Schedule Section -->
+    <section class="student-schedule">
+        <h2>View Student Schedule</h2>
+        <div class="calendar-wrapper">
+            <div class="calendar-container">
+                <table class="calendar">
+                    <thead>
+                        <tr>
+                            <th>Fall 2025</th>
+                            <th>Spring 2025</th>
+                            <th>Fall 2026</th>
+                            <th>Spring 2026</th>
+                            <th>Fall 2027</th>
+                            <th>Spring 2027</th>
+                            <th>Fall 2028</th>
+                            <th>Spring 2028</th>
+                            <th>Fall 2029</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calendarBody">
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div id="popupModal" class="modal" style="display: none;">
+    <p id="popupMessage">Error occurred!</p>
+    <button id="closePopupBtn" type="button">Close</button>
+</div>
+
+<script>// Dummy course list for demonstration
+    const courses = [
+        "BIO-100LAB",
+        "BIO-100",
+        "Chem-400",
+        "Math-101",
+        "Physics-200",
+        "Chem-300"
+    ];
+
+    // Track planned courses for each semester
+    const plannedCourses = {
+        "Fall 2025": [],
+        "Spring 2026": [],
+        "Fall 2026": [],
+        "Spring 2027": []
+    };
+
+    // Function to search and display courses (simplified)
+    function searchCourses() {
+        const searchQuery = document.getElementById("searchCourse").value.toLowerCase();
+        const filteredCourses = courses.filter(course => course.toLowerCase().includes(searchQuery));
+        const courseListContainer = document.getElementById("courseList");
+        courseListContainer.innerHTML = ""; // Clear previous results
+
+        filteredCourses.forEach(course => {
+            const courseItem = document.createElement("div");
+            courseItem.classList.add("course-item");
+            courseItem.innerHTML = `
+                <input type="radio" name="course" value="${course}" id="course-${course}">
+                <label for="course-${course}">${course}</label>
+            `;
+            courseListContainer.appendChild(courseItem);
+        });
+    }
+
+    // Function to add selected courses to the student schedule
+    function addCoursesToSchedule() {
+        const selectedCourse = document.querySelector('input[name="course"]:checked');
+        const semester = document.getElementById("semester").value;
+        if (!selectedCourse) {
+            alert("Please select a course.");
+            return;
+        }
+
+        const selectedCourseName = selectedCourse.value;
+
+        // Check if the course is already planned in any semester
+        if (isCoursePlanned(selectedCourseName)) {
+            alert(`Course ${selectedCourseName} is already planned in the schedule.`);
+            return;
+        }
+
+        // Add the course to the selected semester
+        const calendarBody = document.getElementById("calendarBody");
+        const semesterColumnIndex = getSemesterColumnIndex(semester);
+        const semesterColumn = calendarBody.querySelectorAll("tr");
+
+        // We now append the course into the appropriate semester column (adding to the next available row)
+        let added = false;
+        for (let row of semesterColumn) {
+            const cell = row.children[semesterColumnIndex];
+            if (cell && cell.innerHTML === "") {
+                cell.innerHTML = `<strong class="course" onclick="removeCourse(this)">${selectedCourseName}</strong>`;
+                plannedCourses[semester].push(selectedCourseName);
+                added = true;
+                break;
+            }
+        }
+
+        // If no available row, add it in the first available row in the semester column
+        if (!added) {
+            const row = document.createElement('tr');
+            const emptyCells = new Array(9).fill("<td></td>").join("");
+            row.innerHTML = emptyCells;
+            const cell = row.children[semesterColumnIndex];
+            cell.innerHTML = `<strong class="course" onclick="removeCourse(this)">${selectedCourseName}</strong>`;
+            calendarBody.appendChild(row);
+            plannedCourses[semester].push(selectedCourseName);
+        }
+    }
+
+    // Helper function to check if a course is already planned
+    function isCoursePlanned(courseName) {
+        for (let semester in plannedCourses) {
+            if (plannedCourses[semester].includes(courseName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Helper function to get the column index based on the semester
+    function getSemesterColumnIndex(semester) {
+        const semesterMap = {
+            "Fall 2025": 0,
+            "Spring 2025": 1,
+            "Fall 2026": 2,
+            "Spring 2026": 3,
+            "Fall 2027": 4,
+            "Spring 2027": 5,
+            "Fall 2028": 6,
+            "Spring 2028": 7,
+            "Fall 2029": 8
+        };
+        return semesterMap[semester] || 0; // Default to 0 if no match
+    }
+
+    // Remove course function: Called when a course is clicked
+    function removeCourse(courseElement) {
+        const courseName = courseElement.innerHTML;
+        const semester = getSemesterFromCell(courseElement);
+        const semesterColumnIndex = getSemesterColumnIndex(semester);
+
+        // Remove the course from the schedule table
+        courseElement.parentElement.innerHTML = '';
+
+        // Remove from the plannedCourses data structure
+        const index = plannedCourses[semester].indexOf(courseName);
+        if (index > -1) {
+            plannedCourses[semester].splice(index, 1);
+        }
+    }
+
+    // Helper function to get semester from cell
+    function getSemesterFromCell(courseElement) {
+        const cellIndex = Array.from(courseElement.parentElement.children).indexOf(courseElement.parentElement);
+        const semesterColumn = Object.keys(getSemesterColumnIndex()).find(key => getSemesterColumnIndex(key) === cellIndex);
+        return semesterColumn || "";
+    }</script>
+
+
+</body>
+</html>
