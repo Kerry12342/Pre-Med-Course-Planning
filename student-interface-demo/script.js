@@ -54,7 +54,7 @@ class Student {
 
         if (this.able_to_plan_course(target_course, term)) {
             target_course.currentCount += 1
-            this.planned_courses.push([target_course], term)
+            this.planned_courses.push([target_course, term])
         }
         else {
             console.log("Could not plan course")
