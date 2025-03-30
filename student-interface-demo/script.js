@@ -111,6 +111,8 @@ test_course_format = {
 
 
 
+
+
 const fs = require('fs'); //to access json
 const { pool } = require('pg'); //to access postgresql
 
@@ -124,21 +126,71 @@ const pool = new Pool({
 
 class Admin {
     constructor(name, filename = 'courses.json') {
-        this.name = name; //String
+        this.name = name;
         this.filename = filename;
         this.courses = [];
-        this.sync_from_db();
+        this.sync_from_db(); // Sync JSON with PostgreSQL on startup
     }
 
-    add_course(course_title, prerequisites) {
-        newCourse = { title: course_title, prerequisites: prerequisites, currentCount: 0}
+    // Load courses from PostgreSQL and update JSON file
+    async sync_from_db() {
+        try {
+            const res = await pool.query('SELECT title, prerequisites, currentCount FROM courses');
+            this.courses = res.rows;
+            fs.writeFileSync(this.filename, JSON.stringify(this.courses, null, 4), 'utf8');
+        } catch (error) {
+            console.error("Error syncing from database:", error);
+        }
     }
 
-    remove_course(course_title) {
-
+    // Save courses to JSON file
+    save_courses() {
+        try {
+            fs.writeFileSync(this.filename, JSON.stringify(this.courses, null, 4), 'utf8');
+        } catch (error) {
+            console.error("Error saving courses:", error);
+        }
     }
 
-    find_student(student_name) {
-        
+    // Add a course to PostgreSQL and JSON
+    async add_course(course_title, prerequisites) {
+        try {
+            await pool.query(
+                'INSERT INTO courses (title, prerequisites, currentCount) VALUES ($1, $2, $3)',
+                [course_title, JSON.stringify(prerequisites), 0]
+            );
+            this.courses.push({ title: course_title, prerequisites, currentCount: 0 });
+            this.save_courses();
+        } catch (error) {
+            console.error("Error adding course:", error);
+        }
+    }
+
+    // Remove a course from PostgreSQL and JSON
+    async remove_course(course_title) {
+        try {
+            await pool.query('DELETE FROM courses WHERE title = $1', [course_title]);
+            this.courses = this.courses.filter(course => course.title !== course_title);
+            this.save_courses();
+        } catch (error) {
+            console.error("Error removing course:", error);
+        }
+    }
+
+    // Get all courses
+    get_courses() {
+        return this.courses;
     }
 }
+
+// Example Usage
+(async () => {
+    let admin = new Admin("Professor Smith");
+
+    await admin.add_course("CS101", ["MATH101"]);
+    await admin.add_course("CHEM101", []);
+
+    await admin.remove_course("CS101");
+
+    console.log(admin.get_courses());
+})();
