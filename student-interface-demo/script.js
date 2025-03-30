@@ -111,10 +111,23 @@ test_course_format = {
 
 
 
+const fs = require('fs'); //to access json
+const { pool } = require('pg'); //to access postgresql
+
+const pool = new Pool({
+    user: 'students',
+    host: '150.209.91.82',
+    database: 'developer',
+    password: 'skull-patent-DOWNHILL-mongol-away',
+    port: '5432'
+})
 
 class Admin {
-    constructor(name) {
+    constructor(name, filename = 'courses.json') {
         this.name = name; //String
+        this.filename = filename;
+        this.courses = [];
+        this.sync_from_db();
     }
 
     add_course(course_title, prerequisites) {
