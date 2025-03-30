@@ -73,4 +73,59 @@ class Student {
             console.log("Could not plan course");
         }
     }
+
+    complete_course(target_course, term) {
+        const remindex = this.planned_courses.indexOf(target_course)
+        this.planned_courses.splice(remindex, 1)
+        this.completed_courses.push([target_course, term])
+    }
+
+    remove_planned_courese(target_course) {
+        const remindex = this.planned_courses.indexOf(target_course)
+        this.planned_courses.splice(remindex, 1)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+test_course_format = {
+    title: "CS101",
+    prerequisites: ["CHEM101"],
+    currentCount: 0
+};
+
+
+
+
+
+class Admin {
+    constructor(name) {
+        this.name = name; //String
+    }
+
+    add_course(course_title, prerequisites) {
+        newCourse = { title: course_title, prerequisites: prerequisites, currentCount: 0}
+    }
+
+    remove_course(course_title) {
+
+    }
+
+    find_student(student_name) {
+        
+    }
 }
