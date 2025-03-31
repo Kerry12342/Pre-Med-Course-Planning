@@ -10,6 +10,19 @@ body {
     padding: 0;
 }
 
+.course-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.course-button:hover {
+    background-color: #45a049;
+}
+
 /* Banner styling exactly like the model */
 .banner {
     background-color: #002f86;
@@ -185,6 +198,15 @@ label {
 
 .calendar-table td.selected {
     background-color: #e0f0e0; /* Lighter green to match model palette */
+}
+
+/* Ensure calendar cells have enough space for dropping courses */
+.calendar-cell {
+    min-height: 80px; /* Increase the height of the cells */
+    padding: 10px; /* Add padding inside the cell */
+    text-align: center; /* Center content inside the cell */
+    vertical-align: middle; /* Vertically align content */
+    position: relative; /* Necessary if we want to use absolute positioning for buttons */
 }
 
 /* Course list styling */

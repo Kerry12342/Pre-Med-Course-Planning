@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag Test</title>
+    <style>
+        button {
+            cursor: grab;
+        }
+    </style>
+</head>
+<body>
+    <div id="courseList">
+        <button draggable="true">CS101</button>
+        <button draggable="true">CS102</button>
+        <button draggable="true">BIO100</button>
+    </div>
+
+    <script>const courseButtons = document.querySelectorAll('button');
+
+        courseButtons.forEach(button => {
+            button.addEventListener("dragstart", (event) => {
+                console.log("Dragging: ", event.target.textContent);
+                event.dataTransfer.setData("course", event.target.textContent);
+            });
+        });
+
+        document.addEventListener("dragover", (event) => {
+            event.preventDefault();  // Allow dragging
+        });
+
+        document.body.addEventListener("drop", (event) => {
+            event.preventDefault();
+            const courseName = event.dataTransfer.getData("course");
+            alert("Dropped: " + courseName);  // Show dropped course name
+        });</script>
+</body>
+</html>
