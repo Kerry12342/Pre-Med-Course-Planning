@@ -284,13 +284,13 @@ function filter_courses() {
         // If only "All Tracks" is selected, filter by major requisites
         const major = major_datas.find(m => m.title === selectedMajor);
         if (major) {
-            filteredCourses = get_course_names(course_datas.filter(course => major.requisites.includes(course)));
+            filteredCourses = get_course_names(course_datas.filter(course => major.requisites.includes(course.title)));
         }
     } else if (selectedMajor === "") {
         // If only "All Majors" is selected, filter by track requisites
         const track = track_datas.find(t => t.title === selectedTrack);
         if (track) {
-            filteredCourses = get_course_names(course_datas.filter(course => track.requisites.includes(course)));
+            filteredCourses = get_course_names(course_datas.filter(course => track.requisites.includes(course.title)));
         }
     } else {
         // If both track and major are selected, filter by both requisites
@@ -299,7 +299,7 @@ function filter_courses() {
 
         if (track && major) {
             filteredCourses = get_course_names(course_datas.filter(course =>
-                track.requisites.includes(course) && major.requisites.includes(course)
+                track.requisites.includes(course.title) && major.requisites.includes(course.title)
             ));
         }
     }
