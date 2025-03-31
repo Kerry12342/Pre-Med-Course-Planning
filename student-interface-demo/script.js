@@ -183,7 +183,6 @@ class Admin {
     }
 }
 
-// Example Usage
 (async () => {
     let admin = new Admin("Professor Smith");
 

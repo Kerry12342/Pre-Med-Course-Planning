@@ -1,90 +1,229 @@
+/* Font and general styles from the model */
+body {
+    height: 100%;
+    width: 100%;
+    font-family: "miller-text", serif;
+    line-height: 32px;
+    color: #4F5971;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
 
-        .main_body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            padding: 20px;
-        }
+/* Banner styling exactly like the model */
+.banner {
+    background-color: #002f86;
+    color: white;
+    padding: 15px 0;
+    width: 100%;
+}
 
-        .banner {
-            filter: drop-shadow(0 3mm 4mm rgb(150, 150, 150));
-            width: 100%;
-            height: 100px;
-            border: 0px inset grey;
-            border-radius: 20px;
-            background-image: url('hamilton.png'); /* Replace with your banner image URL */
-            background-size: cover;
-            background-position: center;
-            margin-bottom: 0px;
-        }
+.banner-content {
+    display: flex;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
 
-        .filters, .calendar, .completed-courses {
-            filter: drop-shadow(0 3mm 4mm rgb(150, 150, 150));
-            border-radius: 20px;
-            flex: 1;
-            padding: 10px;
-            border: 0px groove lightgrey;
-            background-image: linear-gradient(white, #c7d3ff);
-        }
+.hamburger-menu {
+    cursor: pointer;
+    font-size: 24px;
+    background-color: white;
+    color: #002f86;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
 
-        select, button {
-            margin: 5px 0;
-            padding: 5px;
-        }
+.logo-section {
+    display: flex;
+    align-items: center;
+}
 
-        .calendar-wrapper {
-            border: 5px groove lightgrey;
-            border-radius: 20px;
-            width: 400px;
-            overflow-x: scroll;
-            justify-content: center;
-        }
+.logo-section h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-right: 15px;
+    color: white;
+}
 
-        .calendar-table {
-            border-collapse: collapse;
-            width: 600px;
-        }
+.separator {
+    font-size: 20px;
+    margin-right: 15px;
+    color: white;
+}
 
-            .calendar-table td, .calendar-table th {
-                padding: 10px;
-                background-color: lightgrey;
-                text-align: center;
-            }
+.subtitle {
+    font-size: 18px;
+    color: white;
+}
 
-            .calendar-table td {
-                background-image: linear-gradient(whitesmoke, white);
-                cursor: pointer;
-                vertical-align: top;
-                min-height: 50px;
-            }
+/* Admin button styling */
+.admin-page {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 30px;
+}
 
-                .calendar-table td.selected {
-                    background-color: lightgreen;
-                }
+.admin-button {
+    background-color: #002f86;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    font-family: "miller-text", serif;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+}
 
-        .completed-courses ul {
-            list-style-type: none;
-            padding: 0;
-        }
+.admin-button:hover {
+    background-color: #00205f;
+}
 
-            .completed-courses ul li {
-                padding: 5px;
-                background-color: #f0f0f0;
-                margin: 5px 0;
-            }
+/* Main body layout - keeping the original layout */
+.main_body {
+    font-family: "miller-text", serif;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+}
 
-        .course-name {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .admin-page{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 1rem;
-        }
-        .admin-button{
-            border-radius:  10px;
-            text-decoration: none;
-        }
+/* Section styling - adapting colors but keeping layout */
+.filters, .calendar, .completed-courses {
+    filter: drop-shadow(0 3mm 4mm rgb(150, 150, 150));
+    border-radius: 20px;
+    flex: 1;
+    padding: 10px;
+    border: 0px groove lightgrey;
+    background-color: #f4f4f4; /* Changed from gradient to match model */
+}
+
+/* Headings */
+h2 {
+    display: block;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+    color: #4F5971; /* Matching the color from the image */
+    font-family: "miller-text", serif;
+}
+
+/* Form controls */
+select, button {
+    margin: 5px 0;
+    padding: 8px;
+    font-family: "miller-text", serif;
+    font-size: 16px;
+}
+
+button {
+    background-color: #002f86;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #00205f;
+}
+
+select {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Labels */
+label {
+    font-size: 16px;
+    color: #4F5971;
+}
+
+/* Calendar styles - preserving functionality */
+.calendar-wrapper {
+    border: 1px solid #ccc; /* Simplified border to match model */
+    border-radius: 5px; /* Smaller radius to match model */
+    width: 400px;
+    overflow-x: scroll;
+    justify-content: center;
+}
+
+.calendar-table {
+    border-collapse: collapse;
+    width: 600px;
+}
+
+.calendar-table td, .calendar-table th {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc; /* Match model table styling */
+}
+
+.calendar-table th {
+    background-color: #f4f4f4;
+    color: #4F5971;
+    font-weight: bold;
+}
+
+.calendar-table td {
+    background-color: #fff; /* Simplified background to match model */
+    cursor: pointer;
+    vertical-align: top;
+    min-height: 50px;
+}
+
+.calendar-table td.selected {
+    background-color: #e0f0e0; /* Lighter green to match model palette */
+}
+
+/* Course list styling */
+#courseList div {
+    text-align: center;
+    width: 100px;
+    background-color: #e0f0e0; /* Lighter green */
+    padding: 10px;
+    border-radius: 5px; /* Reduced to match model */
+    margin: 10px auto;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+#courseList div:hover {
+    background-color: #c0e0c0;
+}
+
+/* Completed courses list */
+.completed-courses ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.completed-courses ul li {
+    padding: 8px;
+    background-color: #f4f4f4;
+    margin: 5px 0;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Course elements in calendar */
+.course-name {
+    display: block;
+    margin-bottom: 5px;
+    background-color: #e0f0e0 !important; /* Lighter green */
+    padding: 8px !important;
+    border-radius: 4px !important;
+    font-size: 14px;
+}
