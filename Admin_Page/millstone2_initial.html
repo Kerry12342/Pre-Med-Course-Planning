@@ -48,7 +48,7 @@
             <h2>View Student Schedule</h2>
             <div class="search-bar">
                 <input type="text" id="searchStudent" placeholder="Search for Students">
-                <button type="button" onclick="showError('Student search not implemented yet')">🔍</button>
+                <button type="button" onclick="searchStudent()">🔍</button>
             </div>
             <div class="calendar-wrapper">
                 <div class="calendar-container">
@@ -81,7 +81,7 @@
 
         <section class="course-management">
             <h2 id="courseTitle">Add Course</h2>
-            <button id="toggleCourse" type="button" onclick="toggleCourseMode()">Switch to Delete Course</button>
+            <button id="toggleCourse" type="button">Switch to Delete Course</button>
             <input type="text" id="courseName" placeholder="Enter Course Title Here" style="display: block; margin-bottom: 10px;">
             <select id="track" style="display: block; margin-bottom: 10px;">
                 <option value="">Track</option>
@@ -106,7 +106,7 @@
                 <option value="Fall 2026">Fall 2026</option>
                 <option value="Spring 2027">Spring 2027</option>
             </select>
-            <button type="button" onclick="showError('Add/Delete course feature not implemented yet')" style="display: block; margin-top: 10px;">Submit</button>
+            <button type="button" id="courseSubmitBtn" style="display: block; margin-top: 10px;">Submit</button>
         </section>
     </main>
 
