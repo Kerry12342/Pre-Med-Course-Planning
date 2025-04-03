@@ -1,53 +1,124 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Course data structure
+    // Student data structure
+    const students = [
+        {
+            "name": "Hi There",
+            "id": "12345",
+            "email": "hithere@hamilton.edu",
+            "plannedCourses": [
+                { "title": "BIO-100", "semester": "Fall 2025" },
+                { "title": "CHEM-110", "semester": "Fall 2025" },
+                { "title": "PHYS-120", "semester": "Fall 2025" },
+                { "title": "CS-101", "semester": "Fall 2025" },
+
+                { "title": "BIO-220", "semester": "Spring 2026" },
+                { "title": "CHEM-220", "semester": "Spring 2026" },
+                { "title": "PHYS-220", "semester": "Spring 2026" },
+                { "title": "CS-201", "semester": "Spring 2026" },
+
+                { "title": "BIO-300", "semester": "Fall 2026" },
+                { "title": "CHEM-300", "semester": "Fall 2026" },
+                { "title": "PHYS-300", "semester": "Fall 2026" },
+                { "title": "CS-301", "semester": "Fall 2026" },
+
+                { "title": "BIO-310", "semester": "Spring 2027" },
+                { "title": "CHEM-310", "semester": "Spring 2027" },
+                { "title": "PHYS-310", "semester": "Spring 2027" },
+                { "title": "CS-310", "semester": "Spring 2027" },
+
+                { "title": "BIO-400", "semester": "Fall 2027" },
+                { "title": "CHEM-400", "semester": "Fall 2027" },
+                { "title": "PHYS-400", "semester": "Fall 2027" },
+                { "title": "CS-400", "semester": "Fall 2027" },
+
+                { "title": "BIO-410", "semester": "Spring 2028" },
+                { "title": "CHEM-410", "semester": "Spring 2028" },
+                { "title": "PHYS-410", "semester": "Spring 2028" },
+                { "title": "CS-410", "semester": "Spring 2028" },
+
+                { "title": "BIO-490", "semester": "Fall 2028" },
+                { "title": "CHEM-490", "semester": "Fall 2028" },
+                { "title": "PHYS-490", "semester": "Fall 2028" },
+                { "title": "CS-490", "semester": "Fall 2028" },
+
+                { "title": "BIO-499", "semester": "Spring 2029" },
+                { "title": "CHEM-499", "semester": "Spring 2029" },
+                { "title": "PHYS-499", "semester": "Spring 2029" },
+                { "title": "CS-499", "semester": "Spring 2029" },
+
+                { "title": "BIO-THESIS", "semester": "Fall 2029" },
+                { "title": "CHEM-THESIS", "semester": "Fall 2029" },
+                { "title": "PHYS-THESIS", "semester": "Fall 2029" },
+                { "title": "CS-THESIS", "semester": "Fall 2029" }
+            ]
+        }
+    ];
+
+    // Course data structure with track and major attributes
     const courses = [
         {
             "title": "BIO-100",
             "semester": "Fall 2025",
             "studentCount": 5,
-            "department": "Biology"
+            "department": "Biology",
+            "track": "pre-medicine",
+            "major": "Biology"
         },
         {
             "title": "BIO-100LAB",
             "semester": "Fall 2025",
             "studentCount": 3,
-            "department": "Biology"
+            "department": "Biology",
+            "track": "pre-medicine",
+            "major": "Biology"
         },
         {
             "title": "CHEM-400",
             "semester": "Spring 2026",
             "studentCount": 5,
-            "department": "Chemistry"
+            "department": "Chemistry",
+            "track": "pre-dental-medicine",
+            "major": "Chemistry"
         },
         {
             "title": "BIO-110",
             "semester": "Fall 2025",
             "studentCount": 7,
-            "department": "Biology"
+            "department": "Biology",
+            "track": "pre-nursing",
+            "major": "Biology"
         },
         {
             "title": "CHEM-110",
             "semester": "Spring 2026",
             "studentCount": 4,
-            "department": "Chemistry"
+            "department": "Chemistry",
+            "track": "pre-medicine",
+            "major": "Biochemistry"
         },
         {
             "title": "PHYS-120",
             "semester": "Fall 2025",
             "studentCount": 6,
-            "department": "Physics"
+            "department": "Physics",
+            "track": "pre-physical-therapy",
+            "major": "Physics"
         },
         {
             "title": "BIO-220",
             "semester": "Spring 2026",
             "studentCount": 2,
-            "department": "Biology"
+            "department": "Biology",
+            "track": "pre-veterinary-medicine",
+            "major": "Biology"
         },
         {
             "title": "CHEM-220",
             "semester": "Fall 2025",
             "studentCount": 8,
-            "department": "Chemistry"
+            "department": "Chemistry",
+            "track": "pre-physical-assistant",
+            "major": "Chemistry"
         }
     ];
 
@@ -118,6 +189,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 <span class="note">Num of Students Planned</span>
                 <input type="text" value="${course.studentCount}" disabled>
                 <div class="course-semester">${course.semester}</div>
+                <div class="course-details">
+                    <span class="course-track">Track: ${course.track || 'N/A'}</span>
+                    <span class="course-major">Major: ${course.major || 'N/A'}</span>
+                </div>
             `;
             courseListElement.appendChild(courseItem);
         });
@@ -135,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return courseMatch && semesterMatch;
         });
 
-        // Only show error if button was clicked AND no results were found
+        // Only show error if button was clicked and no results were found
         if (showErrorMessage === true && filteredCourses.length === 0 && (courseSearch !== '' || semesterSearch !== '')) {
             showError("No courses found matching your search criteria");
         }
@@ -148,6 +223,85 @@ document.addEventListener("DOMContentLoaded", function () {
     // Function called when search button is clicked
     function searchButtonClicked() {
         filterCourses(true); // Pass true to show error message if needed
+    }
+
+    // Function to search for a student and display their schedule
+    function searchStudent() {
+        const searchInput = document.getElementById('searchStudent');
+        if (!searchInput) return;
+
+        const searchTerm = searchInput.value.trim().toLowerCase();
+
+        // If the search term is empty, clear the calendar and return
+        if (searchTerm === '') {
+            clearCalendar();
+            return;
+        }
+
+        // Find the student whose name contains the search term
+        const student = students.find(s => s.name.toLowerCase().includes(searchTerm));
+
+        // If no student is found, show an error
+        if (!student) {
+            showError("No student found matching '" + searchTerm + "'");
+            clearCalendar();
+            return;
+        }
+
+        // Display the student's courses in the calendar
+        displayStudentSchedule(student);
+    }
+
+    // Function to clear all cells in the calendar
+    function clearCalendar() {
+        const cells = document.querySelectorAll('.calendar tbody td');
+        cells.forEach(cell => {
+            cell.innerHTML = '';
+        });
+    }
+
+    // Function to display a student's schedule in the calendar
+    function displayStudentSchedule(student) {
+        // Clear the calendar first
+        clearCalendar();
+
+        // Get all the columns in the calendar
+        const headerRow = document.querySelector('.calendar thead tr');
+        const semesterHeaders = Array.from(headerRow.querySelectorAll('th')).map(th => th.textContent.trim());
+
+        console.log("Calendar headers:", semesterHeaders);
+        console.log("Student courses:", student.plannedCourses);
+
+        // For each course in the student's planned courses
+        student.plannedCourses.forEach(course => {
+            // Find the index of the semester in the calendar headers
+            const semesterIndex = semesterHeaders.findIndex(header =>
+                header.toLowerCase() === course.semester.toLowerCase());
+
+            console.log("Course:", course.title, "Semester:", course.semester, "Index:", semesterIndex);
+
+            // If the semester is found in the calendar
+            if (semesterIndex !== -1) {
+                // Get all cells for that semester (column)
+                const cells = document.querySelectorAll(`.calendar tbody tr td:nth-child(${semesterIndex + 1})`);
+
+                // Find the first empty cell in that column
+                let emptyCell = Array.from(cells).find(cell => cell.innerHTML === '');
+
+                // If no empty cell is found, use the last cell
+                if (!emptyCell && cells.length > 0) {
+                    emptyCell = cells[cells.length - 1];
+                }
+
+                // If we have a cell to use, add the course
+                if (emptyCell) {
+                    const courseDiv = document.createElement('div');
+                    courseDiv.className = 'calendar-course';
+                    courseDiv.textContent = course.title;
+                    emptyCell.appendChild(courseDiv);
+                }
+            }
+        });
     }
 
     // Set up event listeners for search inputs
@@ -207,19 +361,150 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener('click', searchButtonClicked); // Use the new button click handler
     });
 
-    // Attach an event listener to other buttons to show an error message
-    allButtons.forEach(button => {
-        // Skip search buttons and close popup button
-        if (!button.closest('.search-bar') && button !== closePopupBtn && button !== studentInterfaceButton) {
-            button.addEventListener("click", function () {
-                showError("Feature not implemented yet"); // Display a more helpful error message
-            });
+    // Set up the student search button
+    const studentSearchButton = document.querySelector('.student-schedule .search-bar button');
+    if (studentSearchButton) {
+        studentSearchButton.removeEventListener('click', function() { showError("Student search not implemented yet"); });
+        studentSearchButton.addEventListener('click', searchStudent);
+    }
+
+    // Function to add a new course
+    function addCourse() {
+        const titleInput = document.getElementById('courseName');
+        const trackSelect = document.getElementById('track');
+        const majorSelect = document.getElementById('major');
+        const semesterSelect = document.getElementById('semester');
+
+        const title = titleInput.value.trim();
+        const track = trackSelect.value;
+        const major = majorSelect.value;
+        const semester = semesterSelect.value;
+
+        // Validate inputs
+        if (!title) {
+            showError("Please enter a course title");
+            return;
         }
-    });
+
+        if (!semester) {
+            showError("Please select a semester");
+            return;
+        }
+
+        // Check if the course already exists
+        const existingCourse = courses.find(c =>
+            c.title.toLowerCase() === title.toLowerCase() &&
+            c.semester.toLowerCase() === semester.toLowerCase());
+
+        if (existingCourse) {
+            showError("This course already exists for the selected semester");
+            return;
+        }
+
+        // Create new course object
+        const newCourse = {
+            title: title,
+            semester: semester,
+            studentCount: 0,
+            department: major.split(' ')[0] || "General", // Use first word of major as department
+            track: track,
+            major: major
+        };
+
+        // Add to the courses array
+        courses.push(newCourse);
+
+        // Clear form inputs
+        titleInput.value = '';
+        trackSelect.selectedIndex = 0;
+        majorSelect.selectedIndex = 0;
+        semesterSelect.selectedIndex = 0;
+
+        // Update the display to show the new course
+        displayCourses(courses);
+
+        // Show success message
+        showSuccess("Course added successfully");
+    }
+
+    // Function to delete a course
+    function deleteCourse() {
+        const titleInput = document.getElementById('courseName');
+        const semesterSelect = document.getElementById('semester');
+
+        const title = titleInput.value.trim();
+        const semester = semesterSelect.value;
+
+        // Validate inputs
+        if (!title) {
+            showError("Please enter a course title to delete");
+            return;
+        }
+
+        // Find the index of the course to delete
+        const courseIndex = courses.findIndex(c =>
+            c.title.toLowerCase() === title.toLowerCase() &&
+            (!semester || c.semester.toLowerCase() === semester.toLowerCase()));
+
+        if (courseIndex === -1) {
+            showError("Course not found");
+            return;
+        }
+
+        // Remove the course from the array
+        courses.splice(courseIndex, 1);
+
+        // Clear form inputs
+        titleInput.value = '';
+        semesterSelect.selectedIndex = 0;
+
+        // Update the display
+        displayCourses(courses);
+
+        // Show success message
+        showSuccess("Course deleted successfully");
+    }
+
+    // Function to show a success message
+    function showSuccess(message) {
+        const popupModal = document.getElementById("popupModal");
+        const popupMessage = document.getElementById("popupMessage");
+        if (popupModal && popupMessage) {
+            popupMessage.style.color = "#28a745"; // Green color for success
+            popupMessage.textContent = message;
+            popupModal.style.display = "block";
+
+            // Reset color after modal is closed
+            const closeBtn = document.getElementById("closePopupBtn");
+            if (closeBtn) {
+                const originalHandler = closeBtn.onclick;
+                closeBtn.onclick = function() {
+                    if (originalHandler) originalHandler();
+                    popupMessage.style.color = "#4F5971"; // Reset to default color
+                };
+            }
+        }
+    }
+
+    // Setup form submit handler based on mode (Add or Delete)
+    const submitButton = document.querySelector('.course-management button:last-child');
+    if (submitButton) {
+        submitButton.removeEventListener('click', function() { showError("Add/Delete course feature not implemented yet"); });
+        submitButton.addEventListener('click', function() {
+            const mode = document.getElementById('courseTitle').innerText;
+            if (mode === "Add Course") {
+                addCourse();
+            } else {
+                deleteCourse();
+            }
+        });
+    }
 
     // Make functions available globally
     window.showError = showError;
     window.filterCourses = filterCourses;
+    window.searchStudent = searchStudent;
+    window.searchButtonClicked = searchButtonClicked;
 
     // Ensure the toggle button still functions properly
     if (toggleButton) {
