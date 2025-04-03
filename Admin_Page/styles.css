@@ -77,29 +77,25 @@ body {
     color: white;
 }
 
-/* Header adjusted to model */
-.header {
+/* Student Interface Button */
+.student-interface-button {
     background-color: #002f86;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 10px 20px;
+    font-size: 16px;
+    font-family: "miller-text", serif;
+    transition: background-color 0.3s;
+    cursor: pointer;
 }
 
-.logo_link {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    padding: 20px 0;
-    transition: color 0.25s;
-    white-space: nowrap;
-    color: white;
+.student-interface-button:hover {
+    background-color: #00205f;
 }
 
-.logo_link_icon {
-    display: inline-block;
-    vertical-align: top;
-}
-
-/* Dashboard Layout - adjusted to match the three-column layout from model */
+/* Dashboard Layout */
 .dashboard {
     display: flex;
     flex-direction: row;
@@ -139,34 +135,100 @@ p {
     color: #4F5971;
 }
 
+/* Search Bars */
+.search-bar {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.search-bar input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: "miller-text", serif;
+}
+
+.search-bar button {
+    background-color: #002f86;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
 /* Course List */
 .course-list {
     max-height: 300px;
     overflow-y: auto;
 }
 
-.course-list div {
-    text-align: center;
-    width: 100px;
-    background-color: #e0f0e0;
-    padding: 10px;
+.course-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.course-list li {
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: white;
+    margin-bottom: 10px;
     border-radius: 5px;
-    margin: 10px auto;
-    cursor: pointer;
+}
+
+.course-list li strong {
     font-size: 16px;
-    transition: background-color 0.2s;
+    color: #4F5971;
+    margin-bottom: 5px;
 }
 
-.course-list div:hover {
-    background-color: #c0e0c0;
+.course-list .note {
+    color: #666;
+    font-size: 14px;
+    margin-right: 10px;
 }
 
-/* Calendar styling to match model */
+.course-list input {
+    width: 50px;
+    padding: 3px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+}
+
+.course-semester {
+    color: #002f86;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: .5px;
+}
+
+.course-details {
+    margin-top: 5px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-track, .course-major {
+    margin-top: 2px;
+    color: #4F5971;
+}
+
+/* Calendar styling */
 .calendar-wrapper {
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 100%;
-    max-width: 400px;
+    max-width: 400px;  /* Return to original width */
     overflow-x: scroll;
     overflow-y: auto;
     max-height: 300px;
@@ -181,7 +243,7 @@ p {
 
 .calendar {
     border-collapse: collapse;
-    width: 600px;
+    width: 600px;  /* Set fixed width to make it scrollable */
 }
 
 th, td {
@@ -206,11 +268,19 @@ td {
     min-height: 50px;
 }
 
-td.selected {
+/* Calendar Course Styles */
+.calendar-course {
+    display: block;
+    margin-bottom: 5px;
     background-color: #e0f0e0;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #4F5971;
+    text-align: center;
 }
 
-/* Buttons and Inputs styled like model */
+/* Buttons and Inputs */
 button {
     background-color: #002f86;
     color: white;
@@ -242,7 +312,7 @@ input, select {
     margin-bottom: 10px;
 }
 
-/* Modal styling aligned with model */
+/* Modal styling */
 .modal {
     display: none;
     position: fixed;
@@ -259,18 +329,26 @@ input, select {
     color: #4F5971;
 }
 
-.modal button {
+.modal p {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #4F5971;
+    font-weight: bold;
+}
+
+#closePopupBtn {
     margin-top: 10px;
     background-color: #002f86;
     color: white;
 }
 
-/* Course elements in calendar to match model */
-.course-name {
-    display: block;
-    margin-bottom: 5px;
-    background-color: #e0f0e0;
-    padding: 8px;
-    border-radius: 4px;
-    font-size: 14px;
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+
+    section {
+        width: 100%;
+    }
 }
