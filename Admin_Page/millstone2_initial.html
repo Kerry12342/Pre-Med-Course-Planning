@@ -1,4 +1,3 @@
-<!--CITE: In collaboration with ChatGPT for html starter code and debugging.-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,111 +7,112 @@
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
 </head>
-<!-- Banner Header -->
-<header class="banner">
-    <div class="banner-content">
-        <div class="hamburger-menu">
-            <i class="fas fa-bars"></i>
+<body>
+    <!-- Banner Header -->
+    <header class="banner">
+        <div class="banner-content">
+            <div class="hamburger-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo-section">
+                <h1>Hamilton</h1>
+                <span class="separator">•</span>
+                <span class="subtitle">Hamilton College Premed Planning</span>
+            </div>
         </div>
-        <div class="logo-section">
-            <h1>Hamilton</h1>
-            <span class="separator">•</span>
-            <span class="subtitle">Hamilton College Premed Planning</span>
-        </div>
-    </div>
-</header>
-  <a href="./../student-interface-demo/interface.html" style="display: inline-block; width: 200px; margin-top: 10px; text-decoration: none;">
-    <button type="button" class="student-interface-button" style="width: 100%; display: block; cursor: pointer;">Student Interface</button>
-  </a>
+    </header>
+
+    <a href="./../student-interface-demo/interface.html" style="display: inline-block; width: 200px; margin-top: 10px; text-decoration: none;">
+        <button type="button" class="student-interface-button" style="width: 100%; display: block; cursor: pointer;">Student Interface</button>
+    </a>
+
     <main class="dashboard">
-      <section class="enrollment">
-          <h2>Enrollment by Course</h2>
-          <div class="search-bar">
-              <input type="text" id="searchCourse" placeholder="Search for Courses">
-              <button type="button" onclick="showError()">🔍</button>
+        <section class="enrollment">
+            <h2>Enrollment by Course</h2>
+            <div class="search-bar">
+                <input type="text" id="searchCourse" placeholder="Search for Courses">
+                <button type="button" onclick="searchButtonClicked()">🔍</button>
             </div>
             <div class="search-bar">
-              <input type="text" id="searchSemester" placeholder="Search by Semester">
-              <button type="button" onclick="showError()">🔍</button>
+                <input type="text" id="searchSemester" placeholder="Search by Semester">
+                <button type="button" onclick="searchButtonClicked()">🔍</button>
             </div>
             <div class="course-list">
-              <ul>
-                  <li><strong>BIO-100LAB</strong> <br> <span class="note">Num of Students Planned</span> <input type="text" value="3" disabled></li>
-                  <li><strong>BIO-100</strong> <br> <span class="note">Num of Students Planned</span> <input type="text" value="5" disabled></li>
-                  <li><strong>Chem-400</strong> <br> <span class="note">Num of Students Planned</span> <input type="text" value="5" disabled></li>
-              </ul>
+                <ul>
+                    <!-- Course items will be populated dynamically -->
+                </ul>
             </div>
-          </section>
+        </section>
 
-          <section class="student-schedule">
+        <section class="student-schedule">
             <h2>View Student Schedule</h2>
             <div class="search-bar">
-              <input type="text" id="searchStudent" placeholder="Search for Students">
-              <button type="button" onclick="showError()">🔍</button>
+                <input type="text" id="searchStudent" placeholder="Search for Students">
+                <button type="button" onclick="showError('Student search not implemented yet')">🔍</button>
             </div>
             <div class="calendar-wrapper">
-              <div class="calendar-container">
-                  <table class="calendar">
-                      <thead>
-                        <tr>
-                          <th>Fall 2025</th>
-                          <th>Spring 2025</th>
-                          <th>Fall 2026</th>
-                          <th>Spring 2026</th>
-                          <th>Fall 2027</th>
-                          <th>Spring 2027</th>
-                          <th>Fall 2028</th>
-                          <th>Spring 2028</th>
-                          <th>Fall 2029</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                      </tbody>
+                <div class="calendar-container">
+                    <table class="calendar">
+                        <thead>
+                            <tr>
+                                <th>Fall 2025</th>
+                                <th>Spring 2026</th>
+                                <th>Fall 2026</th>
+                                <th>Spring 2027</th>
+                                <th>Fall 2027</th>
+                                <th>Spring 2028</th>
+                                <th>Fall 2028</th>
+                                <th>Spring 2029</th>
+                                <th>Fall 2029</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        </tbody>
                     </table>
-                  </div>
                 </div>
-              </section>
+            </div>
+        </section>
 
-              <section class="course-management">
-                <h2 id="courseTitle">Add Course</h2>
-                <button id="toggleCourse" type="button" onclick="toggleCourseMode()">Switch to Delete Course</button>
-                <input type="text" id="courseName" placeholder="Enter Course Title Here" style="display: block; margin-bottom: 10px;">
-                <select id="track" style="display: block; margin-bottom: 10px;">
-                  <option value="">Track</option>
-                  <option value="pre-dental-medicine">Pre-Dental-Medicine</option>
-                  <option value="pre-medicine">Pre-Medicine</option>
-                  <option value="pre-nursing">Pre-Nursing</option>
-                  <option value="pre-physical-assistant">Pre-Physical-Assistant</option>
-                  <option value="pre-physical-therapy">Pre-Physical-Therapy</option>
-                  <option value="pre-veterinary-medicine">Pre-Veterinary-Medicine</option>
-                </select>
-                <select id="major" style="display: block; margin-bottom: 10px;">
-                  <option value="">Major</option>
-                  <option value="Biology">Biology</option>
-                  <option value="Chemistry">Chemistry</option>
-                  <option value="Biochemistry">Biochemistry</option>
-                  <option value="Physics">Biochemistry</option>
-                </select>
-                <select id="semester" style="display: block; margin-bottom: 10px;">
-                  <option value="">Semester</option>
-                  <option value="Fall 2025">Fall 2025</option>
-                  <option value="Spring 2026">Spring 2026</option>
-                </select>
-                <button type="button" onclick="showError()" style="display: block; margin-top: 10px;">Submit</button>
-              </section>
-            </main>
-          </div>
-          </div>
+        <section class="course-management">
+            <h2 id="courseTitle">Add Course</h2>
+            <button id="toggleCourse" type="button" onclick="toggleCourseMode()">Switch to Delete Course</button>
+            <input type="text" id="courseName" placeholder="Enter Course Title Here" style="display: block; margin-bottom: 10px;">
+            <select id="track" style="display: block; margin-bottom: 10px;">
+                <option value="">Track</option>
+                <option value="pre-dental-medicine">Pre-Dental-Medicine</option>
+                <option value="pre-medicine">Pre-Medicine</option>
+                <option value="pre-nursing">Pre-Nursing</option>
+                <option value="pre-physical-assistant">Pre-Physical-Assistant</option>
+                <option value="pre-physical-therapy">Pre-Physical-Therapy</option>
+                <option value="pre-veterinary-medicine">Pre-Veterinary-Medicine</option>
+            </select>
+            <select id="major" style="display: block; margin-bottom: 10px;">
+                <option value="">Major</option>
+                <option value="Biology">Biology</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Biochemistry">Biochemistry</option>
+                <option value="Physics">Physics</option>
+            </select>
+            <select id="semester" style="display: block; margin-bottom: 10px;">
+                <option value="">Semester</option>
+                <option value="Fall 2025">Fall 2025</option>
+                <option value="Spring 2026">Spring 2026</option>
+                <option value="Fall 2026">Fall 2026</option>
+                <option value="Spring 2027">Spring 2027</option>
+            </select>
+            <button type="button" onclick="showError('Add/Delete course feature not implemented yet')" style="display: block; margin-top: 10px;">Submit</button>
+        </section>
+    </main>
 
-          <div id="popupModal" class="modal" style="display: none;">
-            <p id="popupMessage">Error occurred!</p>
-            <button id="closePopupBtn" type="button">Close</button>
-          </div>
+    <div id="popupModal" class="modal" style="display: none;">
+        <p id="popupMessage">Error occurred!</p>
+        <button id="closePopupBtn" type="button">Close</button>
+    </div>
 </body>
 </html>
