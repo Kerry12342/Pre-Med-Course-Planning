@@ -5,7 +5,26 @@
     box-sizing: border-box;
 }
 
-/* Banner styling */
+/* Font and general styles to match the model */
+body {
+    height: 100%;
+    width: 100%;
+    font-family: "miller-text", serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 32px;
+    color: #4F5971;
+    background-color: #fff;
+}
+
+.page_wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Banner styling exactly like the model */
 .banner {
     background-color: #002f86;
     color: white;
@@ -44,51 +63,25 @@
     font-size: 32px;
     font-weight: bold;
     margin-right: 15px;
+    color: white;
 }
 
 .separator {
     font-size: 20px;
     margin-right: 15px;
+    color: white;
 }
 
 .subtitle {
     font-size: 18px;
+    color: white;
 }
 
-/* Page and Body */
-html {
-    --header-height: 80px;
-    --header-background-color: #002f86;
-    --header-color: #fff;
-    background-color: #002f86;
-    scroll-behavior: smooth;
-    line-height: 1.15;
-    -webkit-text-size-adjust: 100%;
-}
-
-body {
-    height: 100%;
-    width: 100%;
-    font-family: "miller-text", serif;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 32px;
-    color: #4F5971;
-    background-color: #fff;
-}
-
-.page_wrapper {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Header */
+/* Header adjusted to model */
 .header {
-    background: var(--header-background-color);
+    background-color: #002f86;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    color: var(--header-color);
+    color: white;
 }
 
 .logo_link {
@@ -98,6 +91,7 @@ body {
     padding: 20px 0;
     transition: color 0.25s;
     white-space: nowrap;
+    color: white;
 }
 
 .logo_link_icon {
@@ -105,24 +99,34 @@ body {
     vertical-align: top;
 }
 
-/* Dashboard Layout */
+/* Dashboard Layout - adjusted to match the three-column layout from model */
 .dashboard {
     display: flex;
-    justify-content: space-around;
-    width: 90%;
-    margin-top: 80px;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    margin-top: 20px;
 }
 
 section {
+    filter: drop-shadow(0 3mm 4mm rgb(150, 150, 150));
+    border-radius: 20px;
     flex: 1;
-    background: #f4f4f4;
-    padding: 20px;
-    margin: 10px;
-    border-radius: 5px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border: 0px groove lightgrey;
+    background-color: #f4f4f4;
+    margin: 0;
 }
 
+/* Headings */
 h2 {
+    display: block;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+    color: #4F5971;
+    font-family: "miller-text", serif;
     font-size: 1.5em;
     margin-block-start: 0.83em;
     margin-block-end: 0.83em;
@@ -132,6 +136,7 @@ h2 {
 p {
     margin-block-start: 1em;
     margin-block-end: 1em;
+    color: #4F5971;
 }
 
 /* Course List */
@@ -140,14 +145,32 @@ p {
     overflow-y: auto;
 }
 
-/* Calendar */
+.course-list div {
+    text-align: center;
+    width: 100px;
+    background-color: #e0f0e0;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px auto;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.course-list div:hover {
+    background-color: #c0e0c0;
+}
+
+/* Calendar styling to match model */
 .calendar-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: auto;
-    max-width: 400px;
-    max-height: 300px;
     border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+    overflow-x: scroll;
+    overflow-y: auto;
+    max-height: 300px;
+    justify-content: center;
 }
 
 .calendar-container {
@@ -158,29 +181,68 @@ p {
 
 .calendar {
     border-collapse: collapse;
-    width: auto;
+    width: 600px;
 }
 
 th, td {
-    border: 1px solid #ccc;
     padding: 10px;
-    min-width: 120px;
     text-align: center;
+    border: 1px solid #ccc;
+    min-width: 120px;
 }
 
-thead {
+thead, th {
     background-color: #f4f4f4;
+    color: #4F5971;
+    font-weight: bold;
     position: sticky;
     top: 0;
 }
 
-/* Buttons and Inputs */
+td {
+    background-color: #fff;
+    cursor: pointer;
+    vertical-align: top;
+    min-height: 50px;
+}
+
+td.selected {
+    background-color: #e0f0e0;
+}
+
+/* Buttons and Inputs styled like model */
+button {
+    background-color: #002f86;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    font-family: "miller-text", serif;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    margin: 5px 0;
+}
+
+button:hover {
+    background-color: #00205f;
+}
+
+input, select {
+    margin: 5px 0;
+    padding: 8px;
+    font-family: "miller-text", serif;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 #toggleCourse, #courseName {
     display: block;
     margin-bottom: 10px;
 }
 
-/* Modal */
+/* Modal styling aligned with model */
 .modal {
     display: none;
     position: fixed;
@@ -193,9 +255,22 @@ thead {
     border-radius: 5px;
     text-align: center;
     z-index: 2000;
+    font-family: "miller-text", serif;
+    color: #4F5971;
 }
 
 .modal button {
     margin-top: 10px;
+    background-color: #002f86;
+    color: white;
 }
 
+/* Course elements in calendar to match model */
+.course-name {
+    display: block;
+    margin-bottom: 5px;
+    background-color: #e0f0e0;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
