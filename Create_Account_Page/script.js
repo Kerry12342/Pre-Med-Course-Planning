@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Account creation submitted');
             alert('Account created successfully! You will be redirected to the login page.');
             // Redirect to login page
-            window.location.href = 'index.html';
+            window.location.href = './../Login_Page/login_page.html';
         }
     });
 });

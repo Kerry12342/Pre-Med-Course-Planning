@@ -21,6 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (email && password) {
             // Add your login logic here
             console.log('Login attempted with email:', email);
+
+            // Have fetch from user.
+            var userRole = "student"
+            if (userRole === "admin") {
+                window.location.href = "./../Admin_Page/millstone2_initial.html";
+            } else if (userRole === "student") {
+                window.location.href = "./../student-interface-demo/interface.html";
+            } else {
+              alert("User role not recognized");
+            }
             // Here you would typically make an API call to verify credentials
         } else {
             // Show validation error
@@ -33,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             alert('Please fill in all required fields');
+
+            
         }
     });
 
@@ -73,4 +85,6 @@ document.addEventListener('DOMContentLoaded', function() {
             loginButton.click();
         }
     });
+
+
 });
