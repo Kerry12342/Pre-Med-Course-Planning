@@ -1,4 +1,45 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // --- 1) Create the GLOBAL tooltip at the body level ---
+    const globalTooltip = document.createElement('div');
+    globalTooltip.id = 'globalTooltip';
+    // Inline styles to ensure it appears on top
+    globalTooltip.style.display = 'none';
+    globalTooltip.style.position = 'absolute';
+    globalTooltip.style.zIndex = '999999';
+    globalTooltip.style.backgroundColor = 'white';
+    globalTooltip.style.border = '1px solid #ccc';
+    globalTooltip.style.borderRadius = '4px';
+    globalTooltip.style.padding = '5px';
+    globalTooltip.style.fontSize = '14px';
+    globalTooltip.style.color = '#333';
+    globalTooltip.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)';
+    document.body.appendChild(globalTooltip);
+
+    // --- 2) Helper functions to show/hide the tooltip ---
+    function showTooltip(courseElement, track, major) {
+        // Populate the tooltip text
+        globalTooltip.innerHTML = `
+            <div><strong>Track:</strong> ${track || 'N/A'}</div>
+            <div><strong>Major:</strong> ${major || 'N/A'}</div>
+        `;
+
+        // Position it above (or near) the hovered element
+        const rect = courseElement.getBoundingClientRect();
+        // Example: center horizontally, appear above the course
+        // Adjust left/top offsets as desired
+        globalTooltip.style.left = (rect.left + rect.width / 2) + 'px';
+        // Account for current scroll offset in Y
+        globalTooltip.style.top = (rect.top + window.scrollY - globalTooltip.offsetHeight - 8) + 'px';
+
+        // Show the tooltip
+        globalTooltip.style.display = 'block';
+    }
+
+    function hideTooltip() {
+        globalTooltip.style.display = 'none';
+    }
+
+    // --- 3) Rest of your code remains the same, except displayStudentSchedule(...) ---
     // Student data structure
     const students = [
         {
@@ -170,16 +211,13 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     ];
 
-    // Select the toggle button for switching between "Add Course" and "Delete Course" mode
+    // Toggle + headings
     const toggleButton = document.getElementById("toggleCourse");
-    // Select the course title element to change text dynamically
     const courseTitle = document.getElementById("courseTitle");
-    // Get the Student Interface button
     const studentInterfaceButton = document.querySelector("a[href='./../student-interface-demo/interface.html'] button");
-    // Select all buttons except the toggle button and Student Interface button
     const allButtons = document.querySelectorAll("button:not(#toggleCourse):not(.student-interface-button)");
 
-    // Function to show an error message using the popup modal
+    // Show error in modal or fallback
     function showError(message) {
         const popupModal = document.getElementById("popupModal");
         const popupMessage = document.getElementById("popupMessage");
@@ -187,12 +225,11 @@ document.addEventListener("DOMContentLoaded", function () {
             popupMessage.textContent = message || "Invalid Search";
             popupModal.style.display = "block";
         } else {
-            // Fallback to alert if modal elements don't exist
             alert(message || "Invalid Search");
         }
     }
 
-    // Set up the close button for the popup modal
+    // Close popup
     const closePopupBtn = document.getElementById("closePopupBtn");
     if (closePopupBtn) {
         closePopupBtn.addEventListener("click", function() {
@@ -203,33 +240,29 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Function to toggle between "Add Course" and "Delete Course" modes
+    // Toggle between Add Course / Delete Course
     function toggleCourseMode() {
-        if (courseTitle && toggleButton) { // Ensure elements exist before modifying them
+        if (courseTitle && toggleButton) {
             if (courseTitle.innerText === "Add Course") {
-                courseTitle.innerText = "Delete Course"; // Change title to "Delete Course"
-                toggleButton.innerText = "Switch to Add Course"; // Update button text accordingly
+                courseTitle.innerText = "Delete Course";
+                toggleButton.innerText = "Switch to Add Course";
             } else {
-                courseTitle.innerText = "Add Course"; // Change title back to "Add Course"
-                toggleButton.innerText = "Switch to Delete Course"; // Update button text accordingly
+                courseTitle.innerText = "Add Course";
+                toggleButton.innerText = "Switch to Delete Course";
             }
         }
     }
 
-    // Function to display courses in the enrollment section
+    // Display courses in enrollment section
     function displayCourses(courseList) {
         const courseListElement = document.querySelector('.course-list ul');
-        courseListElement.innerHTML = ''; // Clear existing list
-
+        courseListElement.innerHTML = '';
         if (courseList.length === 0) {
-            // If no courses match, display a message
             const noCoursesItem = document.createElement('li');
             noCoursesItem.textContent = 'No courses match your search criteria.';
             courseListElement.appendChild(noCoursesItem);
             return;
         }
-
-        // Add each course to the list
         courseList.forEach(course => {
             const courseItem = document.createElement('li');
             courseItem.innerHTML = `
@@ -246,84 +279,67 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Function to filter courses based on search criteria (without showing errors)
+    // Filter courses
     function filterCourses(showErrorMessage = false) {
         const courseSearch = document.getElementById('searchCourse').value.toUpperCase();
         const semesterSearch = document.getElementById('searchSemester').value.toUpperCase();
         const majorSearch = document.getElementById('searchMajor').value.toUpperCase();
         const trackSearch = document.getElementById('searchTrack').value.toUpperCase();
 
-
         const filteredCourses = courses.filter(course => {
             const courseMatch = course.title.toUpperCase().includes(courseSearch);
             const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
             const majorMatch = course.major.toUpperCase().includes(majorSearch);
             const trackMatch = course.track.toUpperCase().includes(trackSearch);
-
-
             return (courseMatch && semesterMatch) && (majorMatch && trackMatch);
         });
 
-        // Only show error if button was clicked and no results were found
-        if (showErrorMessage === true && filteredCourses.length === 0 && (courseSearch !== '' || semesterSearch !== '')) {
+        if (showErrorMessage && filteredCourses.length === 0 && (courseSearch !== '' || semesterSearch !== '')) {
             showError("No courses found matching your search criteria");
         }
-
         displayCourses(filteredCourses);
-
         return filteredCourses.length > 0;
     }
 
-    // Function called when search button is clicked
+    // Search button
     function searchButtonClicked() {
-        filterCourses(true); // Pass true to show error message if needed
+        filterCourses(true);
     }
 
-    // Function to get unique semesters from a student's planned courses
+    // Get unique semesters from a student's planned courses
     function getUniqueSemesters(student) {
         if (!student || !student.plannedCourses) return [];
-
-        // Extract all semesters and remove duplicates
         const semesters = student.plannedCourses
             .map(course => course.semester)
-            .filter((semester, index, self) => self.indexOf(semester) === index);
+            .filter((sem, i, self) => self.indexOf(sem) === i);
 
-        // Sort semesters chronologically
         return semesters.sort((a, b) => {
-            const aSeason = a.split(' ')[0]; // 'Fall' or 'Spring'
-            const aYear = parseInt(a.split(' ')[1]); // The year as a number
+            const aSeason = a.split(' ')[0];
+            const aYear = parseInt(a.split(' ')[1]);
             const bSeason = b.split(' ')[0];
             const bYear = parseInt(b.split(' ')[1]);
-
             if (aYear !== bYear) return aYear - bYear;
-            // If same year, Spring comes before Fall
             return aSeason === 'Spring' && bSeason === 'Fall' ? -1 : 1;
         });
     }
 
-    // Function to create calendar tables with dynamic semesters
+    // Create calendar table dynamically
     function createCalendarTable(containerId, semesters) {
         const container = document.getElementById(containerId) || document.querySelector(containerId);
         if (!container) return;
-
-        // Create table structure
         const table = document.createElement('table');
         table.className = 'calendar';
 
-        // Create header row with semester names
         const thead = document.createElement('thead');
         const headerRow = document.createElement('tr');
-
-        semesters.forEach(semester => {
+        semesters.forEach(sem => {
             const th = document.createElement('th');
-            th.textContent = semester;
+            th.textContent = sem;
             headerRow.appendChild(th);
         });
-
         thead.appendChild(headerRow);
         table.appendChild(thead);
 
-        // Create empty body rows (6 rows x number of semesters)
         const tbody = document.createElement('tbody');
         for (let i = 0; i < 6; i++) {
             const row = document.createElement('tr');
@@ -333,230 +349,164 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             tbody.appendChild(row);
         }
-
         table.appendChild(tbody);
 
-        // Clear container and add new table
         container.innerHTML = '';
         container.appendChild(table);
-
         return table;
     }
 
-    // Function to search for a student and display their schedule
+    // Clear calendar
+    function clearCalendar() {
+        const mainCalendarContainer = document.querySelector('.calendar-container');
+        const modalCalendarContainer = document.querySelector('#modal-calendar');
+        if (mainCalendarContainer) mainCalendarContainer.innerHTML = '';
+        if (modalCalendarContainer) modalCalendarContainer.innerHTML = '';
+    }
+
+    // --- 4) Updated displayStudentSchedule to use the global tooltip on hover ---
+    function displayStudentSchedule(student) {
+        if (!student || !student.plannedCourses || student.plannedCourses.length === 0) return;
+        const semesters = getUniqueSemesters(student);
+
+        // Helper: get info from the "courses" array
+        function getCourseInfo(courseTitle) {
+            const courseInfo = courses.find(c => c.title === courseTitle);
+            return courseInfo || { track: "N/A", major: "N/A" };
+        }
+
+        // All calendars (main + modal)
+        const calendars = document.querySelectorAll('.calendar');
+        calendars.forEach(calendar => {
+            // Clear existing cells
+            const allCells = calendar.querySelectorAll('tbody td');
+            allCells.forEach(cell => (cell.innerHTML = ''));
+
+            const headerCells = calendar.querySelectorAll('thead th');
+            const semesterHeaders = Array.from(headerCells).map(th => th.textContent.trim());
+
+            const processedCourses = {};
+            semesterHeaders.forEach(s => (processedCourses[s] = new Set()));
+
+            const uniqueCoursesBySemester = {};
+            semesterHeaders.forEach(s => {
+                uniqueCoursesBySemester[s] = [];
+            });
+
+            // Group courses by semester
+            student.plannedCourses.forEach(course => {
+                const semester = course.semester;
+                if (uniqueCoursesBySemester[semester] && !processedCourses[semester].has(course.title)) {
+                    uniqueCoursesBySemester[semester].push(course);
+                    processedCourses[semester].add(course.title);
+                }
+            });
+
+            // Populate
+            semesterHeaders.forEach((semester, semesterIndex) => {
+                const courseGroup = uniqueCoursesBySemester[semester] || [];
+                const cells = calendar.querySelectorAll(`tbody tr td:nth-child(${semesterIndex + 1})`);
+
+                courseGroup.forEach((course, index) => {
+                    if (index < cells.length) {
+                        const courseDiv = document.createElement('div');
+                        courseDiv.className = 'calendar-course';
+
+                        // Info for the tooltip
+                        const info = getCourseInfo(course.title);
+
+                        // If it's "Study Off-Campus"
+                        if (course.title === "Study Off-Campus") {
+                            courseDiv.classList.add('study-abroad');
+                            info.track = "N/A";
+                            info.major = "Study Abroad Program";
+                        }
+
+                        courseDiv.textContent = course.title;
+
+                        // ► On hover, show/hide the global tooltip
+                        courseDiv.addEventListener('mouseenter', () => {
+                            showTooltip(courseDiv, info.track, info.major);
+                        });
+                        courseDiv.addEventListener('mouseleave', () => {
+                            hideTooltip();
+                        });
+
+                        cells[index].appendChild(courseDiv);
+                    }
+                });
+            });
+        });
+    }
+
+    // Student search
     function searchStudent() {
         const searchInput = document.getElementById('searchStudent');
         if (!searchInput) return;
-
         const searchTerm = searchInput.value.trim().toLowerCase();
 
-        // If the search term is empty, clear the calendar and return
         if (searchTerm === '') {
             clearCalendar();
             return;
         }
-
-        // Find the student whose name contains the search term
         const student = students.find(s => s.name.toLowerCase().includes(searchTerm));
-
-        // If no student is found, show an error
         if (!student) {
             showError("No student found matching '" + searchTerm + "'");
             clearCalendar();
             return;
         }
-
-        // Get unique semesters from student data
         const semesters = getUniqueSemesters(student);
-
-        // Create calendar tables with dynamic semesters
         createCalendarTable('.calendar-container', semesters);
         createCalendarTable('#modal-calendar', semesters);
-
-        // Display the student's courses in the calendar
         displayStudentSchedule(student);
     }
 
-    // Function to clear all cells in the calendar
-    function clearCalendar() {
-        const mainCalendarContainer = document.querySelector('.calendar-container');
-        const modalCalendarContainer = document.querySelector('#modal-calendar');
-
-        if (mainCalendarContainer) mainCalendarContainer.innerHTML = '';
-        if (modalCalendarContainer) modalCalendarContainer.innerHTML = '';
-    }
-
-    // Function to display a student's schedule in the calendar
-    // Enhanced displayStudentSchedule function with hover information
-    // Updated displayStudentSchedule function that properly creates tooltips
-function displayStudentSchedule(student) {
-    if (!student || !student.plannedCourses || student.plannedCourses.length === 0) return;
-
-    // Get unique semesters
-    const semesters = getUniqueSemesters(student);
-
-    // Function to get course info from the courses array
-    function getCourseInfo(courseTitle) {
-        const courseInfo = courses.find(c => c.title === courseTitle);
-        return courseInfo || { track: "N/A", major: "N/A" };
-    }
-
-    // Get all calendar tables
-    const calendars = document.querySelectorAll('.calendar');
-
-    calendars.forEach(calendar => {
-        // Clear the calendar first to avoid duplicates
-        const allCells = calendar.querySelectorAll('tbody td');
-        allCells.forEach(cell => {
-            cell.innerHTML = '';
-        });
-
-        // Get the headers from the current calendar
-        const headerCells = calendar.querySelectorAll('thead th');
-        const semesterHeaders = Array.from(headerCells).map(th => th.textContent.trim());
-
-        // Create a map to track processed courses for each semester
-        const processedCourses = {};
-        semesterHeaders.forEach(semester => {
-            processedCourses[semester] = new Set();
-        });
-
-        // First pass: collect unique courses by semester
-        const uniqueCoursesBySemester = {};
-        semesterHeaders.forEach(semester => {
-            uniqueCoursesBySemester[semester] = [];
-        });
-
-        // Group courses by semester (only including each course once per semester)
-        student.plannedCourses.forEach(course => {
-            const semester = course.semester;
-            // Only process if this semester exists in our headers and we haven't seen this course yet
-            if (uniqueCoursesBySemester[semester] && !processedCourses[semester].has(course.title)) {
-                uniqueCoursesBySemester[semester].push(course);
-                processedCourses[semester].add(course.title);
-            }
-        });
-
-        // Now populate the calendar with these unique courses
-        semesterHeaders.forEach((semester, semesterIndex) => {
-            const courses = uniqueCoursesBySemester[semester] || [];
-
-            // Get all cells for that semester (column)
-            const cells = calendar.querySelectorAll(`tbody tr td:nth-child(${semesterIndex + 1})`);
-
-            // Populate the courses in order
-            courses.forEach((course, index) => {
-                // Make sure we don't exceed the available cells
-                if (index < cells.length) {
-                    // Create course div
-                    const courseDiv = document.createElement('div');
-                    courseDiv.className = 'calendar-course';
-
-                    // Get course information for tooltip
-                    const info = getCourseInfo(course.title);
-
-                    // Style differently if it's a study off-campus semester
-                    if (course.title === "Study Off-Campus") {
-                        courseDiv.className = 'calendar-course study-abroad';
-                        info.track = "N/A";
-                        info.major = "Study Abroad Program";
-                    }
-
-                    // Set course title as the visible text
-                    courseDiv.textContent = course.title;
-
-                    // Create tooltip with track and major info
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'course-tooltip';
-                    tooltip.innerHTML = `
-                        <div><strong>Track:</strong> ${info.track || "N/A"}</div>
-                        <div><strong>Major:</strong> ${info.major || "N/A"}</div>
-                    `;
-
-                    // Add tooltip to course div
-                    courseDiv.appendChild(tooltip);
-
-                    // Add course div to cell
-                    cells[index].appendChild(courseDiv);
-                }
-            });
-        });
-    });
-}
-
-    // Set up event listeners for search inputs
+    // Set up event listeners for search inputs (course/semester/major/track)
     const courseSearchInput = document.getElementById('searchCourse');
     const semesterSearchInput = document.getElementById('searchSemester');
     const trackSearchInput = document.getElementById('searchTrack');
     const majorSearchInput = document.getElementById('searchMajor');
 
-
     if (courseSearchInput) {
-        // Remove any existing input event listeners first
-        courseSearchInput.removeEventListener('input', function() {
-            filterCourses(false);
-        });
-
-        // Add new event listener that ONLY updates the display without error messages
+        courseSearchInput.removeEventListener('input', function() { filterCourses(false); });
         courseSearchInput.addEventListener('input', function() {
             const courseSearch = courseSearchInput.value.toUpperCase();
             const semesterSearch = semesterSearchInput ? semesterSearchInput.value.toUpperCase() : '';
             const majorSearch = majorSearchInput ? majorSearchInput.value.toUpperCase() : '';
             const trackSearch = trackSearchInput ? trackSearchInput.value.toUpperCase() : '';
 
-
             const filteredCourses = courses.filter(course => {
                 const courseMatch = course.title.toUpperCase().includes(courseSearch);
                 const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
                 const majorMatch = course.major.toUpperCase().includes(majorSearch);
                 const trackMatch = course.track.toUpperCase().includes(trackSearch);
-
-
-
                 return (courseMatch && semesterMatch) && (majorMatch && trackMatch);
             });
-
-            // Just update the display, never show errors
             displayCourses(filteredCourses);
         });
     }
 
     if (semesterSearchInput) {
-        // Remove any existing input event listeners first
-        semesterSearchInput.removeEventListener('input', function() {
-            filterCourses(false);
-        });
-
-        // Add new event listener that ONLY updates the display without error messages
+        semesterSearchInput.removeEventListener('input', function() { filterCourses(false); });
         semesterSearchInput.addEventListener('input', function() {
             const courseSearch = courseSearchInput ? courseSearchInput.value.toUpperCase() : '';
             const semesterSearch = semesterSearchInput.value.toUpperCase();
             const trackSearch = trackSearchInput ? trackSearchInput.value.toUpperCase() : '';
             const majorSearch = majorSearchInput ? majorSearchInput.value.toUpperCase() : '';
 
-
-
             const filteredCourses = courses.filter(course => {
                 const courseMatch = course.title.toUpperCase().includes(courseSearch);
                 const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
                 const trackMatch = course.track.toUpperCase().includes(trackSearch);
                 const majorMatch = course.major.toUpperCase().includes(majorSearch);
-
                 return (courseMatch && semesterMatch) && (trackMatch && majorMatch);
             });
-
-            // Just update the display, never show errors
             displayCourses(filteredCourses);
         });
     }
 
     if (majorSearchInput) {
-        // Remove any existing input event listeners first
-        majorSearchInput.removeEventListener('input', function() {
-            filterCourses(false);
-        });
-
-        // Add new event listener that ONLY updates the display without error messages
+        majorSearchInput.removeEventListener('input', function() { filterCourses(false); });
         majorSearchInput.addEventListener('input', function() {
             const majorSearch = majorSearchInput.value.toUpperCase();
             const semesterSearch = semesterSearchInput ? semesterSearchInput.value.toUpperCase() : '';
@@ -568,23 +518,14 @@ function displayStudentSchedule(student) {
                 const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
                 const trackMatch = course.track.toUpperCase().includes(trackSearch);
                 const majorMatch = course.major.toUpperCase().includes(majorSearch);
-
-
                 return (courseMatch && semesterMatch) && (trackMatch && majorMatch);
             });
-
-            // Just update the display, never show errors
             displayCourses(filteredCourses);
         });
     }
 
     if (trackSearchInput) {
-        // Remove any existing input event listeners first
-        trackSearchInput.removeEventListener('input', function() {
-            filterCourses(false);
-        });
-
-        // Add new event listener that ONLY updates the display without error messages
+        trackSearchInput.removeEventListener('input', function() { filterCourses(false); });
         trackSearchInput.addEventListener('input', function() {
             const majorSearch = majorSearchInput ? majorSearchInput.value.toUpperCase() : '';
             const semesterSearch = semesterSearchInput ? semesterSearchInput.value.toUpperCase() : '';
@@ -596,35 +537,27 @@ function displayStudentSchedule(student) {
                 const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
                 const trackMatch = course.track.toUpperCase().includes(trackSearch);
                 const majorMatch = course.major.toUpperCase().includes(majorSearch);
-
-
                 return (courseMatch && semesterMatch) && (trackMatch && majorMatch);
             });
-
-            // Just update the display, never show errors
             displayCourses(filteredCourses);
         });
     }
 
-
-
-
-
-    // Update search button click handlers for enrollment section
+    // Enrollment search buttons
     const enrollmentSearchButtons = document.querySelectorAll('.enrollment .search-bar button');
     enrollmentSearchButtons.forEach(button => {
         button.removeEventListener('click', function() { showError("Invalid Search"); });
-        button.addEventListener('click', searchButtonClicked); // Use the new button click handler
+        button.addEventListener('click', searchButtonClicked);
     });
 
-    // Set up the student search button
+    // Student search button
     const studentSearchButton = document.querySelector('.student-schedule .search-bar button');
     if (studentSearchButton) {
         studentSearchButton.removeEventListener('click', function() { showError("Student search not implemented yet"); });
         studentSearchButton.addEventListener('click', searchStudent);
     }
 
-    // Function to add a new course
+    // Add a new course
     function addCourse() {
         const titleInput = document.getElementById('courseName');
         const trackSelect = document.getElementById('track');
@@ -636,113 +569,94 @@ function displayStudentSchedule(student) {
         const major = majorSelect.value;
         const semester = semesterSelect.value;
 
-        // Validate inputs
         if (!title) {
             showError("Please enter a course title");
             return;
         }
-
         if (!semester) {
             showError("Please select a semester");
             return;
         }
 
-        // Enhanced validation to prevent duplicate courses (case-insensitive comparison)
+        // Prevent duplicates
         const existingCourse = courses.find(c =>
             c.title.toLowerCase() === title.toLowerCase() &&
-            c.semester.toLowerCase() === semester.toLowerCase());
-
+            c.semester.toLowerCase() === semester.toLowerCase()
+        );
         if (existingCourse) {
             showError("This course already exists for the selected semester");
             return;
         }
 
-        // Create new course object
+        // Create new
         const newCourse = {
             title: title,
             semester: semester,
             studentCount: 0,
-            department: major.split(' ')[0] || "General", // Use first word of major as department
+            department: major.split(' ')[0] || "General",
             track: track,
             major: major
         };
-
-        // Add to the courses array
         courses.push(newCourse);
 
-        // Clear form inputs
+        // Clear
         titleInput.value = '';
         trackSelect.selectedIndex = 0;
         majorSelect.selectedIndex = 0;
         semesterSelect.selectedIndex = 0;
 
-        // Update the display to show the new course
         displayCourses(courses);
-
-        // Show success message
         showSuccess("Course added successfully");
     }
 
-    // Function to delete a course
+    // Delete a course
     function deleteCourse() {
         const titleInput = document.getElementById('courseName');
         const semesterSelect = document.getElementById('semester');
-
         const title = titleInput.value.trim();
         const semester = semesterSelect.value;
 
-        // Validate inputs
         if (!title) {
             showError("Please enter a course title to delete");
             return;
         }
-
-        // Find the index of the course to delete
         const courseIndex = courses.findIndex(c =>
             c.title.toLowerCase() === title.toLowerCase() &&
-            (!semester || c.semester.toLowerCase() === semester.toLowerCase()));
-
+            (!semester || c.semester.toLowerCase() === semester.toLowerCase())
+        );
         if (courseIndex === -1) {
             showError("Course not found");
             return;
         }
-
-        // Remove the course from the array
         courses.splice(courseIndex, 1);
 
-        // Clear form inputs
         titleInput.value = '';
         semesterSelect.selectedIndex = 0;
-
-        // Update the display
         displayCourses(courses);
 
-        // Show success message
         showSuccess("Course deleted successfully");
     }
 
-    // Function to show a success message
+    // Success message
     function showSuccess(message) {
         const popupModal = document.getElementById("popupModal");
         const popupMessage = document.getElementById("popupMessage");
         if (popupModal && popupMessage) {
-            popupMessage.style.color = "#28a745"; // Green color for success
+            popupMessage.style.color = "#28a745";
             popupMessage.textContent = message;
             popupModal.style.display = "block";
-
-            // Reset color after modal is closed
             const closeBtn = document.getElementById("closePopupBtn");
             if (closeBtn) {
                 const originalHandler = closeBtn.onclick;
                 closeBtn.onclick = function() {
                     if (originalHandler) originalHandler();
-                    popupMessage.style.color = "#4F5971"; // Reset to default color
+                    popupMessage.style.color = "#4F5971";
                 };
             }
         }
     }
 
-    // Setup form submit handler based on mode (Add or Delete)
+    // Submit handler
     const submitButton = document.querySelector('.course-management button:last-child');
     if (submitButton) {
         submitButton.removeEventListener('click', function() { showError("Add/Delete course feature not implemented yet"); });
@@ -756,7 +670,7 @@ function displayStudentSchedule(student) {
         });
     }
 
-    // Make functions available globally
+    // Make functions global
     window.showError = showError;
     window.filterCourses = filterCourses;
     window.searchStudent = searchStudent;
@@ -764,44 +678,32 @@ function displayStudentSchedule(student) {
     window.openModal = openModal;
     window.closeModal = closeModal;
 
-    // Ensure the toggle button still functions properly
     if (toggleButton) {
-        // Remove any previous event listeners to avoid duplicate handlers
         toggleButton.removeEventListener("click", toggleCourseMode);
-        // Add the event listener
         toggleButton.addEventListener("click", toggleCourseMode);
     } else {
-        console.error("Toggle button not found."); // Log an error if the toggle button is missing
+        console.error("Toggle button not found.");
     }
 
-    // Prevent Student Interface button from triggering error
     if (studentInterfaceButton) {
         studentInterfaceButton.addEventListener("click", function(event) {
-            // Stop any other event listeners from firing
             event.stopPropagation();
-            // Let the default navigation behavior happen
         });
     }
 
-    // Initialize with an empty course list (clear static courses)
+    // Initialize with empty course list
     displayCourses([]);
 });
 
+// Modal
 const modal = document.getElementById("scheduleModal");
-
-// Function to open the modal
 function openModal() {
     modal.classList.remove("hidden");
 }
-
-// Function to close the modal
 function closeModal() {
     modal.classList.add("hidden");
 }
-
-// Close modal when clicking outside the modal content
 modal.addEventListener("click", function(event) {
-    // Only close if the click is directly on the modal background, not on its content
     if (event.target === modal) {
         closeModal();
     }
