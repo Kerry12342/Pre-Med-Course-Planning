@@ -235,10 +235,21 @@ p {
     justify-content: center;
 }
 
+.calendar-modal-wrapper {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 100%;  /* Return to original width */
+    overflow-x: scroll;
+    overflow-y: auto;
+    justify-content: center;
+}
+
 .calendar-container {
     display: block;
     white-space: nowrap;
-    overflow: auto;
+    /* overflow: auto; */
+    width: 100%;
 }
 
 .calendar {
@@ -351,4 +362,65 @@ input, select {
     section {
         width: 100%;
     }
+}
+
+
+.modal {
+    position: fixed;
+    padding: 0px;
+    top: 50%;
+    left: 50%;
+    max-width: 1200px; /* Optional: Set a max-width */
+    max-height: 800px; /* Optional: Set a max-height */
+    width: 90%; /* Adjust width to be larger */
+    height: 80%; /* Adjust height to fit the full content */
+    transform: translate(-50%, -50%);  /* This ensures it is centered both vertically and horizontally */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    max-width: 1400px;  /* Maximum width */
+    max-height: 900px;  /* Maximum height */
+    overflow: hidden; /* Prevent scrolling */
+
+  }
+
+
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 100%;
+    height: auto;
+    height: 100vh;
+    max-width: 100%; /* Ensure it fills the modal width */
+    max-height: 100%; /* Ensure it fills the modal height */
+    overflow-y: auto;
+    position: relative;
+}
+
+  .close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+
+  .hidden {
+    display: none;
+  }
+
+
+  .cursor {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #007bff;
+  }
+
+  #modal-calendar tr {
+    height: 50px;
+    background-color: red;
 }
