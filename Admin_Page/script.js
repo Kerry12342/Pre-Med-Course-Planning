@@ -51,6 +51,54 @@ document.addEventListener("DOMContentLoaded", function () {
                 { "title": "PHYS-THESIS", "semester": "Fall 2029" },
                 { "title": "CS-THESIS", "semester": "Fall 2029" }
             ]
+        },
+        {
+            "name": "John Smith",
+            "id": "67890",
+            "email": "jsmith@hamilton.edu",
+            "plannedCourses": [
+                { "title": "CHEM-120", "semester": "Fall 2027" },
+                { "title": "BIO-101", "semester": "Fall 2027" },
+                { "title": "MATH-113", "semester": "Fall 2027" },
+                { "title": "ENG-110", "semester": "Fall 2027" },
+                { "title": "PSYCH-101", "semester": "Fall 2027" },
+
+                { "title": "CHEM-190", "semester": "Spring 2028" },
+                { "title": "BIO-115", "semester": "Spring 2028" },
+                { "title": "MATH-116", "semester": "Spring 2028" },
+                { "title": "HIST-180", "semester": "Spring 2028" },
+                { "title": "PSYCH-205", "semester": "Spring 2028" },
+
+                { "title": "Study Off-Campus", "semester": "Fall 2028" },
+
+                { "title": "CHEM-255", "semester": "Spring 2029" },
+                { "title": "BIO-228", "semester": "Spring 2029" },
+                { "title": "SOC-110", "semester": "Spring 2029" },
+                { "title": "PHIL-120", "semester": "Spring 2029" },
+                { "title": "ECON-110", "semester": "Spring 2029" },
+
+                { "title": "CHEM-321", "semester": "Fall 2029" },
+                { "title": "BIO-330", "semester": "Fall 2029" },
+                { "title": "PHYS-190", "semester": "Fall 2029" },
+                { "title": "GOVT-116", "semester": "Fall 2029" },
+                { "title": "ECON-242", "semester": "Fall 2029" },
+
+                { "title": "CHEM-322", "semester": "Spring 2030" },
+                { "title": "BIO-331", "semester": "Spring 2030" },
+                { "title": "PHYS-195", "semester": "Spring 2030" },
+                { "title": "WGST-101", "semester": "Spring 2030" },
+                { "title": "ANTH-113", "semester": "Spring 2030" },
+
+                { "title": "CHEM-410", "semester": "Fall 2030" },
+                { "title": "BIO-437", "semester": "Fall 2030" },
+                { "title": "CHEM-371", "semester": "Fall 2030" },
+                { "title": "PSYCH-380", "semester": "Fall 2030" },
+
+                { "title": "CHEM-412", "semester": "Spring 2031" },
+                { "title": "BIO-438", "semester": "Spring 2031" },
+                { "title": "CHEM-551", "semester": "Spring 2031" },
+                { "title": "CHEM-549", "semester": "Spring 2031" }
+            ]
         }
     ];
 
@@ -231,6 +279,70 @@ document.addEventListener("DOMContentLoaded", function () {
         filterCourses(true); // Pass true to show error message if needed
     }
 
+    // Function to get unique semesters from a student's planned courses
+    function getUniqueSemesters(student) {
+        if (!student || !student.plannedCourses) return [];
+
+        // Extract all semesters and remove duplicates
+        const semesters = student.plannedCourses
+            .map(course => course.semester)
+            .filter((semester, index, self) => self.indexOf(semester) === index);
+
+        // Sort semesters chronologically
+        return semesters.sort((a, b) => {
+            const aSeason = a.split(' ')[0]; // 'Fall' or 'Spring'
+            const aYear = parseInt(a.split(' ')[1]); // The year as a number
+            const bSeason = b.split(' ')[0];
+            const bYear = parseInt(b.split(' ')[1]);
+
+            if (aYear !== bYear) return aYear - bYear;
+            // If same year, Spring comes before Fall
+            return aSeason === 'Spring' && bSeason === 'Fall' ? -1 : 1;
+        });
+    }
+
+    // Function to create calendar tables with dynamic semesters
+    function createCalendarTable(containerId, semesters) {
+        const container = document.getElementById(containerId) || document.querySelector(containerId);
+        if (!container) return;
+
+        // Create table structure
+        const table = document.createElement('table');
+        table.className = 'calendar';
+
+        // Create header row with semester names
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+
+        semesters.forEach(semester => {
+            const th = document.createElement('th');
+            th.textContent = semester;
+            headerRow.appendChild(th);
+        });
+
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Create empty body rows (6 rows x number of semesters)
+        const tbody = document.createElement('tbody');
+        for (let i = 0; i < 6; i++) {
+            const row = document.createElement('tr');
+            semesters.forEach(() => {
+                const cell = document.createElement('td');
+                row.appendChild(cell);
+            });
+            tbody.appendChild(row);
+        }
+
+        table.appendChild(tbody);
+
+        // Clear container and add new table
+        container.innerHTML = '';
+        container.appendChild(table);
+
+        return table;
+    }
+
     // Function to search for a student and display their schedule
     function searchStudent() {
         const searchInput = document.getElementById('searchStudent');
@@ -254,102 +366,123 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Get unique semesters from student data
+        const semesters = getUniqueSemesters(student);
+
+        // Create calendar tables with dynamic semesters
+        createCalendarTable('.calendar-container', semesters);
+        createCalendarTable('#modal-calendar', semesters);
+
         // Display the student's courses in the calendar
         displayStudentSchedule(student);
     }
 
     // Function to clear all cells in the calendar
     function clearCalendar() {
-        const cells = document.querySelectorAll('.calendar tbody td');
-        cells.forEach(cell => {
-            cell.innerHTML = '';
-        });
+        const mainCalendarContainer = document.querySelector('.calendar-container');
+        const modalCalendarContainer = document.querySelector('#modal-calendar');
 
-        const modalCells = document.querySelectorAll('#modal-calendar tbody td');
-        cells.forEach(cell => {
-            cell.innerHTML = '';
-        });
+        if (mainCalendarContainer) mainCalendarContainer.innerHTML = '';
+        if (modalCalendarContainer) modalCalendarContainer.innerHTML = '';
     }
 
     // Function to display a student's schedule in the calendar
-    function displayStudentSchedule(student) {
-        // Clear the calendar first
-        clearCalendar();
+    // Enhanced displayStudentSchedule function with hover information
+    // Updated displayStudentSchedule function that properly creates tooltips
+function displayStudentSchedule(student) {
+    if (!student || !student.plannedCourses || student.plannedCourses.length === 0) return;
 
-        // Get all the columns in the calendar
-        const headerRow = document.querySelector('.calendar thead tr');
-        const semesterHeaders = Array.from(headerRow.querySelectorAll('th')).map(th => th.textContent.trim());
+    // Get unique semesters
+    const semesters = getUniqueSemesters(student);
 
-        const modalHeaderRow = document.querySelector('#modal-calendar thead tr');
-        const modalSemesterHeaders = Array.from(modalHeaderRow.querySelectorAll('th')).map(th => th.textContent.trim());
+    // Function to get course info from the courses array
+    function getCourseInfo(courseTitle) {
+        const courseInfo = courses.find(c => c.title === courseTitle);
+        return courseInfo || { track: "N/A", major: "N/A" };
+    }
 
-        console.log("Calendar headers:", semesterHeaders);
-        console.log("Student courses:", student.plannedCourses);
+    // Get all calendar tables
+    const calendars = document.querySelectorAll('.calendar');
 
-        console.log("Calendar headers:", modalSemesterHeaders);
-        console.log("Student courses:", student.plannedCourses);
+    calendars.forEach(calendar => {
+        // Clear the calendar first to avoid duplicates
+        const allCells = calendar.querySelectorAll('tbody td');
+        allCells.forEach(cell => {
+            cell.innerHTML = '';
+        });
 
-        // For each course in the student's planned courses
+        // Get the headers from the current calendar
+        const headerCells = calendar.querySelectorAll('thead th');
+        const semesterHeaders = Array.from(headerCells).map(th => th.textContent.trim());
+
+        // Create a map to track processed courses for each semester
+        const processedCourses = {};
+        semesterHeaders.forEach(semester => {
+            processedCourses[semester] = new Set();
+        });
+
+        // First pass: collect unique courses by semester
+        const uniqueCoursesBySemester = {};
+        semesterHeaders.forEach(semester => {
+            uniqueCoursesBySemester[semester] = [];
+        });
+
+        // Group courses by semester (only including each course once per semester)
         student.plannedCourses.forEach(course => {
-            // Find the index of the semester in the calendar headers
-            const semesterIndex = semesterHeaders.findIndex(header =>
-                header.toLowerCase() === course.semester.toLowerCase());
+            const semester = course.semester;
+            // Only process if this semester exists in our headers and we haven't seen this course yet
+            if (uniqueCoursesBySemester[semester] && !processedCourses[semester].has(course.title)) {
+                uniqueCoursesBySemester[semester].push(course);
+                processedCourses[semester].add(course.title);
+            }
+        });
 
-            console.log("Course:", course.title, "Semester:", course.semester, "Index:", semesterIndex);
+        // Now populate the calendar with these unique courses
+        semesterHeaders.forEach((semester, semesterIndex) => {
+            const courses = uniqueCoursesBySemester[semester] || [];
 
-            // If the semester is found in the calendar
-            if (semesterIndex !== -1) {
-                // Get all cells for that semester (column)
-                const cells = document.querySelectorAll(`.calendar tbody tr td:nth-child(${semesterIndex + 1})`);
+            // Get all cells for that semester (column)
+            const cells = calendar.querySelectorAll(`tbody tr td:nth-child(${semesterIndex + 1})`);
 
-                // Find the first empty cell in that column
-                let emptyCell = Array.from(cells).find(cell => cell.innerHTML === '');
-
-                // If no empty cell is found, use the last cell
-                if (!emptyCell && cells.length > 0) {
-                    emptyCell = cells[cells.length - 1];
-                }
-
-                // If we have a cell to use, add the course
-                if (emptyCell) {
+            // Populate the courses in order
+            courses.forEach((course, index) => {
+                // Make sure we don't exceed the available cells
+                if (index < cells.length) {
+                    // Create course div
                     const courseDiv = document.createElement('div');
                     courseDiv.className = 'calendar-course';
+
+                    // Get course information for tooltip
+                    const info = getCourseInfo(course.title);
+
+                    // Style differently if it's a study off-campus semester
+                    if (course.title === "Study Off-Campus") {
+                        courseDiv.className = 'calendar-course study-abroad';
+                        info.track = "N/A";
+                        info.major = "Study Abroad Program";
+                    }
+
+                    // Set course title as the visible text
                     courseDiv.textContent = course.title;
-                    emptyCell.appendChild(courseDiv);
+
+                    // Create tooltip with track and major info
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'course-tooltip';
+                    tooltip.innerHTML = `
+                        <div><strong>Track:</strong> ${info.track || "N/A"}</div>
+                        <div><strong>Major:</strong> ${info.major || "N/A"}</div>
+                    `;
+
+                    // Add tooltip to course div
+                    courseDiv.appendChild(tooltip);
+
+                    // Add course div to cell
+                    cells[index].appendChild(courseDiv);
                 }
-            }
-
-
-            // Find the index of the semester in the calendar headers
-            const modalSemesterIndex = modalSemesterHeaders.findIndex(header =>
-                header.toLowerCase() === course.semester.toLowerCase());
-
-            console.log("HECourse:", course.title, "Semester:", course.semester, "Index:", modalSemesterIndex);
-
-            // If the semester is found in the calendar
-            if (modalSemesterIndex !== -1) {
-                // Get all cells for that semester (column)
-                const modalCells = document.querySelectorAll(`#modal-calendar tbody tr td:nth-child(${modalSemesterIndex + 1})`);
-
-                // Find the first empty cell in that column
-                let modalEmptyCell = Array.from(modalCells).find(cell => cell.innerHTML === '');
-
-                // If no empty cell is found, use the last cell
-                if (!modalEmptyCell && modalCells.length > 0) {
-                    modalEmptyCell = modalCells[modalCells.length - 1];
-                }
-
-                // If we have a cell to use, add the course
-                if (modalEmptyCell) {
-                    const modalCourseDiv = document.createElement('div');
-                    modalCourseDiv.className = 'calendar-course';
-                    modalCourseDiv.textContent = course.title;
-                    modalEmptyCell.appendChild(modalCourseDiv);
-                }
-            }
-
+            });
         });
-    }
+    });
+}
 
     // Set up event listeners for search inputs
     const courseSearchInput = document.getElementById('searchCourse');
@@ -514,7 +647,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Check if the course already exists
+        // Enhanced validation to prevent duplicate courses (case-insensitive comparison)
         const existingCourse = courses.find(c =>
             c.title.toLowerCase() === title.toLowerCase() &&
             c.semester.toLowerCase() === semester.toLowerCase());
@@ -628,6 +761,8 @@ document.addEventListener("DOMContentLoaded", function () {
     window.filterCourses = filterCourses;
     window.searchStudent = searchStudent;
     window.searchButtonClicked = searchButtonClicked;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
 
     // Ensure the toggle button still functions properly
     if (toggleButton) {
@@ -654,13 +789,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 const modal = document.getElementById("scheduleModal");
 
+// Function to open the modal
 function openModal() {
     modal.classList.remove("hidden");
-  }
+}
 
-  function closeModal() {
+// Function to close the modal
+function closeModal() {
     modal.classList.add("hidden");
-  }
+}
 
-  // Close modal when clicking outside the modal content
-  modal.addEventListener("click", closeModal);
+// Close modal when clicking outside the modal content
+modal.addEventListener("click", function(event) {
+    // Only close if the click is directly on the modal background, not on its content
+    if (event.target === modal) {
+        closeModal();
+    }
+});
