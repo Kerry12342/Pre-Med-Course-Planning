@@ -249,3 +249,16 @@ label {
     border-radius: 4px !important;
     font-size: 14px;
 }
+
+#globalTooltip {
+    display: none;             /* Hidden by default */
+    position: absolute;        /* We will manually position it */
+    z-index: 999999;           /* Very high so it appears on top */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 14px;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
