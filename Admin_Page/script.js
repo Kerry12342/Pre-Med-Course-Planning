@@ -368,8 +368,8 @@ document.addEventListener("DOMContentLoaded", function () {
         courseSearchInput.addEventListener('input', function() {
             const courseSearch = courseSearchInput.value.toUpperCase();
             const semesterSearch = semesterSearchInput ? semesterSearchInput.value.toUpperCase() : '';
-            const majorSearch = majorSearchInput.value.toUpperCase();
-            const trackSearch = trackSearchInput.value.toUpperCase();
+            const majorSearch = majorSearchInput ? majorSearchInput.value.toUpperCase() : '';
+            const trackSearch = trackSearchInput ? trackSearchInput.value.toUpperCase() : '';
 
 
             const filteredCourses = courses.filter(course => {
@@ -398,8 +398,8 @@ document.addEventListener("DOMContentLoaded", function () {
         semesterSearchInput.addEventListener('input', function() {
             const courseSearch = courseSearchInput ? courseSearchInput.value.toUpperCase() : '';
             const semesterSearch = semesterSearchInput.value.toUpperCase();
-            const trackSearch = trackSearchInput.value.toUpperCase();
-            const majorSearch = majorSearchInput.value.toUpperCase();
+            const trackSearch = trackSearchInput ? trackSearchInput.value.toUpperCase() : '';
+            const majorSearch = majorSearchInput ? majorSearchInput.value.toUpperCase() : '';
 
 
 
@@ -425,10 +425,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Add new event listener that ONLY updates the display without error messages
         majorSearchInput.addEventListener('input', function() {
-            const majorSearch = majorSearchInput ? courseSearchInput.value.toUpperCase() : '';
-            const semesterSearch = semesterSearchInput.value.toUpperCase();
-            const courseSearch = courseSearchInput.value.toUpperCase();
-            const trackSearch = trackSearchInput.value.toUpperCase();
+            const majorSearch = majorSearchInput.value.toUpperCase();
+            const semesterSearch = semesterSearchInput ? semesterSearchInput.value.toUpperCase() : '';
+            const courseSearch = courseSearchInput ? courseSearchInput.value.toUpperCase() : '';
+            const trackSearch = trackSearchInput ? trackSearchInput.value.toUpperCase() : '';
 
             const filteredCourses = courses.filter(course => {
                 const courseMatch = course.title.toUpperCase().includes(courseSearch);
@@ -453,10 +453,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Add new event listener that ONLY updates the display without error messages
         trackSearchInput.addEventListener('input', function() {
-            const majorSearch = majorSearchInput.value.toUpperCase();
-            const semesterSearch = semesterSearchInput.value.toUpperCase();
-            const courseSearch = courseSearchInput.value.toUpperCase();
-            const trackSearch = trackSearchInput ? trackSearchInput.value.toUpperCase() : '';
+            const majorSearch = majorSearchInput ? majorSearchInput.value.toUpperCase() : '';
+            const semesterSearch = semesterSearchInput ? semesterSearchInput.value.toUpperCase() : '';
+            const courseSearch = courseSearchInput ? courseSearchInput.value.toUpperCase() : '';
+            const trackSearch = trackSearchInput.value.toUpperCase();
 
             const filteredCourses = courses.filter(course => {
                 const courseMatch = course.title.toUpperCase().includes(courseSearch);
