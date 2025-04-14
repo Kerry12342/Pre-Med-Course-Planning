@@ -17,7 +17,7 @@
             <div class="logo-section">
                 <h1>Hamilton</h1>
                 <span class="separator">•</span>
-                <span class="subtitle">Hamilton College Premed Planning</span>
+                <span class="subtitle">Hamilton College Pre-Health Planning</span>
             </div>
         </div>
     </header>
@@ -74,8 +74,17 @@
         </div>
         <div class="completed-courses">
             <h2>Completed Courses</h2>
-            <ul id="completedCoursesList"></ul>
+            <table id="completedCoursesTable" border="1" style="margin-top: 10px; border-collapse: collapse;">
+                <tr>
+                    <th>Course Title</th>
+                    <th>Term</th>
+                </tr>
+            </table>
+
         </div>
     </div>
+
+    <!-- Global tooltip for all course blocks -->
+    <div id="globalTooltip"></div>
 </body>
 </html>
