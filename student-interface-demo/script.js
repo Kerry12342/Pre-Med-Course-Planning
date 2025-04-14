@@ -150,11 +150,13 @@ class Student {
         this.completed_courses = completed_courses; // Array
         this.all_course_data = all_course_data;
     }
+
     all_planned_courses_before_term(target_term) {
         return this.planned_courses.filter(course => before(course[1], target_term)).map(function (course) {
             return course[0];
         });
     }
+
     display_all_course_data() {
         for (const dictionary of get_course_data()) {
             for (const key in dictionary) {
@@ -162,6 +164,7 @@ class Student {
             }
         }
     }
+
     getCourseRequisites(courseName) {
         // Find the course object that matches the given course name (case-insensitive)
         const course = this.all_course_data.find(c => c.title.toLowerCase() === courseName.toLowerCase());
@@ -174,6 +177,7 @@ class Student {
             return [];
         }
     }
+
     has_prereqs_for_course(target_course, target_term) {
         let course_prereqs = this.getCourseRequisites(target_course.title);
         let completed_and_planned = this.all_planned_courses_before_term(target_term); // Use this to call the method
@@ -188,11 +192,15 @@ class Student {
         }
         return course_prereqs.length === 0; // Fix: 'length' is a property, not a function
     }
+
     able_to_plan_course(target_course, target_term) {
         return (this.has_prereqs_for_course(target_course, target_term) &&
             !this.planned_courses.includes(target_course) &&
             !this.completed_courses.includes(target_course));
     }
+
+    // Add a given course to the schedule and fulfill the relevant requirements in
+    // this student's tracks / majors
     plan_course(target_course, term) {
         // If time isn't conflicted, and not in completed or planned, add to planned.
         if (this.able_to_plan_course(target_course, term)) {
@@ -202,11 +210,13 @@ class Student {
             console.log("Could not plan course");
         }
     }
+
     complete_course(target_course, term) {
         const remindex = this.planned_courses.indexOf(target_course)
         this.planned_courses.splice(remindex, 1)
         this.completed_courses.push([target_course, term])
     }
+
     remove_planned_courese(target_course) {
         const remindex = this.planned_courses.indexOf(target_course)
         this.planned_courses.splice(remindex, 1)
@@ -263,18 +273,8 @@ function filter_courses() {
     const majorSelect = document.getElementById("major");
     const selectedTrack = trackSelect.value;
     const selectedMajor = majorSelect.value;
+
     let filteredCourses = [];
-
-
-    const courseSearch = document.getElementById('searchCourse').value.toUpperCase();
-    const semesterSearch = document.getElementById('searchSemester').value.toUpperCase();
-
-    const filterCourses = courses.filter(course => {
-        const courseMatch = course.title.toUpperCase().includes(courseSearch);
-        const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
-
-        return courseMatch && semesterMatch;
-    });
 
     // If "All Tracks" or "All Majors" is selected, include all courses from course_data
     if (selectedTrack === "" && selectedMajor === "") {
@@ -284,13 +284,13 @@ function filter_courses() {
         // If only "All Tracks" is selected, filter by major requisites
         const major = major_datas.find(m => m.title === selectedMajor);
         if (major) {
-            filteredCourses = get_course_names(course_datas.filter(course => major.requisites.includes(course.title)));
+            filteredCourses = get_course_names(course_datas.filter(course => major.requisites.includes(course)));
         }
     } else if (selectedMajor === "") {
         // If only "All Majors" is selected, filter by track requisites
         const track = track_datas.find(t => t.title === selectedTrack);
         if (track) {
-            filteredCourses = get_course_names(course_datas.filter(course => track.requisites.includes(course.title)));
+            filteredCourses = get_course_names(course_datas.filter(course => track.requisites.includes(course)));
         }
     } else {
         // If both track and major are selected, filter by both requisites
@@ -299,7 +299,7 @@ function filter_courses() {
 
         if (track && major) {
             filteredCourses = get_course_names(course_datas.filter(course =>
-                track.requisites.includes(course.title) && major.requisites.includes(course.title)
+                track.requisites.includes(course) && major.requisites.includes(course)
             ));
         }
     }
@@ -552,29 +552,6 @@ function makeCoursesDraggable() {
         });
     });
 }
-
-function populateCompletedCoursesTable(student) {
-    const table = document.getElementById("completedCoursesTable");
-
-    if (!student || !student.completed_courses) {
-      console.warn("Invalid student data provided to populateCompletedCoursesTable()");
-      return;
-    }
-
-    // Clear existing rows except the header
-    while (table.rows.length > 1) {
-      table.deleteRow(1);
-    }
-
-    student.completed_courses.forEach(([course, term]) => {
-      const row = table.insertRow();
-      const titleCell = row.insertCell(0);
-      const termCell = row.insertCell(1);
-
-      titleCell.innerText = course.title;
-      termCell.innerText = term;
-    });
-  }
 
 
 
