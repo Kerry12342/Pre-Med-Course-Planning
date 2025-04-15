@@ -39,6 +39,24 @@ document.addEventListener("DOMContentLoaded", function () {
         globalTooltip.style.display = 'none';
     }
 
+    // --- Track and Major Lists ---
+    let tracks = [
+      "pre-dental-medicine",
+      "pre-medicine",
+      "pre-nursing",
+      "pre-physical-assistant",
+      "pre-physical-therapy",
+      "pre-veterinary-medicine"
+    ];
+
+    let majors = [
+      "Biology",
+      "Chemistry",
+      "Biochemistry",
+      "Physics"
+    ];
+
+
     // --- 3) Rest of your code remains the same, except displayStudentSchedule(...) ---
     // Student data structure
     const students = [
@@ -147,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const courses = [
         {
             "title": "BIO-100",
-            "semester": "Fall 2025",
             "studentCount": 5,
             "department": "Biology",
             "track": "pre-medicine",
@@ -155,7 +172,6 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         {
             "title": "BIO-100LAB",
-            "semester": "Fall 2025",
             "studentCount": 3,
             "department": "Biology",
             "track": "pre-medicine",
@@ -163,7 +179,6 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         {
             "title": "CHEM-400",
-            "semester": "Spring 2026",
             "studentCount": 5,
             "department": "Chemistry",
             "track": "pre-dental-medicine",
@@ -171,7 +186,6 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         {
             "title": "BIO-110",
-            "semester": "Fall 2025",
             "studentCount": 7,
             "department": "Biology",
             "track": "pre-nursing",
@@ -179,7 +193,6 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         {
             "title": "CHEM-110",
-            "semester": "Spring 2026",
             "studentCount": 4,
             "department": "Chemistry",
             "track": "pre-medicine",
@@ -187,7 +200,6 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         {
             "title": "PHYS-120",
-            "semester": "Fall 2025",
             "studentCount": 6,
             "department": "Physics",
             "track": "pre-physical-therapy",
@@ -195,7 +207,6 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         {
             "title": "BIO-220",
-            "semester": "Spring 2026",
             "studentCount": 2,
             "department": "Biology",
             "track": "pre-veterinary-medicine",
@@ -203,7 +214,6 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         {
             "title": "CHEM-220",
-            "semester": "Fall 2025",
             "studentCount": 8,
             "department": "Chemistry",
             "track": "pre-physical-assistant",
@@ -254,6 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Display courses in enrollment section
+    // Display courses in enrollment section
     function displayCourses(courseList) {
         const courseListElement = document.querySelector('.course-list ul');
         courseListElement.innerHTML = '';
@@ -269,7 +280,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 <strong>${course.title}</strong> <br>
                 <span class="note">Num of Students Planned</span>
                 <input type="text" value="${course.studentCount}" disabled>
-                <div class="course-semester">${course.semester}</div>
                 <div class="course-details">
                     <span class="course-track">Track: ${course.track || 'N/A'}</span>
                     <span class="course-major">Major: ${course.major || 'N/A'}</span>
@@ -280,21 +290,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Filter courses
+    // Filter courses
     function filterCourses(showErrorMessage = false) {
         const courseSearch = document.getElementById('searchCourse').value.toUpperCase();
-        const semesterSearch = document.getElementById('searchSemester').value.toUpperCase();
         const majorSearch = document.getElementById('searchMajor').value.toUpperCase();
         const trackSearch = document.getElementById('searchTrack').value.toUpperCase();
 
         const filteredCourses = courses.filter(course => {
             const courseMatch = course.title.toUpperCase().includes(courseSearch);
-            const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
             const majorMatch = course.major.toUpperCase().includes(majorSearch);
             const trackMatch = course.track.toUpperCase().includes(trackSearch);
-            return (courseMatch && semesterMatch) && (majorMatch && trackMatch);
+            return courseMatch && majorMatch && trackMatch;
         });
 
-        if (showErrorMessage && filteredCourses.length === 0 && (courseSearch !== '' || semesterSearch !== '')) {
+        if (showErrorMessage && filteredCourses.length === 0 && courseSearch !== '') {
             showError("No courses found matching your search criteria");
         }
         displayCourses(filteredCourses);
@@ -470,76 +479,21 @@ document.addEventListener("DOMContentLoaded", function () {
     if (courseSearchInput) {
         courseSearchInput.removeEventListener('input', function() { filterCourses(false); });
         courseSearchInput.addEventListener('input', function() {
-            const courseSearch = courseSearchInput.value.toUpperCase();
-            const semesterSearch = semesterSearchInput ? semesterSearchInput.value.toUpperCase() : '';
-            const majorSearch = majorSearchInput ? majorSearchInput.value.toUpperCase() : '';
-            const trackSearch = trackSearchInput ? trackSearchInput.value.toUpperCase() : '';
-
-            const filteredCourses = courses.filter(course => {
-                const courseMatch = course.title.toUpperCase().includes(courseSearch);
-                const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
-                const majorMatch = course.major.toUpperCase().includes(majorSearch);
-                const trackMatch = course.track.toUpperCase().includes(trackSearch);
-                return (courseMatch && semesterMatch) && (majorMatch && trackMatch);
-            });
-            displayCourses(filteredCourses);
-        });
-    }
-
-    if (semesterSearchInput) {
-        semesterSearchInput.removeEventListener('input', function() { filterCourses(false); });
-        semesterSearchInput.addEventListener('input', function() {
-            const courseSearch = courseSearchInput ? courseSearchInput.value.toUpperCase() : '';
-            const semesterSearch = semesterSearchInput.value.toUpperCase();
-            const trackSearch = trackSearchInput ? trackSearchInput.value.toUpperCase() : '';
-            const majorSearch = majorSearchInput ? majorSearchInput.value.toUpperCase() : '';
-
-            const filteredCourses = courses.filter(course => {
-                const courseMatch = course.title.toUpperCase().includes(courseSearch);
-                const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
-                const trackMatch = course.track.toUpperCase().includes(trackSearch);
-                const majorMatch = course.major.toUpperCase().includes(majorSearch);
-                return (courseMatch && semesterMatch) && (trackMatch && majorMatch);
-            });
-            displayCourses(filteredCourses);
+            filterCourses(false);
         });
     }
 
     if (majorSearchInput) {
         majorSearchInput.removeEventListener('input', function() { filterCourses(false); });
         majorSearchInput.addEventListener('input', function() {
-            const majorSearch = majorSearchInput.value.toUpperCase();
-            const semesterSearch = semesterSearchInput ? semesterSearchInput.value.toUpperCase() : '';
-            const courseSearch = courseSearchInput ? courseSearchInput.value.toUpperCase() : '';
-            const trackSearch = trackSearchInput ? trackSearchInput.value.toUpperCase() : '';
-
-            const filteredCourses = courses.filter(course => {
-                const courseMatch = course.title.toUpperCase().includes(courseSearch);
-                const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
-                const trackMatch = course.track.toUpperCase().includes(trackSearch);
-                const majorMatch = course.major.toUpperCase().includes(majorSearch);
-                return (courseMatch && semesterMatch) && (trackMatch && majorMatch);
-            });
-            displayCourses(filteredCourses);
+            filterCourses(false);
         });
     }
 
     if (trackSearchInput) {
         trackSearchInput.removeEventListener('input', function() { filterCourses(false); });
         trackSearchInput.addEventListener('input', function() {
-            const majorSearch = majorSearchInput ? majorSearchInput.value.toUpperCase() : '';
-            const semesterSearch = semesterSearchInput ? semesterSearchInput.value.toUpperCase() : '';
-            const courseSearch = courseSearchInput ? courseSearchInput.value.toUpperCase() : '';
-            const trackSearch = trackSearchInput.value.toUpperCase();
-
-            const filteredCourses = courses.filter(course => {
-                const courseMatch = course.title.toUpperCase().includes(courseSearch);
-                const semesterMatch = course.semester.toUpperCase().includes(semesterSearch);
-                const trackMatch = course.track.toUpperCase().includes(trackSearch);
-                const majorMatch = course.major.toUpperCase().includes(majorSearch);
-                return (courseMatch && semesterMatch) && (trackMatch && majorMatch);
-            });
-            displayCourses(filteredCourses);
+            filterCourses(false);
         });
     }
 
@@ -557,41 +511,69 @@ document.addEventListener("DOMContentLoaded", function () {
         studentSearchButton.addEventListener('click', searchStudent);
     }
 
+    // Function to populate track and major dropdowns
+    function populateDropdowns() {
+        const trackSelect = document.getElementById('track');
+        const majorSelect = document.getElementById('major');
+
+        if (trackSelect) {
+            // Clear existing options except the first one
+            while (trackSelect.options.length > 1) {
+                trackSelect.remove(1);
+            }
+
+            // Add options from the tracks array
+            tracks.forEach(track => {
+                const option = document.createElement('option');
+                option.value = track;
+                option.textContent = track.charAt(0).toUpperCase() + track.slice(1).replace(/-/g, ' ');
+                trackSelect.appendChild(option);
+            });
+        }
+
+        if (majorSelect) {
+            // Clear existing options except the first one
+            while (majorSelect.options.length > 1) {
+                majorSelect.remove(1);
+            }
+
+            // Add options from the majors array
+            majors.forEach(major => {
+                const option = document.createElement('option');
+                option.value = major;
+                option.textContent = major;
+                majorSelect.appendChild(option);
+            });
+        }
+    }
+
     // Add a new course
     function addCourse() {
         const titleInput = document.getElementById('courseName');
         const trackSelect = document.getElementById('track');
         const majorSelect = document.getElementById('major');
-        const semesterSelect = document.getElementById('semester');
 
         const title = titleInput.value.trim();
         const track = trackSelect.value;
         const major = majorSelect.value;
-        const semester = semesterSelect.value;
 
         if (!title) {
             showError("Please enter a course title");
             return;
         }
-        if (!semester) {
-            showError("Please select a semester");
-            return;
-        }
 
-        // Prevent duplicates
+        // Prevent duplicates - now only checking by title
         const existingCourse = courses.find(c =>
-            c.title.toLowerCase() === title.toLowerCase() &&
-            c.semester.toLowerCase() === semester.toLowerCase()
+            c.title.toLowerCase() === title.toLowerCase()
         );
         if (existingCourse) {
-            showError("This course already exists for the selected semester");
+            showError("This course already exists");
             return;
         }
 
         // Create new
         const newCourse = {
             title: title,
-            semester: semester,
             studentCount: 0,
             department: major.split(' ')[0] || "General",
             track: track,
@@ -603,7 +585,6 @@ document.addEventListener("DOMContentLoaded", function () {
         titleInput.value = '';
         trackSelect.selectedIndex = 0;
         majorSelect.selectedIndex = 0;
-        semesterSelect.selectedIndex = 0;
 
         displayCourses(courses);
         showSuccess("Course added successfully");
@@ -612,17 +593,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Delete a course
     function deleteCourse() {
         const titleInput = document.getElementById('courseName');
-        const semesterSelect = document.getElementById('semester');
         const title = titleInput.value.trim();
-        const semester = semesterSelect.value;
 
         if (!title) {
             showError("Please enter a course title to delete");
             return;
         }
         const courseIndex = courses.findIndex(c =>
-            c.title.toLowerCase() === title.toLowerCase() &&
-            (!semester || c.semester.toLowerCase() === semester.toLowerCase())
+            c.title.toLowerCase() === title.toLowerCase()
         );
         if (courseIndex === -1) {
             showError("Course not found");
@@ -631,7 +609,6 @@ document.addEventListener("DOMContentLoaded", function () {
         courses.splice(courseIndex, 1);
 
         titleInput.value = '';
-        semesterSelect.selectedIndex = 0;
         displayCourses(courses);
 
         showSuccess("Course deleted successfully");
@@ -693,6 +670,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize with empty course list
     displayCourses([]);
+
+    // Initialize the track and major dropdowns
+    populateDropdowns();
+
 });
 
 // Modal
