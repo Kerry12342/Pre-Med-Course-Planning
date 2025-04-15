@@ -33,11 +33,7 @@
                 <input type="text" id="searchCourse" placeholder="Search for Courses">
                 <button type="button" onclick="searchButtonClicked()">🔍</button>
             </div>
-            <div class="search-bar">
-                <input type="text" id="searchSemester" placeholder="Search by Semester">
-                <button type="button" onclick="searchButtonClicked()">🔍</button>
-            </div>
-
+            
             <div class="search-bar">
                 <input type="text" id="searchTrack" placeholder="Search by Track">
                 <button type="button" onclick="searchButtonClicked()">🔍</button>
@@ -134,27 +130,12 @@
             <button id="toggleCourse" type="button">Switch to Delete Course</button>
             <input type="text" id="courseName" placeholder="Enter Course Title Here" style="display: block; margin-bottom: 10px;">
             <select id="track" style="display: block; margin-bottom: 10px;">
-                <option value="">Track</option>
-                <option value="pre-dental-medicine">Pre-Dental-Medicine</option>
-                <option value="pre-medicine">Pre-Medicine</option>
-                <option value="pre-nursing">Pre-Nursing</option>
-                <option value="pre-physical-assistant">Pre-Physical-Assistant</option>
-                <option value="pre-physical-therapy">Pre-Physical-Therapy</option>
-                <option value="pre-veterinary-medicine">Pre-Veterinary-Medicine</option>
+              <option value="">Track</option>
+              <!-- Track options will be populated dynamically -->
             </select>
             <select id="major" style="display: block; margin-bottom: 10px;">
-                <option value="">Major</option>
-                <option value="Biology">Biology</option>
-                <option value="Chemistry">Chemistry</option>
-                <option value="Biochemistry">Biochemistry</option>
-                <option value="Physics">Physics</option>
-            </select>
-            <select id="semester" style="display: block; margin-bottom: 10px;">
-                <option value="">Semester</option>
-                <option value="Fall 2025">Fall 2025</option>
-                <option value="Spring 2026">Spring 2026</option>
-                <option value="Fall 2026">Fall 2026</option>
-                <option value="Spring 2027">Spring 2027</option>
+              <option value="">Major</option>
+              <!-- Major options will be populated dynamically -->
             </select>
             <button type="button" id="courseSubmitBtn" style="display: block; margin-top: 10px;">Submit</button>
         </section>
