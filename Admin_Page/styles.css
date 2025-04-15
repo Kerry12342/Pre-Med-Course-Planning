@@ -500,3 +500,21 @@ select[multiple] option:hover {
   height: 100px;
   overflow: auto;
 }
+
+
+.tab-buttons {
+    display: flex;
+    margin-bottom: 10px;
+}
+.tab {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    background-color: #62626c;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+}
+.tab.active {
+    background-color: #002f86;
+    font-weight: bold;
+}

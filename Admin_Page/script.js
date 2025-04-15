@@ -718,7 +718,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Submit handler
-    const submitButton = document.querySelector('.course-management button:last-child');
+    const submitButton = document.getElementById('courseSubmitBtn');
     if (submitButton) {
         submitButton.removeEventListener('click', function() { showError("Add/Delete course feature not implemented yet"); });
         submitButton.addEventListener('click', function() {
@@ -777,4 +777,23 @@ modal.addEventListener("click", function(event) {
     if (event.target === modal) {
         closeModal();
     }
+});
+
+document.querySelectorAll(".tab").forEach(button => {
+    button.addEventListener("click", () => {
+        const tabId = button.dataset.tab;
+
+        // Update tab button styling
+        document.querySelectorAll(".tab").forEach(btn => {
+            btn.classList.remove("active");
+            btn.style.backgroundColor = "#62626c ";
+        });
+        button.classList.add("active");
+        button.style.backgroundColor = "#002f86";
+
+        // Show the selected tab content
+        document.querySelectorAll(".tab-content").forEach(content => {
+            content.style.display = content.id === tabId ? "block" : "none";
+        });
+    });
 });
