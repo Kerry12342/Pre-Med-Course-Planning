@@ -16,19 +16,22 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.appendChild(globalTooltip);
 
     // --- 2) Helper functions to show/hide the tooltip ---
-    function showTooltip(courseElement, track, major) {
+    function showTooltip(courseElement, tracks, majors) {
+        // Format tracks and majors for display
+        const tracksDisplay = tracks && tracks.length ?
+            tracks.join(', ') : 'N/A';
+        const majorsDisplay = majors && majors.length ?
+            majors.join(', ') : 'N/A';
+
         // Populate the tooltip text
         globalTooltip.innerHTML = `
-            <div><strong>Track:</strong> ${track || 'N/A'}</div>
-            <div><strong>Major:</strong> ${major || 'N/A'}</div>
+            <div><strong>Tracks:</strong> ${tracksDisplay}</div>
+            <div><strong>Majors:</strong> ${majorsDisplay}</div>
         `;
 
         // Position it above (or near) the hovered element
         const rect = courseElement.getBoundingClientRect();
-        // Example: center horizontally, appear above the course
-        // Adjust left/top offsets as desired
         globalTooltip.style.left = (rect.left + rect.width / 2) + 'px';
-        // Account for current scroll offset in Y
         globalTooltip.style.top = (rect.top + window.scrollY - globalTooltip.offsetHeight - 8) + 'px';
 
         // Show the tooltip
@@ -167,57 +170,57 @@ document.addEventListener("DOMContentLoaded", function () {
             "title": "BIO-100",
             "studentCount": 5,
             "department": "Biology",
-            "track": "pre-medicine",
-            "major": "Biology"
+            "tracks": ["pre-medicine", "pre-dental-medicine"],
+            "majors": ["Biology", "Biochemistry"]
         },
         {
             "title": "BIO-100LAB",
             "studentCount": 3,
             "department": "Biology",
-            "track": "pre-medicine",
-            "major": "Biology"
+            "track": ["pre-medicine"],
+            "major": ["Biology"]
         },
         {
             "title": "CHEM-400",
             "studentCount": 5,
             "department": "Chemistry",
-            "track": "pre-dental-medicine",
-            "major": "Chemistry"
+            "track": ["pre-dental-medicine"],
+            "major": ["Chemistry"]
         },
         {
             "title": "BIO-110",
             "studentCount": 7,
             "department": "Biology",
-            "track": "pre-nursing",
-            "major": "Biology"
+            "track": ["pre-nursing"],
+            "major": ["Biology"]
         },
         {
             "title": "CHEM-110",
             "studentCount": 4,
             "department": "Chemistry",
-            "track": "pre-medicine",
-            "major": "Biochemistry"
+            "track": ["pre-medicine"],
+            "major": ["Biochemistry"]
         },
         {
             "title": "PHYS-120",
             "studentCount": 6,
             "department": "Physics",
-            "track": "pre-physical-therapy",
-            "major": "Physics"
+            "track": ["pre-physical-therapy"],
+            "major": ["Physics"]
         },
         {
             "title": "BIO-220",
             "studentCount": 2,
             "department": "Biology",
-            "track": "pre-veterinary-medicine",
-            "major": "Biology"
+            "track": ["pre-veterinary-medicine"],
+            "major": ["Biology"]
         },
         {
             "title": "CHEM-220",
             "studentCount": 8,
             "department": "Chemistry",
-            "track": "pre-physical-assistant",
-            "major": "Chemistry"
+            "track": ["pre-physical-assistant"],
+            "major": ["Chemistry"]
         },
     ];
 
@@ -264,7 +267,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Display courses in enrollment section
-    // Display courses in enrollment section
     function displayCourses(courseList) {
         const courseListElement = document.querySelector('.course-list ul');
         courseListElement.innerHTML = '';
@@ -276,20 +278,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         courseList.forEach(course => {
             const courseItem = document.createElement('li');
+
+            // Format tracks and majors as comma-separated lists
+            const tracksDisplay = course.tracks && course.tracks.length ?
+                course.tracks.join(', ') : 'N/A';
+            const majorsDisplay = course.majors && course.majors.length ?
+                course.majors.join(', ') : 'N/A';
+
             courseItem.innerHTML = `
                 <strong>${course.title}</strong> <br>
                 <span class="note">Num of Students Planned</span>
                 <input type="text" value="${course.studentCount}" disabled>
                 <div class="course-details">
-                    <span class="course-track">Track: ${course.track || 'N/A'}</span>
-                    <span class="course-major">Major: ${course.major || 'N/A'}</span>
+                    <span class="course-track">Tracks: ${tracksDisplay}</span>
+                    <span class="course-major">Majors: ${majorsDisplay}</span>
                 </div>
             `;
             courseListElement.appendChild(courseItem);
         });
     }
 
-    // Filter courses
     // Filter courses
     function filterCourses(showErrorMessage = false) {
         const courseSearch = document.getElementById('searchCourse').value.toUpperCase();
@@ -298,8 +306,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const filteredCourses = courses.filter(course => {
             const courseMatch = course.title.toUpperCase().includes(courseSearch);
-            const majorMatch = course.major.toUpperCase().includes(majorSearch);
-            const trackMatch = course.track.toUpperCase().includes(trackSearch);
+
+            // Check if any major matches the search term
+            const majorMatch = majorSearch === '' ||
+                (course.majors && course.majors.some(major =>
+                    major.toUpperCase().includes(majorSearch)
+                ));
+
+            // Check if any track matches the search term
+            const trackMatch = trackSearch === '' ||
+                (course.tracks && course.tracks.some(track =>
+                    track.toUpperCase().includes(trackSearch)
+                ));
+
             return courseMatch && majorMatch && trackMatch;
         });
 
@@ -381,7 +400,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Helper: get info from the "courses" array
         function getCourseInfo(courseTitle) {
             const courseInfo = courses.find(c => c.title === courseTitle);
-            return courseInfo || { track: "N/A", major: "N/A" };
+            return courseInfo || { tracks: [], majors: [] };
         }
 
         // All calendars (main + modal)
@@ -554,15 +573,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const majorSelect = document.getElementById('major');
 
         const title = titleInput.value.trim();
-        const track = trackSelect.value;
-        const major = majorSelect.value;
+
+        // Get all selected tracks
+        const tracks = Array.from(trackSelect.selectedOptions)
+            .filter(option => option.value) // Filter out the empty option
+            .map(option => option.value);
+
+        // Get all selected majors
+        const majors = Array.from(majorSelect.selectedOptions)
+            .filter(option => option.value) // Filter out the empty option
+            .map(option => option.value);
 
         if (!title) {
             showError("Please enter a course title");
             return;
         }
 
-        // Prevent duplicates - now only checking by title
+        // Prevent duplicates - checking by title
         const existingCourse = courses.find(c =>
             c.title.toLowerCase() === title.toLowerCase()
         );
@@ -571,20 +598,32 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Create new
+        // Get department from the first major if available
+        const department = majors.length > 0 ?
+            majors[0].split(' ')[0] || "General" : "General";
+
+        // Create new course
         const newCourse = {
             title: title,
             studentCount: 0,
-            department: major.split(' ')[0] || "General",
-            track: track,
-            major: major
+            department: department,
+            tracks: tracks,
+            majors: majors
         };
         courses.push(newCourse);
 
-        // Clear
+        // Clear selections
         titleInput.value = '';
-        trackSelect.selectedIndex = 0;
-        majorSelect.selectedIndex = 0;
+        for (let i = 0; i < trackSelect.options.length; i++) {
+            trackSelect.options[i].selected = false;
+        }
+        for (let i = 0; i < majorSelect.options.length; i++) {
+            majorSelect.options[i].selected = false;
+        }
+
+        // Reset the dropdown appearance
+        trackSelect.blur();
+        majorSelect.blur();
 
         displayCourses(courses);
         showSuccess("Course added successfully");
@@ -612,6 +651,51 @@ document.addEventListener("DOMContentLoaded", function () {
         displayCourses(courses);
 
         showSuccess("Course deleted successfully");
+    }
+
+    // Make sure the dropdowns allow multiple selections
+    function fixMultipleSelection() {
+        const trackSelect = document.getElementById('track');
+        const majorSelect = document.getElementById('major');
+
+        // Ensure multiple attribute is set
+        if (trackSelect) {
+            trackSelect.multiple = true;
+
+            // Add click handler to prevent default behavior that might be interfering
+            trackSelect.addEventListener('mousedown', function(e) {
+                if (e.target.tagName === 'OPTION') {
+                    // Prevent deselection of other options
+                    e.preventDefault();
+
+                    // Toggle selection of the clicked option
+                    e.target.selected = !e.target.selected;
+
+                    // Trigger a change event
+                    const event = new Event('change');
+                    this.dispatchEvent(event);
+
+                    return false;
+                }
+            });
+        }
+
+        // Same for major select
+        if (majorSelect) {
+            majorSelect.multiple = true;
+
+            majorSelect.addEventListener('mousedown', function(e) {
+                if (e.target.tagName === 'OPTION') {
+                    e.preventDefault();
+                    e.target.selected = !e.target.selected;
+
+                    const event = new Event('change');
+                    this.dispatchEvent(event);
+
+                    return false;
+                }
+            });
+        }
     }
 
     // Success message
@@ -668,11 +752,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+
+
     // Initialize with empty course list
     displayCourses([]);
 
     // Initialize the track and major dropdowns
     populateDropdowns();
+
+    // Fix multiple selection
+    fixMultipleSelection();
 
 });
 
