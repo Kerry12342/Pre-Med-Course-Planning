@@ -1,3 +1,37 @@
+
+function saveDatabase(database) {
+
+    fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ data: database })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function getDatabase() {
+    return fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/get-json')
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error:', error);
+            return []; // Return an empty array in case of an error
+        });
+}
+
+    getDatabase().then(data => {
+       alert(JSON.stringify(data, null, 2));
+       console.log(JSON.stringify(data, null, 2))
+    });
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const hamburgerMenu = document.querySelector('.hamburger-menu');
@@ -22,16 +56,31 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add your login logic here
             console.log('Login attempted with email:', email);
 
+
+            getDatabase().then(data => { 
+                const student = data[0].data.students.find(s => s.email.toLowerCase().includes(email));
+                const admin = data[0].data.admins.find(s => s.email.toLowerCase().includes(email));
+                if (admin && admin.password == password) {
+                    window.location.href = "./../Admin_Page/millstone2_initial.html";
+                }
+                else if (student && student.password == password) {
+                    window.location.href = "./../student-interface-demo/interface.html";
+                }
+                else {
+                    alert('Incorrect Password');
+
+                }
+            })
+
+
             // Have fetch from user.
-            var userRole = "student"
-            if (userRole === "admin") {
-                window.location.href = "./../Admin_Page/millstone2_initial.html";
-            } else if (userRole === "student") {
-                window.location.href = "./../student-interface-demo/interface.html";
-            } else {
-              alert("User role not recognized");
-            }
-            // Here you would typically make an API call to verify credentials
+            // var userRole = "student"
+            // if (userRole === "admin") {
+            //     window.location.href = "./../Admin_Page/millstone2_initial.html";
+            // } else if (userRole === "student") {
+            //     window.location.href = "./../student-interface-demo/interface.html";
+            // }
+
         } else {
             // Show validation error
             if (!email) {

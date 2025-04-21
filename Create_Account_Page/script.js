@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm-password');
+    const nameInput = document.getElementById('name');
+    // const emailVal = emailInput.value.trim();
+    const adminCode = "testing123";
 
     // Error messages
     const emailError = document.getElementById('email-error');
@@ -27,6 +30,48 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Menu clicked');
         // Add your menu toggle functionality here
     });
+
+
+
+
+
+
+    function saveDatabase(database) {
+
+        fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ data: database })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function getDatabase() {
+        return fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/get-json')
+            .then(response => response.json())
+            .catch(error => {
+                console.error('Error:', error);
+                return []; // Return an empty array in case of an error
+            });
+    }
+
+
+
+
+
+
+
+
+
+
 
     // Validate Hamilton email
     function validateEmail() {
@@ -158,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const isEmailValid = validateEmail();
         const isPasswordValid = validatePasswordComplexity();
         const isPasswordMatching = validatePasswordsMatch();
+        
 
         // Check if fields are empty
         if (!emailInput.value) {
@@ -180,10 +226,72 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Submit if everything is valid
         if (isEmailValid && isPasswordValid && isPasswordMatching) {
-            console.log('Account creation submitted');
-            alert('Account created successfully! You will be redirected to the login page.');
-            // Redirect to login page
-            window.location.href = './../Login_Page/login_page.html';
+            // If not in admin or in studens, then create account. 
+            getDatabase().then(data => { 
+                const emailVal = emailInput.value.trim();
+                console.log(emailVal)
+                const student = data[0].data.students.find(s => s.email == emailVal);
+                const admin = data[0].data.admins.find(s => s.email == emailVal);
+                console.log(admin)
+                console.log(student)
+                const adminInput = document.getElementById('admincode');
+                const adminVal = adminInput.value.trim();
+
+                if (student) {
+                    alert('Account with this email already exists');
+                    return;
+                }
+                else if (admin) {
+                    alert('Admin with this email already exists');
+                    return;
+                }
+
+                else if (adminVal == adminCode) {
+                    const nameValue = nameInput.value.trim();
+                    const  newAdmin = {
+                        name: nameValue,
+                        email: emailVal,
+                        password: passwordInput.value,
+                    };
+                    console.log(newAdmin)
+                    
+                    data[0].data.admins.push(newAdmin);
+                    console.log(data[0].data.admins)
+                    saveDatabase(data[0].data);
+                    console.log('Admin creation submitted');
+                    alert('Admin created successfully! You will be redirected to the login page.');
+                    window.location.href = './../Login_Page/login_page.html';
+                }
+
+                else {
+                    const nameValue = nameInput.value.trim();
+                    const newStudent = {
+                        name: nameValue,
+                        email: emailVal,
+                        password: passwordInput.value,
+                        plannedCourses: []
+                    };
+                    data[0].data.students.push(newStudent);
+                    saveDatabase(data[0].data);
+                    console.log('Account creation submitted');
+                    alert('Account created successfully! You will be redirected to the login page.');
+
+
+
+
+                    // Redirect to login page
+                    window.location.href = './../Login_Page/login_page.html';
+                }
+
+            })
+
+
+
+
+            // console.log('Account creation submitted');
+            // alert('Account created successfully! You will be redirected to the login page.');
+            // // Redirect to login page
+            // window.location.href = './../Login_Page/login_page.html';
         }
     });
 });

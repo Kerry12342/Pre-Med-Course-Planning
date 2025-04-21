@@ -803,6 +803,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //            "name": "Hi There",
     //            "id": "12345",
     //            "email": "hithere@hamilton.edu",
+                //" password": 12345
     //            "plannedCourses": [
     //                { "title": "BIO-100", "semester": "Fall 2025" },
     //                { "title": "CHEM-110", "semester": "Fall 2025" },
