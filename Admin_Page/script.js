@@ -402,6 +402,8 @@ document.addEventListener("DOMContentLoaded", function () {
         getDatabase().then(data => {
             const trackSelect = document.getElementById('track');
             const majorSelect = document.getElementById('major');
+            const prerequisitesSelect = document.getElementById('prerequisites');
+            const corequisitesSelect = document.getElementById('corequisites');
 
             if (trackSelect) {
                 // Clear existing options except the first one
@@ -432,6 +434,36 @@ document.addEventListener("DOMContentLoaded", function () {
                     majorSelect.appendChild(option);
                 });
             }
+
+            if (prerequisitesSelect) {
+                // Clear existing options except the first one
+                while (prerequisitesSelect.options.length > 1) {
+                    prerequisitesSelect.remove(1);
+                }
+
+                // Add options from the majors array
+                data[0].data.courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.title;
+                    option.textContent = course.title;
+                    prerequisitesSelect.appendChild(option);
+                });
+            }
+
+            if (corequisitesSelect) {
+                // Clear existing options except the first one
+                while (corequisitesSelect.options.length > 1) {
+                    corequisitesSelect.remove(1);
+                }
+
+                // Add options from the majors array
+                data[0].data.courses.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.title;
+                    option.textContent = course.title;
+                    corequisitesSelect.appendChild(option);
+                });
+            }
         });
     }
 
@@ -441,6 +473,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const titleInput = document.getElementById('courseName');
             const trackSelect = document.getElementById('track');
             const majorSelect = document.getElementById('major');
+            const prerequisitesSelect = document.getElementById('prerequisites');
+            const corequisitesSelect = document.getElementById('corequisites');
 
             const title = titleInput.value.trim();
 
@@ -451,6 +485,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Get all selected majors
             const majors = Array.from(majorSelect.selectedOptions)
+                .filter(option => option.value) // Filter out the empty option
+                .map(option => option.value);
+
+            const prerequisites = Array.from(prerequisitesSelect.selectedOptions)
+                .filter(option => option.value) // Filter out the empty option
+                .map(option => option.value);
+
+            const corequisites = Array.from(corequisitesSelect.selectedOptions)
                 .filter(option => option.value) // Filter out the empty option
                 .map(option => option.value);
 
@@ -478,7 +520,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 studentCount: 0,
                 department: department,
                 tracks: tracks,
-                majors: majors
+                majors: majors,
+                prerequisites: prerequisites,
+                corequisites: corequisites
             };
             data[0].data.courses.push(newCourse);
             saveDatabase(data[0].data);
@@ -491,10 +535,18 @@ document.addEventListener("DOMContentLoaded", function () {
             for (let i = 0; i < majorSelect.options.length; i++) {
                 majorSelect.options[i].selected = false;
             }
+            for (let i = 0; i < prerequisitesSelect.options.length; i++) {
+                prerequisitesSelect.options[i].selected = false;
+            }
+            for (let i = 0; i < corequisitesSelect.options.length; i++) {
+                corequisitesSelect.options[i].selected = false;
+            }
 
             // Reset the dropdown appearance
             trackSelect.blur();
             majorSelect.blur();
+            prerequisitesSelect.blur();
+            corequisitesSelect.blur();
 
             displayCourses(data[0].data.courses);
             showSuccess("Course added successfully");
@@ -532,6 +584,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function fixMultipleSelection() {
         const trackSelect = document.getElementById('track');
         const majorSelect = document.getElementById('major');
+        const prerequisitesSelect = document.getElementById('prerequisites');
+        const corequisitesSelect = document.getElementById('corequisites');
 
         // Ensure multiple attribute is set
         if (trackSelect) {
@@ -560,6 +614,38 @@ document.addEventListener("DOMContentLoaded", function () {
             majorSelect.multiple = true;
 
             majorSelect.addEventListener('mousedown', function(e) {
+                if (e.target.tagName === 'OPTION') {
+                    e.preventDefault();
+                    e.target.selected = !e.target.selected;
+
+                    const event = new Event('change');
+                    this.dispatchEvent(event);
+
+                    return false;
+                }
+            });
+        }
+
+        if (prerequisitesSelect) {
+            prerequisitesSelect.multiple = true;
+
+            prerequisitesSelect.addEventListener('mousedown', function (e) {
+                if (e.target.tagName === 'OPTION') {
+                    e.preventDefault();
+                    e.target.selected = !e.target.selected;
+
+                    const event = new Event('change');
+                    this.dispatchEvent(event);
+
+                    return false;
+                }
+            });
+        }
+
+        if (corequisitesSelect) {
+            corequisitesSelect.multiple = true;
+
+            corequisitesSelect.addEventListener('mousedown', function (e) {
                 if (e.target.tagName === 'OPTION') {
                     e.preventDefault();
                     e.target.selected = !e.target.selected;
@@ -639,6 +725,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fixMultipleSelection();
 
     //jsonData = {
+    //    "admins": [],
     //    "majors": [
     //        "Biology",
     //        "Chemistry",

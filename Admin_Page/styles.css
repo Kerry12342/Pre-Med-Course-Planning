@@ -494,7 +494,9 @@ select[multiple] option:hover {
 }
 
 #track,
-#major {
+#major,
+#prerequisites,
+#corequisites{
   width: 200px;
   margin-bottom: 10px;
   height: 100px;
