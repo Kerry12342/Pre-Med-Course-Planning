@@ -16,17 +16,23 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.appendChild(globalTooltip);
 
     // --- 2) Helper functions to show/hide the tooltip ---
-    function showTooltip(courseElement, tracks, majors) {
+    function showTooltip(courseElement, tracks, majors, prerequisites, corequisites) {
         // Format tracks and majors for display
         const tracksDisplay = tracks && tracks.length ?
             tracks.join(', ') : 'N/A';
         const majorsDisplay = majors && majors.length ?
             majors.join(', ') : 'N/A';
+        const prerequisitesDisplay = prerequisites && prerequisites.length ?
+            prerequisites.join(', ') : 'N/A';
+        const corequisitesDisplay = corequisites && corequisites.length ?
+            corequisites.join(', ') : 'N/A';
 
         // Populate the tooltip text
         globalTooltip.innerHTML = `
             <div><strong>Tracks:</strong> ${tracksDisplay}</div>
             <div><strong>Majors:</strong> ${majorsDisplay}</div>
+            <div><strong>Prerequisites:</strong> ${prerequisitesDisplay}</div>
+            <div><strong>Corequisites:</strong> ${corequisitesDisplay}</div>
         `;
 
         // Position it above (or near) the hovered element
@@ -142,6 +148,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const majorsDisplay = course.majors && course.majors.length ?
                 course.majors.join(', ') : 'N/A';
 
+            const prerequisitesDisplay = course.prerequisites && course.prerequisites.length ?
+                course.prerequisites.join(', ') : 'N/A';
+            const corequisitesDisplay = course.corequisites && course.corequisites.length ?
+                course.corequisites.join(', ') : 'N/A';
+
             courseItem.innerHTML = `
                 <strong>${course.title}</strong> <br>
                 <span class="note">Num of Students Planned</span>
@@ -149,6 +160,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="course-details">
                     <span class="course-track">Tracks: ${tracksDisplay}</span>
                     <span class="course-major">Majors: ${majorsDisplay}</span>
+                    <span class="course-major">Prerequisites: ${prerequisitesDisplay}</span>
+                    <span class="course-major">Corequisites: ${corequisitesDisplay}</span>
                 </div>
             `;
             courseListElement.appendChild(courseItem);
@@ -263,7 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
         function getCourseInfo(courseTitle) {
             getDatabase().then(data => {
                 const courseInfo = data[0].data.courses.find(c => c.title === courseTitle);
-                return courseInfo || { tracks: [], majors: [] };
+                return courseInfo || { tracks: [], majors: [], prerequisites: [], corequisites: []};
             });
         }
 
@@ -312,13 +325,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             courseDiv.classList.add('study-abroad');
                             info.track = "N/A";
                             info.major = "Study Abroad Program";
+                            info.prerequisites = "N/A";
+                            info.corequisites = "N/A";
                         }
 
                         courseDiv.textContent = course.title;
 
                         // ► On hover, show/hide the global tooltip
                         courseDiv.addEventListener('mouseenter', () => {
-                            showTooltip(courseDiv, info.track, info.major);
+                            showTooltip(courseDiv, info.track, info.major, info.prerequisites, info.corequisites);
                         });
                         courseDiv.addEventListener('mouseleave', () => {
                             hideTooltip();

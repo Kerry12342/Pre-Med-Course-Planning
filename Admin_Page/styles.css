@@ -162,7 +162,7 @@ p {
 
 /* Course List */
 .course-list {
-    max-height: 300px;
+    max-height: 470px;
     overflow-y: auto;
 }
 
