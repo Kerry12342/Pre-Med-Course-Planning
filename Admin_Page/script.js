@@ -224,6 +224,46 @@ document.addEventListener("DOMContentLoaded", function () {
         },
     ];
 
+    //--------------------------------------------------------
+    //DATABASE REQUEST FUNCTIONS
+    //--------------------------------------------------------
+
+    function saveDatabase(database) {
+
+        fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ data: database })
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('Data Stored');
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function getDatabase() {
+        return fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/get-json')
+            .then(response => response.json())
+            .catch(error => {
+                console.error('Error:', error);
+                return []; // Return an empty array in case of an error
+            });
+    }
+
+    //--------------------------------------------------------
+    //USAGE:
+    // save  ->   saveDatabase(jsonData);
+    // retrieve   ->    getDatabase().then(data => {
+    //                      // must do everything in here. variable is "data"
+    //                  });
+    //--------------------------------------------------------
+
     // Toggle + headings
     const toggleButton = document.getElementById("toggleCourse");
     const courseTitle = document.getElementById("courseTitle");
@@ -762,6 +802,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Fix multiple selection
     fixMultipleSelection();
+
+    jsonData = {
+        "majors": ["CS"],
+        "tracks": ["Pre-Vet"],
+        "courses": ["BIO-100"],
+        "students": []
+    }
+
+    saveDatabase(jsonData);
+
+    getDatabase().then(data => {
+        alert(JSON.stringify(data, null, 2));
+    });
 
 });
 
