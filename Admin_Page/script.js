@@ -854,3 +854,27 @@ document.querySelectorAll(".tab").forEach(button => {
         });
     });
 });
+
+function exportScheduleToCSV() {
+    const rows = document.querySelectorAll('#modal-calendar table tr');
+    let csvContent = "";
+
+    rows.forEach(row => {
+        const cols = row.querySelectorAll('th, td');
+        const rowData = Array.from(cols).map(cell => {
+            let text = cell.innerText.replace(/"/g, '""'); // escape quotes
+            return `"${text}"`;
+        }).join(",");
+        csvContent += rowData + "\r\n";
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "full_schedule.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}

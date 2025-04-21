@@ -1,29 +1,29 @@
-/* Font and general styles from the model */
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Font and general styles to match the model */
 body {
     height: 100%;
     width: 100%;
     font-family: "miller-text", serif;
+    font-weight: 400;
+    font-size: 20px;
     line-height: 32px;
     color: #4F5971;
     background-color: #fff;
-    margin: 0;
-    padding: 0;
 }
 
-.course-button {
-    background-color: #4CAF50; /* Green */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 5px;
-    cursor: pointer;
+.page_wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
-
-.course-button:hover {
-    background-color: #45a049;
-}
-
-/* Banner styling exactly like the model */
+/* ========== Header Banner ========== */
 .banner {
     background-color: #002f86;
     color: white;
@@ -76,7 +76,7 @@ body {
     color: white;
 }
 
-/* Admin button styling */
+/* ========== Admin Page Button ========== */
 .admin-page {
     display: flex;
     justify-content: flex-start;
@@ -102,41 +102,49 @@ body {
     background-color: #00205f;
 }
 
-/* Main body layout - keeping the original layout */
+/* ========== Main Layout ========== */
 .main_body {
-    font-family: "miller-text", serif;
     display: flex;
     flex-direction: row;
     gap: 20px;
-    padding: 20px;
+    padding: 20px 30px;
+    font-family: "miller-text", serif;
 }
 
-/* Section styling - adapting colors but keeping layout */
 .filters, .calendar, .completed-courses {
-    filter: drop-shadow(0 3mm 4mm rgb(150, 150, 150));
+    background-color: #f4f4f4;
+    filter: drop-shadow(0 3mm 4mm rgba(150, 150, 150, 0.2));
     border-radius: 20px;
+    padding: 20px;
     flex: 1;
-    padding: 10px;
-    border: 0px groove lightgrey;
-    background-color: #f4f4f4; /* Changed from gradient to match model */
 }
 
-/* Headings */
+/* ========== Typography ========== */
 h2 {
-    display: block;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    unicode-bidi: isolate;
-    color: #4F5971; /* Matching the color from the image */
+    color: #4F5971;
     font-family: "miller-text", serif;
+    font-size: 22px;
+    margin-bottom: 10px;
 }
 
-/* Form controls */
-select, button {
-    margin: 5px 0;
-    padding: 8px;
-    font-family: "miller-text", serif;
+label {
     font-size: 16px;
+    color: #4F5971;
+    display: block;
+    margin-top: 10px;
+}
+
+/* ========== Forms ========== */
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-family: "miller-text", serif;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
 }
 
 button {
@@ -144,6 +152,9 @@ button {
     color: white;
     border: none;
     border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: "miller-text", serif;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -152,24 +163,29 @@ button:hover {
     background-color: #00205f;
 }
 
-select {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* Labels */
-label {
+/* ========== Course List ========== */
+#courseList div {
+    background-color: #e0f0e0;
+    padding: 10px;
+    margin: 10px auto;
+    width: 100px;
+    border-radius: 5px;
+    text-align: center;
     font-size: 16px;
-    color: #4F5971;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-/* Calendar styles - preserving functionality */
+#courseList div:hover {
+    background-color: #c0e0c0;
+}
+
+/* ========== Calendar ========== */
 .calendar-wrapper {
-    border: 1px solid #ccc; /* Simplified border to match model */
-    border-radius: 5px; /* Smaller radius to match model */
-    width: 400px;
-    overflow-x: scroll;
-    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow-x: auto;
+    max-width: 100%;
 }
 
 .calendar-table {
@@ -177,10 +193,10 @@ label {
     width: 600px;
 }
 
-.calendar-table td, .calendar-table th {
+.calendar-table th, .calendar-table td {
     padding: 10px;
     text-align: center;
-    border: 1px solid #ccc; /* Match model table styling */
+    border: 1px solid #ccc;
 }
 
 .calendar-table th {
@@ -190,43 +206,40 @@ label {
 }
 
 .calendar-table td {
-    background-color: #fff; /* Simplified background to match model */
-    cursor: pointer;
+    background-color: #fff;
+    min-height: 80px;
     vertical-align: top;
-    min-height: 50px;
+    position: relative;
+    cursor: pointer;
 }
 
 .calendar-table td.selected {
-    background-color: #e0f0e0; /* Lighter green to match model palette */
+    background-color: #e0f0e0;
 }
 
-/* Ensure calendar cells have enough space for dropping courses */
 .calendar-cell {
-    min-height: 80px; /* Increase the height of the cells */
-    padding: 10px; /* Add padding inside the cell */
-    text-align: center; /* Center content inside the cell */
-    vertical-align: middle; /* Vertically align content */
-    position: relative; /* Necessary if we want to use absolute positioning for buttons */
-}
-
-/* Course list styling */
-#courseList div {
-    text-align: center;
-    width: 100px;
-    background-color: #e0f0e0; /* Lighter green */
     padding: 10px;
-    border-radius: 5px; /* Reduced to match model */
-    margin: 10px auto;
-    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    min-height: 80px;
+}
+
+/* ========== Completed Courses ========== */
+#completedCoursesTable {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+#completedCoursesTable th, #completedCoursesTable td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ccc;
     font-size: 16px;
-    transition: background-color 0.2s;
 }
 
-#courseList div:hover {
-    background-color: #c0e0c0;
-}
-
-/* Completed courses list */
 .completed-courses ul {
     list-style-type: none;
     padding: 0;
@@ -240,25 +253,26 @@ label {
     font-size: 16px;
 }
 
-/* Course elements in calendar */
+/* ========== Courses in Calendar Cells ========== */
 .course-name {
     display: block;
     margin-bottom: 5px;
-    background-color: #e0f0e0 !important; /* Lighter green */
+    background-color: #e0f0e0 !important;
     padding: 8px !important;
     border-radius: 4px !important;
     font-size: 14px;
 }
 
+/* ========== Tooltip ========== */
 #globalTooltip {
-    display: none;             /* Hidden by default */
-    position: absolute;        /* We will manually position it */
-    z-index: 999999;           /* Very high so it appears on top */
+    display: none;
+    position: absolute;
+    z-index: 999999;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 5px;
     font-size: 14px;
     color: #333;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
