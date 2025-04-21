@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard - Pre-Health Planning</title>
+    <title>Admin Dashboard - Pre-Health Planning</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
 </head>
@@ -51,11 +51,8 @@
         </section>
 
         <section class="student-schedule">
-            <h2>View Student Schedule</h2>
-            <div class="search-bar">
-                <input type="text" id="searchStudent" placeholder="Search for Students">
-                <button type="button" onclick="searchStudent()">🔍</button>
-            </div>
+            <h2>View Schedule</h2>
+
 
 
             <div class="calendar-wrapper">
@@ -88,11 +85,7 @@
 
             <div class="calendar-trigger">
                 <button type="button" onclick="openModal()">Click here to view full schedule</button>
-            </div>
-
-            <div class="calendar-trigger">
-                <button onclick="exportScheduleToCSV()">Export full schedule to CSV</button>
-            </div>            
+            </div>   
 
         </section>
 
@@ -131,47 +124,7 @@
         </div>
 
         <section class="course-management" style="width: 100%; max-width: 400px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
-          <!-- Tabs -->
-          <div class="tab-buttons" style="display: flex; margin-bottom: 15px;">
-              <button type="button" class="tab active" data-tab="courses" >Courses</button>
-              <button type="button" class="tab" data-tab="tracksMajors">Tracks & Majors</button>
-          </div>
-      
-          <!-- Fixed height container to maintain layout dimensions -->
-          <div class="tab-wrapper" style="min-height: 320px;">
-              <!-- Courses Tab -->
-              <div class="tab-content" id="courses" style="display: block;">
-                  <h2 id="courseTitle">Add Course</h2>
-                  <button id="toggleCourse" type="button">Switch to Delete Course</button>
-                  <input type="text" id="courseName" placeholder="Enter Course Title Here" style="display: block; margin-bottom: 10px;">
-                  <select id="track" multiple style="display: block; margin-bottom: 10px; height: 100px; overflow: auto;">
-                      <option value="">Track</option>
-                      <!-- Track options will be populated dynamically -->
-                  </select>
-                  <select id="major" multiple style="display: block; margin-bottom: 10px; height: 100px; overflow: auto;">
-                      <option value="">Major</option>
-                      <!-- Major options will be populated dynamically -->
-                  </select>
-                  <select id="prerequisites" multiple style="display: block; margin-bottom: 10px; height: 100px; overflow: auto;">
-                      <option value="">Prerequisites</option>
-                      <!-- Major options will be populated dynamically -->
-                  </select>
-                  <select id="corequisites" multiple style="display: block; margin-bottom: 10px; height: 100px; overflow: auto;">
-                      <option value="">Corequisites</option>
-                      <!-- Major options will be populated dynamically -->
-                  </select>
-                  <button type="button" id="courseSubmitBtn" style="display: block; margin-top: 10px;">Submit</button>
-              </div>
-      
-              <!-- Tracks & Majors Tab -->
-              <div class="tab-content" id="tracksMajors" style="display: none;">
-                  <h2>Edit Tracks & Majors</h2>
-                  <input type="text" id="newTrack" placeholder="Add New Track" style="display: block; margin-bottom: 10px;">
-                  <button type="button" id="addTrackBtn">Add Track</button>
-                  <input type="text" id="newMajor" placeholder="Add New Major" style="display: block; margin-top: 20px; margin-bottom: 10px;">
-                  <button type="button" id="addMajorBtn">Add Major</button>
-              </div>
-          </div>
+            <h2>Completed Courses</h2>
         </section>
     </main>
 
