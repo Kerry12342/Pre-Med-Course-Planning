@@ -1,0 +1,522 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Font and general styles to match the model */
+body {
+    height: 100%;
+    width: 100%;
+    font-family: "miller-text", serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 32px;
+    color: #4F5971;
+    background-color: #fff;
+}
+
+.page_wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Banner styling exactly like the model */
+.banner {
+    background-color: #002f86;
+    color: white;
+    padding: 15px 0;
+    width: 100%;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+.hamburger-menu {
+    cursor: pointer;
+    font-size: 24px;
+    background-color: white;
+    color: #002f86;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+}
+
+.logo-section h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-right: 15px;
+    color: white;
+}
+
+.separator {
+    font-size: 20px;
+    margin-right: 15px;
+    color: white;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: white;
+}
+
+/* Student Interface Button */
+.student-interface-button {
+    background-color: #002f86;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 10px 20px;
+    font-size: 16px;
+    font-family: "miller-text", serif;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.student-interface-button:hover {
+    background-color: #00205f;
+}
+
+/* Dashboard Layout */
+.dashboard {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+section {
+    filter: drop-shadow(0 3mm 4mm rgb(150, 150, 150));
+    border-radius: 20px;
+    flex: 1;
+    padding: 10px;
+    border: 0px groove lightgrey;
+    background-color: #f4f4f4;
+    margin: 0;
+}
+
+/* Headings */
+h2 {
+    display: block;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+    color: #4F5971;
+    font-family: "miller-text", serif;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    font-weight: bold;
+}
+
+p {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    color: #4F5971;
+}
+
+/* Search Bars */
+.search-bar {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.search-bar input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: "miller-text", serif;
+}
+
+.search-bar button {
+    background-color: #002f86;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+/* Course List */
+.course-list {
+    max-height: 470px;
+    overflow-y: auto;
+}
+
+.course-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.course-list li {
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: white;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.course-list li strong {
+    font-size: 16px;
+    color: #4F5971;
+    margin-bottom: 5px;
+}
+
+.course-list .note {
+    color: #666;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.course-list input {
+    width: 50px;
+    padding: 3px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+}
+
+.course-semester {
+    color: #002f86;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: .5px;
+}
+
+.course-details {
+    margin-top: 5px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-track, .course-major {
+    margin-top: 2px;
+    color: #4F5971;
+}
+
+/* Calendar styling */
+.calendar-wrapper {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+    overflow-x: scroll;
+    overflow-y: auto;
+    max-height: 300px;
+    justify-content: center;
+}
+
+.calendar-modal-wrapper {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: scroll;
+    overflow-y: auto;
+    justify-content: center;
+}
+
+.calendar-container {
+    display: block;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.calendar {
+    border-collapse: collapse;
+    width: 600px;  /* Set fixed width to make it scrollable */
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    min-width: 120px;
+}
+
+thead, th {
+    background-color: #f4f4f4;
+    color: #4F5971;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+}
+
+td {
+    background-color: #fff;
+    cursor: pointer;
+    vertical-align: top;
+    min-height: 50px;
+}
+
+/* Calendar Course Styles */
+.calendar-course {
+    position: relative;
+    display: block;
+    margin-bottom: 5px;
+    background-color: #e0f0e0;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #4F5971;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Buttons and Inputs */
+button {
+    background-color: #002f86;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    font-family: "miller-text", serif;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    margin: 5px 0;
+}
+
+button:hover {
+    background-color: #00205f;
+}
+
+input, select {
+    margin: 5px 0;
+    padding: 8px;
+    font-family: "miller-text", serif;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#toggleCourse, #courseName {
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Modal styling */
+.modal {
+    position: fixed;
+    padding: 0px;
+    top: 50%;
+    left: 50%;
+    max-width: 1200px;
+    max-height: 800px;
+    width: 90%;
+    height: 80%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    max-width: 1400px;
+    max-height: 900px;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 100%;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    z-index: 9999;
+    background-color: white;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+#modal-calendar tr {
+    background-color: transparent !important;
+    height: 50px;
+}
+
+/* Style for the view full schedule button */
+.calendar-trigger {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto;
+}
+
+.calendar-trigger button {
+    width: 100%;
+    background-color: #002f86;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    font-family: "miller-text", serif;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+
+    section {
+        width: 100%;
+    }
+}
+
+/* Popup modal for error/success messages */
+#popupModal.modal {
+    z-index: 9999999;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    text-align: center;
+    font-family: "miller-text", serif;
+    color: #4F5971;
+    width: 30%;
+    height: 30%;
+}
+
+/* Global tooltip (for out-of-container hover popups) */
+#globalTooltip {
+    display: none;
+    position: absolute;
+    z-index: 999999;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 14px;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+select[multiple] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+select[multiple] option {
+    padding: 5px;
+    margin: 2px 0;
+    border-radius: 3px;
+}
+
+
+/* Make both dropdown selections have the same color */
+select[multiple] option:checked {
+    background-color: #4F5971 !important; /* Using !important to override any browser defaults */
+    color: white !important;
+}
+
+/* Also style the hover state for consistency */
+select[multiple] option:hover {
+    background-color: #5d6882;
+    color: white;
+}
+
+/* Make both dropdown selections have the same color */
+#track option:checked,
+#major option:checked {
+    background-color: #424958 !important; /* Dark blue/gray color from your screenshot */
+    color: white !important;
+}
+
+/* Fix hover states too */
+#track option:hover,
+#major option:hover {
+    background-color: #424958;
+    color: white;
+}
+
+/* Additional rule to override light blue in Track dropdown */
+#track option:checked {
+    background-color: #424958 !important;
+    color: white !important;
+}
+
+#track,
+#major,
+#prerequisites,
+#corequisites{
+  width: 200px;
+  margin-bottom: 10px;
+  height: 100px;
+  overflow: auto;
+}
+
+
+.tab-buttons {
+    display: flex;
+    margin-bottom: 10px;
+}
+.tab {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    background-color: #62626c;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+}
+.tab.active {
+    background-color: #002f86;
+    font-weight: bold;
+}

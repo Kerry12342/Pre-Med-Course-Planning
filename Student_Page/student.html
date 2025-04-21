@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Planner</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <header class="banner">
+        <div class="banner-content">
+            <div class="hamburger-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo-section">
+                <h1>Hamilton</h1>
+                <span class="separator">•</span>
+                <span class="subtitle">My Pre-Health Plan</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <section class="enrollment">
+            <h2>Enrollment by Course</h2>
+            <div class="search-bar">
+                <input type="text" id="searchCourse" placeholder="Search for Courses">
+                <button type="button" onclick="searchButtonClicked()">🔍</button>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchTrack" placeholder="Search by Track">
+                <button type="button" onclick="searchButtonClicked()">🔍</button>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchMajor" placeholder="Search by Major">
+                <button type="button" onclick="searchButtonClicked()">🔍</button>
+            </div>
+            <div class="course-list">
+                <ul>
+                    <!-- Course items will be populated dynamically -->
+                </ul>
+            </div>
+        </section>
+        <section class="student-schedule">
+            <h2>My Planned Courses</h2>
+            <div class="calendar-wrapper">
+                <div class="calendar-container">
+                    <table class="calendar">
+                        <thead>
+                            <tr id="calendar-semesters"></tr>
+                        </thead>
+                        <tbody id="calendar-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="course-management" style="width: 100%; max-width: 400px;">
+            <h2>Manage Courses</h2>
+            <select id="semesterSelect"></select>
+            <input type="text" id="courseInput" placeholder="Enter Course Title">
+            <button onclick="addCourse()">Add Course</button>
+            <button onclick="removeCourse()">Remove Course</button>
+            <button onclick="saveStudent()">Save Schedule</button>
+            <div id="messageBox"></div>
+        </section>
+    </main>
+</body>
+</html>

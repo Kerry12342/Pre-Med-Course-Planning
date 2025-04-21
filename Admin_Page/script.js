@@ -811,14 +811,14 @@ document.addEventListener("DOMContentLoaded", function () {
     //            "department": "Chemistry",
     //            "track": ["pre-physical-assistant"],
     //            "major": ["Chemistry"]
-    //        },
+    //        }
     //    ],
     //    "students": [
     //        {
     //            "name": "Hi There",
     //            "id": "12345",
     //            "email": "hithere@hamilton.edu",
-                //" password": 12345
+    //            " password": 12345,
     //            "plannedCourses": [
     //                { "title": "BIO-100", "semester": "Fall 2025" },
     //                { "title": "CHEM-110", "semester": "Fall 2025" },
