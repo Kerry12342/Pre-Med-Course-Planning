@@ -173,21 +173,29 @@ function populateCalendar() {
 }
 
 function addCourse() {
-    const title = document.getElementById("courseInput").value.trim().toUpperCase();
-    const semester = document.getElementById("semesterSelect").value;
+    getDatabase().then(data => {
+        const title = document.getElementById("courseInput").value.trim().toUpperCase();
+        const semester = document.getElementById("semesterSelect").value;
 
-    if (!title || !semester) return showMessage("Missing course title or semester.");
-    if (currentStudent.plannedCourses.some(c => c.title === title)) {
-        return showMessage("Course already planned.");
-    }
+        if (!title || !semester) return showMessage("Missing course title or semester.");
 
-    if (!prerequisitesMet(title, semester)) {
-        return showMessage("Missing prerequisites.");
-    }
+        if (data[0].data.courses.some(c => c.title === title)) {
+            if (currentStudent.plannedCourses.some(c => c.title === title)) {
+                return showMessage("Course already planned.");
+            }
 
-    currentStudent.plannedCourses.push({ title, semester });
-    populateCalendar();
-    showMessage("Course added.", true);
+            if (!prerequisitesMet(title, semester)) {
+                return showMessage("Missing prerequisites.");
+            }
+        }
+        else {
+            return showMessage("Course does not exist.");
+        }
+
+        currentStudent.plannedCourses.push({ title, semester });
+        populateCalendar();
+        showMessage("Course added.", true);
+    });
 }
 
 function removeCourse() {

@@ -693,6 +693,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function updateStudentCounts() {
+        getDatabase().then(data => {
+            data[0].data.courses.forEach(course => {
+            const courseTitle = course.title;
+            let count = 0;
+
+            data[0].data.students.forEach(student => {
+                const hasCourse = student.plannedCourses.some(plannedCourse => plannedCourse.title === courseTitle);
+                if (hasCourse) count++;
+            });
+
+            course.studentCount = count;
+            saveDatabase(data[0].data);
+            });
+        });
+    }
+
     // Submit handler
     const submitButton = document.getElementById('courseSubmitBtn');
     if (submitButton) {
@@ -729,6 +746,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+    // Update the student counts for each course in the database
+    updateStudentCounts();
 
     // Initialize with empty course list
     displayCourses([]);
