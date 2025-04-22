@@ -52,20 +52,36 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Login attempted with email:', email);
 
 
-            getDatabase().then(data => { 
-                const student = data[0].data.students.find(s => s.email.toLowerCase().includes(email));
-                const admin = data[0].data.admins.find(s => s.email.toLowerCase().includes(email));
+            getDatabase().then(data => {
+                const student = data[0].data.students.find(s => s.email == email);
+                const admin = data[0].data.admins.find(s => s.email == email);
+                // if (admin && admin.password == password) {
+                //     window.location.href = "./../Admin_Page/millstone2_initial.html";
+                // }
+                // else if (student && student.password == password) {
+                //     window.location.href = "./../Student_Page/student.html";
+                // }
+
                 if (admin && admin.password == password) {
+                    sessionStorage.setItem("user", JSON.stringify({
+                        email: admin.email,
+                        role: 'admin'
+                    }));
                     window.location.href = "./../Admin_Page/millstone2_initial.html";
                 }
                 else if (student && student.password == password) {
-                    window.location.href = "./../Student_Page/student.html?email=" + student.email;
+                    sessionStorage.setItem("user", JSON.stringify({
+                        email: student.email,
+                        role: 'student'
+                    }));
+                    window.location.href = "./../Student_Page/student.html";
                 }
                 else {
                     alert('Incorrect Password');
 
                 }
             })
+
 
 
             // Have fetch from user.

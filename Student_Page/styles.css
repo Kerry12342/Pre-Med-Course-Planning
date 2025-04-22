@@ -520,3 +520,23 @@ select[multiple] option:hover {
     background-color: #002f86;
     font-weight: bold;
 }
+
+.logout-button {
+    margin-left: auto;
+}
+
+#logoutBtn {
+    background-color: #002f86;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+    #logoutBtn:hover {
+        background-color: #4F5971;
+    }

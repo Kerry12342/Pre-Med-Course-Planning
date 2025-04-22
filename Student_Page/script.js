@@ -124,10 +124,24 @@ const semesters = [
 ];
 
 function loadStudent() {
+    const userData = JSON.parse(sessionStorage.getItem('user'));
+    if (!userData || userData.role !== 'student') {
+        alert("No student session found. Please log in again. If the issue persists, try clearing your cache.");
+        window.location.href = "../Login_Page/login_page.html";
+        return;
+    }
+
     getDatabase().then(data => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get('email');
-        currentStudent = data[0].data.students.find(item => item.email === email); // Replace with dynamic lookup as needed
+        const allStudents = data[0].data.students;
+        const match = allStudents.find(s => s.email.toLowerCase() === userData.email.toLowerCase());
+
+        if (!match) {
+            alert("Student not found in the database.");
+            window.location.href = "../Login_Page/login_page.html";
+            return;
+        }
+
+        currentStudent = match;
         populateCalendar();
         populateSemesterOptions();
     });
