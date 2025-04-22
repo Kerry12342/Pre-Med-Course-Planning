@@ -125,7 +125,9 @@ const semesters = [
 
 function loadStudent() {
     getDatabase().then(data => {
-        currentStudent = data[0].data.students[0]; // Replace with dynamic lookup as needed
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        currentStudent = data[0].data.students.find(item => item.email === email); // Replace with dynamic lookup as needed
         populateCalendar();
         populateSemesterOptions();
     });

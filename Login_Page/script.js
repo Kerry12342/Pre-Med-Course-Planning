@@ -26,11 +26,6 @@ function getDatabase() {
         });
 }
 
-    getDatabase().then(data => {
-       alert(JSON.stringify(data, null, 2));
-       console.log(JSON.stringify(data, null, 2))
-    });
-
 
 document.addEventListener('DOMContentLoaded', function() {
     // Elements
@@ -64,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.location.href = "./../Admin_Page/millstone2_initial.html";
                 }
                 else if (student && student.password == password) {
-                    window.location.href = "./../student-interface-demo/interface.html";
+                    window.location.href = "./../Student_Page/student.html?email=" + student.email;
                 }
                 else {
                     alert('Incorrect Password');
