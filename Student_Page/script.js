@@ -260,3 +260,13 @@ function showMessage(msg, success = false) {
 }
 
 displayCourses([]);
+
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            sessionStorage.clear();
+            window.location.href = "../Login_Page/login_page.html"; // Adjust path if needed
+        });
+    }
+});
