@@ -1,3 +1,11 @@
+/*
+ Admin Page Script
+
+ Holds the code for the administrator page which views students and course information, as well as
+ features to add and remove tracks, majors, and students.
+ */
+
+
 document.addEventListener("DOMContentLoaded", function () {
     // --- 1) Create the GLOBAL tooltip at the body level ---
     const globalTooltip = document.createElement('div');
@@ -44,14 +52,24 @@ document.addEventListener("DOMContentLoaded", function () {
         globalTooltip.style.display = 'block';
     }
 
+
+
     function hideTooltip() {
         globalTooltip.style.display = 'none';
     }
 
-    //--------------------------------------------------------
-    //DATABASE REQUEST FUNCTIONS
-    //--------------------------------------------------------
 
+
+    // DATABASE FUNCTIONS:
+    //USAGE:
+    // save  ->   saveDatabase(jsonData);
+    // retrieve   ->    getDatabase().then(data => {
+    //                      // must do everything in here. variable is "data"
+    //                  });
+
+
+
+    // Saves database information. Takes updated database as a parameter.
     function saveDatabase(database) {
 
         fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
@@ -70,6 +88,9 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+
+
+    // Fetches database information.
     function getDatabase() {
         return fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/get-json')
             .then(response => response.json())
@@ -79,19 +100,15 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    //--------------------------------------------------------
-    //USAGE:
-    // save  ->   saveDatabase(jsonData);
-    // retrieve   ->    getDatabase().then(data => {
-    //                      // must do everything in here. variable is "data"
-    //                  });
-    //--------------------------------------------------------
+
 
     // Toggle + headings
     const toggleButton = document.getElementById("toggleCourse");
     const courseTitle = document.getElementById("courseTitle");
     const studentInterfaceButton = document.querySelector("a[href='./../student-interface-demo/interface.html'] button");
     const allButtons = document.querySelectorAll("button:not(#toggleCourse):not(.student-interface-button)");
+
+
 
     // Show error in modal or fallback
     function showError(message) {
@@ -105,6 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+
+
     // Close popup
     const closePopupBtn = document.getElementById("closePopupBtn");
     if (closePopupBtn) {
@@ -115,6 +134,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+
 
     // Toggle between Add Course / Delete Course
     function toggleCourseMode() {
@@ -128,6 +149,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
+
+
 
     // Display courses in enrollment section
     function displayCourses(courseList) {
@@ -168,6 +191,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+
+
     // Filter courses
     function filterCourses(showErrorMessage = false) {
         getDatabase().then(data => {
@@ -176,7 +201,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const trackSearch = document.getElementById('searchTrack').value.toUpperCase();
 
             const dbCourses = data[0].data.courses
-            //
 
             const filteredCourses = dbCourses.filter(course => {
                 const courseMatch = course.title.toUpperCase().includes(courseSearch);
@@ -204,12 +228,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Search button
+
+
+    // Search button calls filterCourses when clicked
     function searchButtonClicked() {
         filterCourses(true);
     }
 
-    // Get unique semesters from a student's planned courses
+    // Get unique semesters from a student's planned courses. Students may have different
+    // semesters based on when they started college.
     function getUniqueSemesters(student) {
         if (!student || !student.plannedCourses) return [];
         const semesters = student.plannedCourses
@@ -225,6 +252,8 @@ document.addEventListener("DOMContentLoaded", function () {
             return aSeason === 'Spring' && bSeason === 'Fall' ? -1 : 1;
         });
     }
+
+
 
     // Create calendar table dynamically
     function createCalendarTable(containerId, semesters) {
@@ -259,6 +288,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return table;
     }
 
+
+
     // Clear calendar
     function clearCalendar() {
         const mainCalendarContainer = document.querySelector('.calendar-container');
@@ -267,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (modalCalendarContainer) modalCalendarContainer.innerHTML = '';
     }
 
-    // --- 4) Updated displayStudentSchedule to use the global tooltip on hover ---
+    // Displays the searched student's schedule on the calendar.
     function displayStudentSchedule(student) {
         if (!student || !student.plannedCourses || student.plannedCourses.length === 0) return;
         const semesters = getUniqueSemesters(student);
@@ -346,7 +377,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Student search
+
+
+    // Student search functionality. 
     function searchStudent() {
 
         getDatabase().then(data => {
@@ -398,6 +431,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+
+
     // Enrollment search buttons
     const enrollmentSearchButtons = document.querySelectorAll('.enrollment .search-bar button');
     enrollmentSearchButtons.forEach(button => {
@@ -405,12 +440,16 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener('click', searchButtonClicked);
     });
 
+
+
     // Student search button
     const studentSearchButton = document.querySelector('.student-schedule .search-bar button');
     if (studentSearchButton) {
         studentSearchButton.removeEventListener('click', function() { showError("Student search not implemented yet"); });
         studentSearchButton.addEventListener('click', searchStudent);
     }
+
+
 
     // Function to populate track and major dropdowns
     function populateDropdowns() {
@@ -482,7 +521,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Add a new course
+
+
+    // Add a new course with the selected name, track, major, and prereqs.
     function addCourse() {
         getDatabase().then(data => {
             const titleInput = document.getElementById('courseName');
@@ -568,7 +609,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Delete a course
+
+
+    // Delete a course with the selected name
     function deleteCourse() {
         getDatabase().then(data => {
             const titleInput = document.getElementById('courseName');
@@ -594,6 +637,8 @@ document.addEventListener("DOMContentLoaded", function () {
             showSuccess("Course deleted successfully");
         });
     }
+
+
 
     // Make sure the dropdowns allow multiple selections
     function fixMultipleSelection() {
@@ -693,6 +738,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+
+
+    // Update student counts for each class.
     function updateStudentCounts() {
         getDatabase().then(data => {
             data[0].data.courses.forEach(course => {
@@ -709,6 +757,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+
+
 
     // Submit handler
     const submitButton = document.getElementById('courseSubmitBtn');
@@ -977,6 +1027,8 @@ document.querySelectorAll(".tab").forEach(button => {
     });
 });
 
+
+// Exports a student's schedule to a CSV file.
 function exportScheduleToCSV() {
     const rows = document.querySelectorAll('#modal-calendar table tr');
     let csvContent = "";

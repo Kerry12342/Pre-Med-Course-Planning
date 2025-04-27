@@ -1,11 +1,13 @@
-// Sample placeholder for your student object loading
+
+window.onload = loadStudent;
+
+
 
 //--------------------------------------------------------
 //DATABASE REQUEST FUNCTIONS
 //--------------------------------------------------------
 
-window.onload = loadStudent;
-
+// Save database. Pass it the updated database.
 function saveDatabase(database) {
 
     fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
@@ -24,6 +26,9 @@ function saveDatabase(database) {
         });
 }
 
+
+
+// Fetch the current database.
 function getDatabase() {
     return fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/get-json')
         .then(response => response.json())
@@ -41,6 +46,8 @@ function getDatabase() {
     //                  });
     //--------------------------------------------------------
 
+
+// Display all of the courses to the student. Passed the list of courses to be displayed.
 function displayCourses(courseList) {
     const courseListElement = document.querySelector('.course-list ul');
     courseListElement.innerHTML = '';
@@ -79,6 +86,8 @@ function displayCourses(courseList) {
     });
 }
 
+
+// Filters courses based on course title, major, and track
 function filterCourses(showErrorMessage = false) {
     getDatabase().then(data => {
         const courseSearch = document.getElementById('searchCourse').value.toUpperCase();
@@ -114,15 +123,19 @@ function filterCourses(showErrorMessage = false) {
     });
 }
 
+// When search button is clicked, courses are filtered.
 function searchButtonClicked() {
     filterCourses(true);
 }
+
 let currentStudent = null;
 const semesters = [
     "Fall 2025", "Spring 2026", "Fall 2026", "Spring 2027",
     "Fall 2027", "Spring 2028", "Fall 2028", "Spring 2029", "Fall 2029"
 ];
 
+
+// Gets the current student's information and populates the calendar and semesters accordingly.
 function loadStudent() {
     const userData = JSON.parse(sessionStorage.getItem('user'));
     if (!userData || userData.role !== 'student') {
@@ -144,9 +157,17 @@ function loadStudent() {
         currentStudent = match;
         populateCalendar();
         populateSemesterOptions();
+
+
+        // getDatabase().then(data => {
+        //     const urlParams = new URLSearchParams(window.location.search);
+        //     const email = urlParams.get('email');
+        //     currentStudent = data[0].data.students.find(item => item.email === email); // Replace with dynamic lookup as needed
     });
 }
 
+
+// Populates the different semester options.
 function populateSemesterOptions() {
     const select = document.getElementById("semesterSelect");
     semesters.forEach(sem => {
@@ -157,6 +178,8 @@ function populateSemesterOptions() {
     });
 }
 
+
+// Fills in the calendar with the different courses the student is taking.
 function populateCalendar() {
     const headerRow = document.getElementById("calendar-semesters");
     const body = document.getElementById("calendar-body");
@@ -188,6 +211,8 @@ function populateCalendar() {
     });
 }
 
+
+// Adds a course to the student's current list of courses.
 function addCourse() {
     getDatabase().then(data => {
         const title = document.getElementById("courseInput").value.trim().toUpperCase();
@@ -196,10 +221,11 @@ function addCourse() {
         if (!title || !semester) return showMessage("Missing course title or semester.");
 
         if (data[0].data.courses.some(c => c.title === title)) {
+            // If the course is already in the student's list, then they can't plan it again.
             if (currentStudent.plannedCourses.some(c => c.title === title)) {
                 return showMessage("Course already planned.");
             }
-
+            // Can't take if they don't meet the prerequisistes.
             if (!prerequisitesMet(title, semester)) {
                 return showMessage("Missing prerequisites.");
             }
@@ -214,6 +240,8 @@ function addCourse() {
     });
 }
 
+
+// Removes a course from the student's list of courses.
 function removeCourse() {
     const title = document.getElementById("courseInput").value.trim().toUpperCase();
     const semester = document.getElementById("semesterSelect").value;
@@ -238,6 +266,8 @@ function removeElement(arr, element) {
     }
 }
 
+
+// Saves student's current information to the database.
 function saveStudent() {
     getDatabase().then(data => {
         const email = currentStudent.email;

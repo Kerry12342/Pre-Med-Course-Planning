@@ -1,17 +1,54 @@
 document.addEventListener('DOMContentLoaded', function() {
+
     // Elements
     const hamburgerMenu = document.querySelector('.hamburger-menu');
     const resetButton = document.querySelector('.reset-button');
-    const emailInput = document.getElementById('email');
-    const emailError = document.getElementById('email-error');
+    const adminInput = document.getElementById('admincode');
     const confirmationMessage = document.getElementById('confirmation');
+    const emailInput = document.getElementById('email');
+    const adminPassReset = "12345";
+    const passwordInput = document.getElementById('newpassword');
+    //confirmationMessage.style.display = 'none';
 
-    // Initially hide error and confirmation
-    emailError.style.display = 'none';
-    confirmationMessage.style.display = 'none';
 
-    // Track if email field has been interacted with
-    let emailTouched = false;
+    // Database functions
+
+    // Saves database. Pass it the updated database.
+    function saveDatabase(database) {
+
+        fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ data: database })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+
+
+    // Returns the database as it currently is.
+    function getDatabase() {
+        return fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/get-json')
+            .then(response => response.json())
+            .catch(error => {
+                console.error('Error:', error);
+                return []; // Return an empty array in case of an error
+            });
+    }
+
+
+
+
+
+  
 
     // Hamburger menu functionality
     hamburgerMenu.addEventListener('click', function() {
@@ -19,41 +56,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add your menu toggle functionality here
     });
 
-    // Validate Hamilton email
-    function validateEmail() {
-        const emailValue = emailInput.value.trim();
-        const isValid = emailValue && emailValue.toLowerCase().endsWith('@hamilton.edu');
 
-        if (!isValid && emailValue && emailTouched) {
-            emailError.style.display = 'flex';
-            emailInput.style.borderColor = 'red';
-            return false;
-        } else {
-            emailError.style.display = 'none';
-            emailInput.style.borderColor = '';
-            return isValid;
-        }
-    }
-
-    // Mark email as touched on blur
-    emailInput.addEventListener('blur', function() {
-        emailTouched = true;
-        validateEmail();
-    });
-
-    // Real-time validation after field has been touched
-    emailInput.addEventListener('input', function() {
-        if (emailTouched) {
-            validateEmail();
-        }
-    });
+    console.log(resetButton)
 
     // Reset button functionality
     resetButton.addEventListener('click', function() {
+        console.log(adminPassReset)
+        console.log(adminInput)
         emailTouched = true;
 
-        // Run validation
-        const isEmailValid = validateEmail();
 
         // Check if email is empty
         if (!emailInput.value) {
@@ -63,20 +74,47 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Submit if email is valid
-        if (isEmailValid) {
-            console.log('Reset password requested for:', emailInput.value);
 
-            // Show confirmation message
-            confirmationMessage.style.display = 'flex';
+        getDatabase().then(data => {
 
-            // Disable reset button and input field
-            resetButton.disabled = true;
-            resetButton.style.opacity = '0.7';
-            resetButton.textContent = 'Email Sent';
-            emailInput.disabled = true;
+            if (adminPassReset == adminInput) {
+                const student = data[0].data.students.find(s => s.email == emailInput);
+                const admin = data[0].data.admins.find(s => s.email == emailInput);
+                if (!student && !admin) {
+                    alert('No account with this email exists');
+                    return;
+                }
+                else if (student){
+                    removeElement(data[0].data.students, student);
+                    student.password == passwordInput
+                    data[0].data.students.push(student);
+                }
+                else if (admin) {
+                    removeElement(data[0].data.admins, admin);
+                    admin.password == passwordInput
+                    data[0].data.admins.push(admin);
+                }
+                saveDatabase(data[0].data);
+                console.log('Reset password requested for:', emailInput.value);
+            }
+            else {
+                alert('Invalid admin code!');
+            }
+
+        })
+
+
+
+        // Show confirmation message
+        confirmationMessage.style.display = 'flex';
+
+        // Disable reset button and input field
+        resetButton.disabled = true;
+        resetButton.style.opacity = '0.7';
+        resetButton.textContent = 'Email Sent';
+        emailInput.disabled = true;
+
 
             // In a real application, you would send a request to your backend here
-        }
     });
 });

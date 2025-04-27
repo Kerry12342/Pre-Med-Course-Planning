@@ -1,4 +1,7 @@
 
+
+// Database functions.
+// Save database. Takes the updated database as an argument.
 function saveDatabase(database) {
 
     fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
@@ -17,6 +20,8 @@ function saveDatabase(database) {
         });
 }
 
+
+// Returns the database as it currently is.
 function getDatabase() {
     return fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/get-json')
         .then(response => response.json())

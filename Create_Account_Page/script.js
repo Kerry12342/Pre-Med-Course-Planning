@@ -6,8 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm-password');
     const nameInput = document.getElementById('name');
+    const advisorInput = document.getElementById('advisor');
     // const emailVal = emailInput.value.trim();
     const adminCode = "testing123";
+
 
     // Error messages
     const emailError = document.getElementById('email-error');
@@ -154,6 +156,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+
+    // Event Listeners:
+
     // Mark fields as touched on blur (when user clicks away)
     emailInput.addEventListener('blur', function() {
         emailTouched = true;
@@ -195,6 +200,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+
+
     // Submit button functionality
     submitButton.addEventListener('click', function() {
         formSubmitted = true;
@@ -226,7 +233,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Submit if everything is valid
         if (isEmailValid && isPasswordValid && isPasswordMatching) {
-            // If not in admin or in studens, then create account. 
+            // If not in admin or in studens, then create account. Otherwise, alert that an account already
+            // exists.
             getDatabase().then(data => { 
                 const emailVal = emailInput.value.trim();
                 console.log(emailVal)
@@ -268,6 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const newStudent = {
                         name: nameValue,
                         email: emailVal,
+                        advisor: advisorInput,
                         password: passwordInput.value,
                         plannedCourses: []
                     };
@@ -275,23 +284,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     saveDatabase(data[0].data);
                     console.log('Account creation submitted');
                     alert('Account created successfully! You will be redirected to the login page.');
-
-
-
-
                     // Redirect to login page
                     window.location.href = './../Login_Page/login_page.html';
                 }
 
             })
-
-
-
-
-            // console.log('Account creation submitted');
-            // alert('Account created successfully! You will be redirected to the login page.');
-            // // Redirect to login page
-            // window.location.href = './../Login_Page/login_page.html';
         }
     });
 });
