@@ -138,6 +138,7 @@
           <div class="tab-buttons" style="display: flex; margin-bottom: 15px;">
               <button type="button" class="tab active" data-tab="courses" >Courses</button>
               <button type="button" class="tab" data-tab="tracksMajors">Tracks & Majors</button>
+              <button type="button" class="tab" data-tab="delStudent">Remove Student</button>
           </div>
       
           <!-- Fixed height container to maintain layout dimensions -->
@@ -169,11 +170,21 @@
               <!-- Tracks & Majors Tab -->
               <div class="tab-content" id="tracksMajors" style="display: none;">
                   <h2>Edit Tracks & Majors</h2>
-                  <input type="text" id="newTrack" placeholder="Add New Track" style="display: block; margin-bottom: 10px;">
+                  <input type="text" id="newTrack" placeholder="Input Track" style="display: block; margin-bottom: 10px;">
                   <button type="button" id="addTrackBtn">Add Track</button>
-                  <input type="text" id="newMajor" placeholder="Add New Major" style="display: block; margin-top: 20px; margin-bottom: 10px;">
+                  <button type="button" id="remTrackBtn">Remove Track</button>
+                  <input type="text" id="newMajor" placeholder="Input Major" style="display: block; margin-top: 20px; margin-bottom: 10px;">
                   <button type="button" id="addMajorBtn">Add Major</button>
+                  <button type="button" id="remMajorBtn">Remove Major</button>
               </div>
+
+
+              <div class="tab-content" id="delStudent" style="display: none;">
+                <h2>Remove Student</h2>
+                <input type="text" id="studentEmail" placeholder="Student Email" style="display: block; margin-bottom: 10px;">
+                <input type="text" id="confirm" placeholder="Confirm" style="display: block; margin-top: 20px; margin-bottom: 10px;">
+                <button type="button" id="remStudent">Remove Student</button>
+            </div>
           </div>
         </section>
     </main>
