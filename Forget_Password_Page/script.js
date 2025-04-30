@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const hamburgerMenu = document.querySelector('.hamburger-menu');
     const resetButton = document.querySelector('.reset-button');
-    const adminInput = document.getElementById('admincode');
     const confirmationMessage = document.getElementById('confirmation');
     const emailInput = document.getElementById('email');
     const adminPassReset = "12345";
+    const adminInput = document.getElementById('admincode');
     const passwordInput = document.getElementById('newpassword');
     //confirmationMessage.style.display = 'none';
 
@@ -45,9 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-
-
-
   
 
     // Hamburger menu functionality
@@ -74,34 +71,38 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-
         getDatabase().then(data => {
 
-            if (adminPassReset == adminInput) {
-                const student = data[0].data.students.find(s => s.email == emailInput);
-                const admin = data[0].data.admins.find(s => s.email == emailInput);
+            if (adminPassReset == adminInput.value) {
+                console.log(data)
+
+                const student = data[0].data.students.find(s => s.email == emailInput.value);
+                const admin = data[0].data.admins.find(s => s.email == emailInput.value);
                 if (!student && !admin) {
                     alert('No account with this email exists');
                     return;
                 }
-                else if (student){
-                    removeElement(data[0].data.students, student);
-                    student.password == passwordInput
+                else if (student) {
+                    data[0].data.students.splice([data[0].data.students.indexOf(student)], 1);
+                    student.password = passwordInput.value;
                     data[0].data.students.push(student);
                 }
                 else if (admin) {
-                    removeElement(data[0].data.admins, admin);
-                    admin.password == passwordInput
+                    data[0].data.admins.splice([data[0].data.admins.indexOf(admin)], 1);
+                    admin.password = passwordInput.value;
                     data[0].data.admins.push(admin);
                 }
                 saveDatabase(data[0].data);
                 console.log('Reset password requested for:', emailInput.value);
+                alert('Password Reset!');
+
             }
             else {
                 alert('Invalid admin code!');
             }
+            window.location.href = "./../Login_Page/login_page.html";
 
-        })
+        });
 
 
 

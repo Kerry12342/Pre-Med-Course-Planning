@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
             getDatabase().then(data => {
+                console.log(data);
                 const student = data[0].data.students.find(s => s.email == email);
                 const admin = data[0].data.admins.find(s => s.email == email);
                 // if (admin && admin.password == password) {
