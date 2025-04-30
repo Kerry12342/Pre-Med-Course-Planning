@@ -129,10 +129,25 @@ function searchButtonClicked() {
 }
 
 let currentStudent = null;
-const semesters = [
-    "Fall 2025", "Spring 2026", "Fall 2026", "Spring 2027",
-    "Fall 2027", "Spring 2028", "Fall 2028", "Spring 2029", "Fall 2029"
-];
+
+function generateSemesters(startingFromFall = true, totalSemesters = 9) {
+    const currentYear = new Date().getFullYear() - 1;
+    const semesters = [];
+
+    let year = currentYear;
+    let isFall = startingFromFall;
+
+    for (let i = 0; i < totalSemesters; i++) {
+        const semester = isFall ? `Fall ${year}` : `Spring ${year + 1}`;
+        semesters.push(semester);
+        isFall = !isFall;
+        if (isFall) year++; // only increment year after Spring
+    }
+
+    return semesters;
+}
+
+const semesters = generateSemesters();
 
 
 // Gets the current student's information and populates the calendar and semesters accordingly.
@@ -157,6 +172,8 @@ function loadStudent() {
         currentStudent = match;
         populateCalendar();
         populateSemesterOptions();
+
+        currentStudent.plannedCourses = currentStudent.plannedCourses.filter(item => semesters.includes(item.semester));
 
 
         // getDatabase().then(data => {

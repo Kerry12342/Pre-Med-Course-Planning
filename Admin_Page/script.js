@@ -668,6 +668,26 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         }
 
+        // add a major with the selected name
+        function addMajor() {
+            getDatabase().then(data => {
+                const majorInput = document.getElementById('newMajor');
+                const major = majorInput.value.trim();
+    
+                if (!major) {
+                    showError("Please enter a major to add");
+                    return;
+                }
+                data[0].data.majors.push(major);
+                saveDatabase(data[0].data);
+    
+                majorInput.value = '';
+                // displayCourses(data[0].data.ma);
+    
+                showSuccess("Major added successfully");
+            });
+        }
+
 
         // Delete a track with the selected name
         function deleteTrack() {
@@ -693,6 +713,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 // displayCourses(data[0].data.ma);
     
                 showSuccess("Track deleted successfully");
+            });
+        }
+
+        // add a major with the selected name
+        function addTrack() {
+            getDatabase().then(data => {
+                const trackInput = document.getElementById('newTrack');
+                const track = trackInput.value.trim();
+    
+                if (!track) {
+                    showError("Please enter a track to add");
+                    return;
+                }
+                data[0].data.tracks.push(track);
+                saveDatabase(data[0].data);
+    
+                trackInput.value = '';
+                // displayCourses(data[0].data.ma);
+    
+                showSuccess("Track added successfully");
             });
         }
 
@@ -896,6 +936,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const remTrackButton = document.getElementById('remTrackBtn');
     remTrackButton.addEventListener('click', function() {
         deleteTrack();
+    });
+
+    const addMajorButton = document.getElementById('addMajorBtn');
+    addMajorButton.addEventListener('click', function () {
+        addMajor();
+    });
+
+    const addTrackButton = document.getElementById('addTrackBtn');
+    addTrackButton.addEventListener('click', function () {
+        addTrack();
     });
 
     const remStudentButton = document.getElementById('remStudent');
