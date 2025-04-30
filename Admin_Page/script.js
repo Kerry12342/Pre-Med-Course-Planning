@@ -640,6 +640,99 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+
+        // Delete a major with the selected name
+        function deleteMajor() {
+            getDatabase().then(data => {
+                const majorInput = document.getElementById('newMajor');
+                const major = majorInput.value.trim();
+    
+                if (!major) {
+                    showError("Please enter a major to delete");
+                    return;
+                }
+                const trackIndex = data[0].data.majors.findIndex(c =>
+                    c.toLowerCase() === major.toLowerCase()
+                );
+                if (trackIndex === -1) {
+                    showError("Major not found");
+                    return;
+                }
+                data[0].data.majors.splice(trackIndex, 1);
+                saveDatabase(data[0].data);
+    
+                majorInput.value = '';
+                // displayCourses(data[0].data.ma);
+    
+                showSuccess("Major deleted successfully");
+            });
+        }
+
+
+        // Delete a track with the selected name
+        function deleteTrack() {
+            getDatabase().then(data => {
+                const trackInput = document.getElementById('newTrack');
+                const track = trackInput.value.trim();
+    
+                if (!track) {
+                    showError("Please enter a track to delete");
+                    return;
+                }
+                const trackIndex = data[0].data.tracks.findIndex(c =>
+                    c.toLowerCase() === track.toLowerCase()
+                );
+                if (trackIndex === -1) {
+                    showError("Track not found");
+                    return;
+                }
+                data[0].data.tracks.splice(trackIndex, 1);
+                saveDatabase(data[0].data);
+    
+                trackInput.value = '';
+                // displayCourses(data[0].data.ma);
+    
+                showSuccess("Track deleted successfully");
+            });
+        }
+
+
+        // Delete a student with the selected email
+        function deleteStudent() {
+            getDatabase().then(data => {
+                const studentInput = document.getElementById('studentEmail');
+                const student = studentInput.value.trim();
+                const confirmInput = document.getElementById('confirm');
+                const confirm = confirmInput.value.trim();
+    
+                if (!student) {
+                    showError("Please enter a Student to Input");
+                    return;
+                }
+                const studentIndex = data[0].data.students.findIndex(c =>
+                    c.email.toLowerCase() === student.toLowerCase()
+                );
+                if (studentIndex === -1) {
+                    showError("Student not found");
+                    return;
+                }
+                if (confirm.toLowerCase() != "confirm") {
+                    showError("Please enter confirm text!");
+                    return;
+                }
+
+                data[0].data.students.splice(studentIndex, 1);
+                saveDatabase(data[0].data);
+                studentInput.value = '';
+                confirmInput.value = '';
+                // displayCourses(data[0].data.ma);
+    
+                showSuccess("Student deleted successfully");
+            });
+        }
+
+
+
     // Make sure the dropdowns allow multiple selections
     function fixMultipleSelection() {
         const trackSelect = document.getElementById('track');
@@ -794,6 +887,22 @@ document.addEventListener("DOMContentLoaded", function () {
             event.stopPropagation();
         });
     }
+
+    const remMajorButton = document.getElementById('remMajorBtn');
+    remMajorButton.addEventListener('click', function() {
+        deleteMajor();
+    });
+
+    const remTrackButton = document.getElementById('remTrackBtn');
+    remTrackButton.addEventListener('click', function() {
+        deleteTrack();
+    });
+
+    const remStudentButton = document.getElementById('remStudent');
+    remStudentButton.addEventListener('click', function() {
+        deleteStudent();
+    });
+
 
 
     // Update the student counts for each course in the database
