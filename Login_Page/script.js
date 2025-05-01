@@ -36,37 +36,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Elements
     const hamburgerMenu = document.querySelector('.hamburger-menu');
     const loginButton = document.querySelector('.login-button');
-    const forgotPasswordBtn = document.querySelector('.forgot-password-btn');
-    const createAccount = document.querySelector('.create-account');
+    const forgotPasswordLink = document.querySelector('a[href*="forget_password.html"]');
+    const createAccountLink = document.querySelector('a[href*="create_account.html"]');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
-
-    // Hamburger menu functionality
-    hamburgerMenu.addEventListener('click', function() {
-        // Add your menu toggle logic here
-        console.log('Menu clicked');
-    });
 
     // Login button functionality
     loginButton.addEventListener('click', function() {
         const email = emailInput.value;
         const password = passwordInput.value;
 
-        if (email && password) {
-            // Add your login logic here
-            console.log('Login attempted with email:', email);
+        console.log('login pressed');
 
+        if (email && password) {
+            console.log('Login attempted with email:', email);
 
             getDatabase().then(data => {
                 console.log(data);
                 const student = data[0].data.students.find(s => s.email == email);
                 const admin = data[0].data.admins.find(s => s.email == email);
-                // if (admin && admin.password == password) {
-                //     window.location.href = "./../Admin_Page/millstone2_initial.html";
-                // }
-                // else if (student && student.password == password) {
-                //     window.location.href = "./../Student_Page/student.html";
-                // }
 
                 if (admin && admin.password == password) {
                     sessionStorage.setItem("user", JSON.stringify({
@@ -84,22 +72,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 else {
                     alert('Incorrect Password');
-
                 }
-            })
-
-
-
-            // Have fetch from user.
-            // var userRole = "student"
-            // if (userRole === "admin") {
-            //     window.location.href = "./../Admin_Page/millstone2_initial.html";
-            // } else if (userRole === "student") {
-            //     window.location.href = "./../student-interface-demo/interface.html";
-            // }
-
+            });
         } else {
-            // Show validation error
             if (!email) {
                 emailInput.style.borderColor = 'red';
             }
@@ -109,8 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             alert('Please fill in all required fields');
-
-            
         }
     });
 
@@ -124,26 +97,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Forgot password functionality
-    forgotPasswordBtn.addEventListener('click', function() {
-        const email = emailInput.value;
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = emailInput.value;
 
-        if (email) {
-            // Add your password reset logic here
-            console.log('Password reset requested for email:', email);
-            alert('Password reset instructions have been sent to your email.');
-        } else {
-            emailInput.style.borderColor = 'red';
-            alert('Please enter your email address to reset your password');
-        }
-    });
+            if (email) {
+                console.log('Password reset requested for email:', email);
+                alert('Password reset instructions have been sent to your email.');
+            } else {
+                emailInput.style.borderColor = 'red';
+                alert('Please enter your email address to reset your password');
+            }
+        });
+    }
 
     // Create account functionality
-    createAccount.addEventListener('click', function(e) {
-        e.preventDefault();
-        // Add your account creation logic here or redirect to registration page
-        console.log('Create account requested');
-        // Example of redirect: window.location.href = 'register.html';
-    });
+    if (createAccountLink) {
+        createAccountLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Create account requested');
+            window.location.href = '../Create_Account_Page/create_account.html';
+        });
+    }
 
     // Handle Enter key press in password field
     passwordInput.addEventListener('keypress', function(e) {
@@ -151,6 +127,4 @@ document.addEventListener('DOMContentLoaded', function() {
             loginButton.click();
         }
     });
-
-
 });

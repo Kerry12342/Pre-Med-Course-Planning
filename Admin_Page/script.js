@@ -1221,3 +1221,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const hamburger = document.getElementById("hamburgerMenu");
+    const logoutContainer = document.getElementById("logoutContainer");
+    const profilePage = document.getElementById("profileContainer");
+
+    hamburger.addEventListener("click", () => {
+        logoutContainer.classList.toggle("active");
+        profilePage.classList.toggle("active");
+    });
+});

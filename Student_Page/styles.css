@@ -38,7 +38,16 @@ body {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 30px;
+    justify-content: space-between;
 }
+
+/* New: group logout + hamburger on the right */
+.right-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* spacing between logout and hamburger */
+}
+
 
 .hamburger-menu {
     cursor: pointer;
@@ -51,7 +60,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 20px;
+    margin-left: auto;
 }
 
 .logo-section {
@@ -522,21 +531,77 @@ select[multiple] option:hover {
 }
 
 .logout-button {
-    margin-left: auto;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* space between hamburger and logout */
+}
+
+.logout-button.active #logoutBtn {
+    display: block;
 }
 
 #logoutBtn {
+    /* display: none; */
     background-color: #002f86;
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 0 16px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
     font-size: 17px;
-    transition: background-color 0.2s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateX(20px); /* Slide out to the left */
+    opacity: 0;
 }
+
 
 #logoutBtn:hover {
     text-decoration: underline;
 }
+
+.logout-button.active #logoutBtn {
+    /* display: block; */
+    visibility: visible;
+    transform: translateX(0); /* Slide into view */
+    opacity: 1;
+}
+
+
+/* Profile button styling matching logout button */
+.profile-button {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* space between hamburger and profile */
+}
+
+
+#profileBtn {
+    /* display: none; */
+    background-color: #002f86;
+    color: white;
+    border: none;
+    padding: 0 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 17px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateX(20px); /* Slide out to the left */
+    opacity: 0;
+}
+
+#profileBtn:hover {
+    text-decoration: underline;
+}
+
+.profile-button.active #profileBtn {
+    /* display: block; */
+    visibility: visible;
+    transform: translateX(0); /* Slide into view */
+    opacity: 1;
+    transition-delay: 0.2s;
+}
+

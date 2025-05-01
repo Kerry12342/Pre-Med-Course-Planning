@@ -22,20 +22,6 @@
     padding: 0 30px;
 }
 
-.hamburger-menu {
-    cursor: pointer;
-    font-size: 24px;
-    background-color: white;
-    color: #002f86;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 20px;
-}
-
 .logo-section {
     display: flex;
     align-items: center;
