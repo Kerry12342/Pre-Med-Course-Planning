@@ -319,6 +319,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    const profileBtn = document.getElementById("profileBtn");
+    if (profileBtn) {
+        profileBtn.addEventListener("click", () => {
+            window.location.href = "../profile_page_student/student_profile.html"; // Adjust path if needed
+        });
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
     const hamburger = document.getElementById("hamburgerMenu");
     const logoutContainer = document.getElementById("logoutContainer");
     const profilePage = document.getElementById("profileContainer");
@@ -328,3 +337,4 @@ document.addEventListener("DOMContentLoaded", () => {
         profilePage.classList.toggle("active");
     });
 });
+
