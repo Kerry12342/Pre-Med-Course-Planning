@@ -1,7 +1,90 @@
 
 window.onload = loadStudent;
 
+// --- Create the GLOBAL tooltip at the document load ---
+document.addEventListener("DOMContentLoaded", function() {
 
+    // Add event listeners for search inputs to make them dynamic
+    const courseSearchInput = document.getElementById('searchCourse');
+    const trackSearchInput = document.getElementById('searchTrack');
+    const majorSearchInput = document.getElementById('searchMajor');
+
+    if (courseSearchInput) {
+        courseSearchInput.addEventListener('input', function() {
+            filterCourses(false);
+        });
+    }
+
+    if (majorSearchInput) {
+        majorSearchInput.addEventListener('input', function() {
+            filterCourses(false);
+        });
+    }
+
+    if (trackSearchInput) {
+        trackSearchInput.addEventListener('input', function() {
+            filterCourses(false);
+        });
+    }
+
+    // Create the tooltip element if it doesn't exist
+    if (!document.getElementById('globalTooltip')) {
+        const globalTooltip = document.createElement('div');
+        globalTooltip.id = 'globalTooltip';
+        // Inline styles to ensure it appears on top
+        globalTooltip.style.display = 'none';
+        globalTooltip.style.position = 'absolute';
+        globalTooltip.style.zIndex = '999999';
+        globalTooltip.style.backgroundColor = 'white';
+        globalTooltip.style.border = '1px solid #ccc';
+        globalTooltip.style.borderRadius = '4px';
+        globalTooltip.style.padding = '5px';
+        globalTooltip.style.fontSize = '14px';
+        globalTooltip.style.color = '#333';
+        globalTooltip.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)';
+        document.body.appendChild(globalTooltip);
+    }
+});
+
+// Helper function to show tooltip
+function showTooltip(courseElement, tracks, majors, prerequisites, corequisites) {
+    const globalTooltip = document.getElementById('globalTooltip');
+    if (!globalTooltip) return;
+
+    // Format tracks and majors for display
+    const tracksDisplay = tracks && tracks.length ?
+        tracks.join(', ') : 'N/A';
+    const majorsDisplay = majors && majors.length ?
+        majors.join(', ') : 'N/A';
+    const prerequisitesDisplay = prerequisites && prerequisites.length ?
+        prerequisites.join(', ') : 'N/A';
+    const corequisitesDisplay = corequisites && corequisites.length ?
+        corequisites.join(', ') : 'N/A';
+
+    // Populate the tooltip text
+    globalTooltip.innerHTML = `
+        <div><strong>Tracks:</strong> ${tracksDisplay}</div>
+        <div><strong>Majors:</strong> ${majorsDisplay}</div>
+        <div><strong>Prerequisites:</strong> ${prerequisitesDisplay}</div>
+        <div><strong>Corequisites:</strong> ${corequisitesDisplay}</div>
+    `;
+
+    // Position it above (or near) the hovered element
+    const rect = courseElement.getBoundingClientRect();
+    globalTooltip.style.left = (rect.left + rect.width / 2) + 'px';
+    globalTooltip.style.top = (rect.top + window.scrollY - globalTooltip.offsetHeight - 8) + 'px';
+
+    // Show the tooltip
+    globalTooltip.style.display = 'block';
+}
+
+// Helper function to hide tooltip
+function hideTooltip() {
+    const globalTooltip = document.getElementById('globalTooltip');
+    if (globalTooltip) {
+        globalTooltip.style.display = 'none';
+    }
+}
 
 //--------------------------------------------------------
 //DATABASE REQUEST FUNCTIONS
@@ -217,17 +300,57 @@ function populateCalendar() {
     });
     body.appendChild(row);
 
-    currentStudent.plannedCourses.forEach(course => {
-        const cell = document.getElementById(`cell-${course.semester}`);
-        if (cell) {
-            const div = document.createElement("div");
-            div.className = "calendar-course";
-            div.textContent = course.title;
-            cell.appendChild(div);
-        }
+    // Get all course data to display in tooltips
+    getDatabase().then(data => {
+        const allCourses = data[0].data.courses;
+
+        currentStudent.plannedCourses.forEach(course => {
+            const cell = document.getElementById(`cell-${course.semester}`);
+            if (cell) {
+                const div = document.createElement("div");
+                div.className = "calendar-course";
+                div.textContent = course.title;
+
+                // Get course info from the database
+                const courseInfo = allCourses.find(c => c.title === course.title);
+
+                // Default tracks and majors if not found
+                let trackInfo = [];
+                let majorInfo = [];
+                let prereqInfo = [];
+                let coreqInfo = [];
+
+                if (courseInfo) {
+                    // Handle both array and singular properties
+                    trackInfo = courseInfo.tracks || (courseInfo.track ? [].concat(courseInfo.track) : []);
+                    majorInfo = courseInfo.majors || (courseInfo.major ? [].concat(courseInfo.major) : []);
+                    prereqInfo = courseInfo.prerequisites || [];
+                    coreqInfo = courseInfo.corequisites || [];
+                }
+
+                // Special case for "Study Off-Campus"
+                if (course.title === "Study Off-Campus") {
+                    div.classList.add('study-abroad');
+                    trackInfo = ["N/A"];
+                    majorInfo = ["Study Abroad Program"];
+                    prereqInfo = ["N/A"];
+                    coreqInfo = ["N/A"];
+                }
+
+                // Add hover event listeners for tooltip
+                div.addEventListener('mouseenter', () => {
+                    showTooltip(div, trackInfo, majorInfo, prereqInfo, coreqInfo);
+                });
+
+                div.addEventListener('mouseleave', () => {
+                    hideTooltip();
+                });
+
+                cell.appendChild(div);
+            }
+        });
     });
 }
-
 
 // Adds a course to the student's current list of courses.
 function addCourse() {
@@ -338,4 +461,3 @@ document.addEventListener("DOMContentLoaded", () => {
         hamburger.classList.toggle('active');
     });
 });
-
