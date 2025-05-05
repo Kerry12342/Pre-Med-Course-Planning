@@ -303,75 +303,87 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!student || !student.plannedCourses || student.plannedCourses.length === 0) return;
         const semesters = getUniqueSemesters(student);
 
-        // Helper: get info from the "courses" array
-        function getCourseInfo(courseTitle) {
-            getDatabase().then(data => {
-                const courseInfo = data[0].data.courses.find(c => c.title === courseTitle);
-                return courseInfo || { tracks: [], majors: [], prerequisites: [], corequisites: []};
-            });
-        }
+        // Get all course data from database first
+        getDatabase().then(data => {
+            const allCourses = data[0].data.courses;
 
-        // All calendars (main + modal)
-        const calendars = document.querySelectorAll('.calendar');
-        calendars.forEach(calendar => {
-            // Clear existing cells
-            const allCells = calendar.querySelectorAll('tbody td');
-            allCells.forEach(cell => (cell.innerHTML = ''));
+            // All calendars (main + modal)
+            const calendars = document.querySelectorAll('.calendar');
+            calendars.forEach(calendar => {
+                // Clear existing cells
+                const allCells = calendar.querySelectorAll('tbody td');
+                allCells.forEach(cell => (cell.innerHTML = ''));
 
-            const headerCells = calendar.querySelectorAll('thead th');
-            const semesterHeaders = Array.from(headerCells).map(th => th.textContent.trim());
+                const headerCells = calendar.querySelectorAll('thead th');
+                const semesterHeaders = Array.from(headerCells).map(th => th.textContent.trim());
 
-            const processedCourses = {};
-            semesterHeaders.forEach(s => (processedCourses[s] = new Set()));
+                const processedCourses = {};
+                semesterHeaders.forEach(s => (processedCourses[s] = new Set()));
 
-            const uniqueCoursesBySemester = {};
-            semesterHeaders.forEach(s => {
-                uniqueCoursesBySemester[s] = [];
-            });
+                const uniqueCoursesBySemester = {};
+                semesterHeaders.forEach(s => {
+                    uniqueCoursesBySemester[s] = [];
+                });
 
-            // Group courses by semester
-            student.plannedCourses.forEach(course => {
-                const semester = course.semester;
-                if (uniqueCoursesBySemester[semester] && !processedCourses[semester].has(course.title)) {
-                    uniqueCoursesBySemester[semester].push(course);
-                    processedCourses[semester].add(course.title);
-                }
-            });
-
-            // Populate
-            semesterHeaders.forEach((semester, semesterIndex) => {
-                const courseGroup = uniqueCoursesBySemester[semester] || [];
-                const cells = calendar.querySelectorAll(`tbody tr td:nth-child(${semesterIndex + 1})`);
-
-                courseGroup.forEach((course, index) => {
-                    if (index < cells.length) {
-                        const courseDiv = document.createElement('div');
-                        courseDiv.className = 'calendar-course';
-
-                        // Info for the tooltip
-                        const info = getCourseInfo(course.title);
-
-                        // If it's "Study Off-Campus"
-                        if (course.title === "Study Off-Campus") {
-                            courseDiv.classList.add('study-abroad');
-                            info.track = "N/A";
-                            info.major = "Study Abroad Program";
-                            info.prerequisites = "N/A";
-                            info.corequisites = "N/A";
-                        }
-
-                        courseDiv.textContent = course.title;
-
-                        // ► On hover, show/hide the global tooltip
-                        courseDiv.addEventListener('mouseenter', () => {
-                            showTooltip(courseDiv, info.track, info.major, info.prerequisites, info.corequisites);
-                        });
-                        courseDiv.addEventListener('mouseleave', () => {
-                            hideTooltip();
-                        });
-
-                        cells[index].appendChild(courseDiv);
+                // Group courses by semester
+                student.plannedCourses.forEach(course => {
+                    const semester = course.semester;
+                    if (uniqueCoursesBySemester[semester] && !processedCourses[semester].has(course.title)) {
+                        uniqueCoursesBySemester[semester].push(course);
+                        processedCourses[semester].add(course.title);
                     }
+                });
+
+                // Populate
+                semesterHeaders.forEach((semester, semesterIndex) => {
+                    const courseGroup = uniqueCoursesBySemester[semester] || [];
+                    const cells = calendar.querySelectorAll(`tbody tr td:nth-child(${semesterIndex + 1})`);
+
+                    courseGroup.forEach((course, index) => {
+                        if (index < cells.length) {
+                            const courseDiv = document.createElement('div');
+                            courseDiv.className = 'calendar-course';
+
+                            // Get course info from the database courses
+                            const courseInfo = allCourses.find(c => c.title === course.title);
+
+                            // Default tracks and majors if not found
+                            let trackInfo = [];
+                            let majorInfo = [];
+                            let prereqInfo = [];
+                            let coreqInfo = [];
+
+                            if (courseInfo) {
+                                // Handle both array and singular properties
+                                trackInfo = courseInfo.tracks || (courseInfo.track ? [].concat(courseInfo.track) : []);
+                                majorInfo = courseInfo.majors || (courseInfo.major ? [].concat(courseInfo.major) : []);
+                                prereqInfo = courseInfo.prerequisites || [];
+                                coreqInfo = courseInfo.corequisites || [];
+                            }
+
+                            // Special case for "Study Off-Campus"
+                            if (course.title === "Study Off-Campus") {
+                                courseDiv.classList.add('study-abroad');
+                                trackInfo = ["N/A"];
+                                majorInfo = ["Study Abroad Program"];
+                                prereqInfo = ["N/A"];
+                                coreqInfo = ["N/A"];
+                            }
+
+                            courseDiv.textContent = course.title;
+
+                            // Add hover event listeners for tooltip
+                            courseDiv.addEventListener('mouseenter', () => {
+                                showTooltip(courseDiv, trackInfo, majorInfo, prereqInfo, coreqInfo);
+                            });
+
+                            courseDiv.addEventListener('mouseleave', () => {
+                                hideTooltip();
+                            });
+
+                            cells[index].appendChild(courseDiv);
+                        }
+                    });
                 });
             });
         });
@@ -379,7 +391,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    // Student search functionality. 
+    // Student search functionality.
     function searchStudent() {
 
         getDatabase().then(data => {
@@ -646,7 +658,7 @@ document.addEventListener("DOMContentLoaded", function () {
             getDatabase().then(data => {
                 const majorInput = document.getElementById('newMajor');
                 const major = majorInput.value.trim();
-    
+
                 if (!major) {
                     showError("Please enter a major to delete");
                     return;
@@ -660,10 +672,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 data[0].data.majors.splice(trackIndex, 1);
                 saveDatabase(data[0].data);
-    
+
                 majorInput.value = '';
                 // displayCourses(data[0].data.ma);
-    
+
                 showSuccess("Major deleted successfully");
             });
         }
@@ -673,17 +685,17 @@ document.addEventListener("DOMContentLoaded", function () {
             getDatabase().then(data => {
                 const majorInput = document.getElementById('newMajor');
                 const major = majorInput.value.trim();
-    
+
                 if (!major) {
                     showError("Please enter a major to add");
                     return;
                 }
                 data[0].data.majors.push(major);
                 saveDatabase(data[0].data);
-    
+
                 majorInput.value = '';
                 // displayCourses(data[0].data.ma);
-    
+
                 showSuccess("Major added successfully");
             });
         }
@@ -694,7 +706,7 @@ document.addEventListener("DOMContentLoaded", function () {
             getDatabase().then(data => {
                 const trackInput = document.getElementById('newTrack');
                 const track = trackInput.value.trim();
-    
+
                 if (!track) {
                     showError("Please enter a track to delete");
                     return;
@@ -708,10 +720,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 data[0].data.tracks.splice(trackIndex, 1);
                 saveDatabase(data[0].data);
-    
+
                 trackInput.value = '';
                 // displayCourses(data[0].data.ma);
-    
+
                 showSuccess("Track deleted successfully");
             });
         }
@@ -721,17 +733,17 @@ document.addEventListener("DOMContentLoaded", function () {
             getDatabase().then(data => {
                 const trackInput = document.getElementById('newTrack');
                 const track = trackInput.value.trim();
-    
+
                 if (!track) {
                     showError("Please enter a track to add");
                     return;
                 }
                 data[0].data.tracks.push(track);
                 saveDatabase(data[0].data);
-    
+
                 trackInput.value = '';
                 // displayCourses(data[0].data.ma);
-    
+
                 showSuccess("Track added successfully");
             });
         }
@@ -744,7 +756,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const student = studentInput.value.trim();
                 const confirmInput = document.getElementById('confirm');
                 const confirm = confirmInput.value.trim();
-    
+
                 if (!student) {
                     showError("Please enter a Student to Input");
                     return;
@@ -766,7 +778,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 studentInput.value = '';
                 confirmInput.value = '';
                 // displayCourses(data[0].data.ma);
-    
+
                 showSuccess("Student deleted successfully");
             });
         }
