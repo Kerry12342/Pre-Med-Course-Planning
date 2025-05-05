@@ -650,103 +650,171 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // add a major with the selected name
+    function addMajor() {
+    getDatabase().then(data => {
+        const majorInput = document.getElementById('newMajor');
+        const major = majorInput.value.trim();
 
-
-
-        // Delete a major with the selected name
-        function deleteMajor() {
-            getDatabase().then(data => {
-                const majorInput = document.getElementById('newMajor');
-                const major = majorInput.value.trim();
-
-                if (!major) {
-                    showError("Please enter a major to delete");
-                    return;
-                }
-                const trackIndex = data[0].data.majors.findIndex(c =>
-                    c.toLowerCase() === major.toLowerCase()
-                );
-                if (trackIndex === -1) {
-                    showError("Major not found");
-                    return;
-                }
-                data[0].data.majors.splice(trackIndex, 1);
-                saveDatabase(data[0].data);
-
-                majorInput.value = '';
-                // displayCourses(data[0].data.ma);
-
-                showSuccess("Major deleted successfully");
-            });
+        if (!major) {
+            showError("Please enter a major to add");
+            return;
         }
+        data[0].data.majors.push(major);
 
-        // add a major with the selected name
-        function addMajor() {
-            getDatabase().then(data => {
-                const majorInput = document.getElementById('newMajor');
-                const major = majorInput.value.trim();
+        // Save the database and THEN update the interface when the save is complete
+        fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ data: data[0].data })
+        })
+        .then(response => response.json())
+        .then(() => {
+            // Clear the input
+            majorInput.value = '';
 
-                if (!major) {
-                    showError("Please enter a major to add");
-                    return;
-                }
-                data[0].data.majors.push(major);
-                saveDatabase(data[0].data);
+            // Update the dropdowns AFTER the save is complete
+            populateDropdowns();
 
-                majorInput.value = '';
-                // displayCourses(data[0].data.ma);
+            // Show success message
+            showSuccess("Major added successfully");
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError("Error saving changes");
+        });
+    });
+    }
 
-                showSuccess("Major added successfully");
-            });
+    // Delete a major with the selected name
+    function deleteMajor() {
+    getDatabase().then(data => {
+        const majorInput = document.getElementById('newMajor');
+        const major = majorInput.value.trim();
+
+        if (!major) {
+            showError("Please enter a major to delete");
+            return;
         }
-
-
-        // Delete a track with the selected name
-        function deleteTrack() {
-            getDatabase().then(data => {
-                const trackInput = document.getElementById('newTrack');
-                const track = trackInput.value.trim();
-
-                if (!track) {
-                    showError("Please enter a track to delete");
-                    return;
-                }
-                const trackIndex = data[0].data.tracks.findIndex(c =>
-                    c.toLowerCase() === track.toLowerCase()
-                );
-                if (trackIndex === -1) {
-                    showError("Track not found");
-                    return;
-                }
-                data[0].data.tracks.splice(trackIndex, 1);
-                saveDatabase(data[0].data);
-
-                trackInput.value = '';
-                // displayCourses(data[0].data.ma);
-
-                showSuccess("Track deleted successfully");
-            });
+        const majorIndex = data[0].data.majors.findIndex(c =>
+            c.toLowerCase() === major.toLowerCase()
+        );
+        if (majorIndex === -1) {
+            showError("Major not found");
+            return;
         }
+        data[0].data.majors.splice(majorIndex, 1);
 
-        // add a major with the selected name
-        function addTrack() {
-            getDatabase().then(data => {
-                const trackInput = document.getElementById('newTrack');
-                const track = trackInput.value.trim();
+        // Save the database and THEN update the interface when the save is complete
+        fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ data: data[0].data })
+        })
+        .then(response => response.json())
+        .then(() => {
+            // Clear the input
+            majorInput.value = '';
 
-                if (!track) {
-                    showError("Please enter a track to add");
-                    return;
-                }
-                data[0].data.tracks.push(track);
-                saveDatabase(data[0].data);
+            // Update the dropdowns AFTER the save is complete
+            populateDropdowns();
 
-                trackInput.value = '';
-                // displayCourses(data[0].data.ma);
+            // Show success message
+            showSuccess("Major deleted successfully");
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError("Error saving changes");
+        });
+    });
+    }
 
-                showSuccess("Track added successfully");
-            });
+    // add a track with the selected name
+    function addTrack() {
+    getDatabase().then(data => {
+        const trackInput = document.getElementById('newTrack');
+        const track = trackInput.value.trim();
+
+        if (!track) {
+            showError("Please enter a track to add");
+            return;
         }
+        data[0].data.tracks.push(track);
+
+        // Save the database and THEN update the interface when the save is complete
+        fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ data: data[0].data })
+        })
+        .then(response => response.json())
+        .then(() => {
+            // Clear the input
+            trackInput.value = '';
+
+            // Update the dropdowns AFTER the save is complete
+            populateDropdowns();
+
+            // Show success message
+            showSuccess("Track added successfully");
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError("Error saving changes");
+        });
+    });
+    }
+
+    // Delete a track with the selected name
+    function deleteTrack() {
+    getDatabase().then(data => {
+        const trackInput = document.getElementById('newTrack');
+        const track = trackInput.value.trim();
+
+        if (!track) {
+            showError("Please enter a track to delete");
+            return;
+        }
+        const trackIndex = data[0].data.tracks.findIndex(c =>
+            c.toLowerCase() === track.toLowerCase()
+        );
+        if (trackIndex === -1) {
+            showError("Track not found");
+            return;
+        }
+        data[0].data.tracks.splice(trackIndex, 1);
+
+        // Save the database and THEN update the interface when the save is complete
+        fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ data: data[0].data })
+        })
+        .then(response => response.json())
+        .then(() => {
+            // Clear the input
+            trackInput.value = '';
+
+            // Update the dropdowns AFTER the save is complete
+            populateDropdowns();
+
+            // Show success message
+            showSuccess("Track deleted successfully");
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError("Error saving changes");
+        });
+    });
+    }
 
 
         // Delete a student with the selected email
