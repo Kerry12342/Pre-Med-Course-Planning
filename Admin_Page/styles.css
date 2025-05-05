@@ -606,3 +606,24 @@ select[multiple] option:hover {
     transition-delay: 0.2s;
 }
 
+/* Hamburger rotation animation */
+.hamburger-menu {
+    cursor: pointer;
+    font-size: 24px;
+    background-color: white;
+    color: #002f86;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+/* Rotate 180 degrees when active */
+.hamburger-menu.active {
+    transform: rotate(-180deg);
+}
+

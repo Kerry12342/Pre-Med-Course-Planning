@@ -335,6 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
     hamburger.addEventListener("click", () => {
         logoutContainer.classList.toggle("active");
         profilePage.classList.toggle("active");
+        hamburger.classList.toggle('active');
     });
 });
 

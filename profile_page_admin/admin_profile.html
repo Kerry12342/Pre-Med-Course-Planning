@@ -6,24 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Profile Page - Pre-Health Planning</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script defer src="script.js"></script>
 </head>
 
 <body>
-    <div class="sidebar">
-        <img src="profile-placeholder.png" alt="Profile Picture" width="80">
-        <p>Admin Name</p>
-        <a href="./../Admin_Page/millstone2_initial.html"><button>Go Back</button></a>
-        <a href="./../Login_Page/login_page.html" id="signout-link"><button>Sign out</button></a>
-
-    </div>
-    <div class="content">
-        <div class="header">
-            <h2>Hamilton College Premed Planning</h2>
-            <p>Admin Name</p>
+    <header class="banner">
+        <div class="banner-content">
+            <div class="logo-section">
+                <h1>Hamilton</h1>
+                <span class="separator">•</span>
+                <span class="subtitle">My Pre-Health Plan</span>
+            </div>
+    
+            <!-- New wrapper for right-side buttons -->
+            <div class="right-controls">
+                <div class="profile-button" id="profileContainer">
+                    <button id="profileBtn">Go Back</button>
+                </div>
+                <div class="logout-button" id="logoutContainer">
+                    <button id="logoutBtn">Log Out</button>
+                </div>
+                <div class="hamburger-menu" id="hamburgerMenu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
         </div>
-        <div class="container">
-            <div class="section">
+    </header>
+    <div class="container">
+         <div class="section">
                 <h3>Basic Information</h3>
                 <input type="text" placeholder="Full Name">
                 <input type="email" placeholder="Email">
@@ -33,13 +44,12 @@
                 <input type="text" placeholder="Major(s)">
                 <input type="text" placeholder="Track">
                 <input type="text" placeholder="Class Year">
-            </div>
-            <div class="section">
+        </div>
+        <div class="section">
                 <h3>System Settings</h3>
                 <button>Global Notification Settings</button>
                 <button>Privacy Settings</button>
                 <button>Accessibility Settings</button>
-            </div>
         </div>
     </div>
 </body>

@@ -1,5 +1,5 @@
-body {
-    font-family: Georgia, serif; /* more academic feel */
+/* body {
+    font-family: Georgia, serif; /* more academic feel
     margin: 0;
     padding: 0;
     display: flex;
@@ -17,9 +17,9 @@ body {
     flex-direction: column;
     align-items: center;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
+} */
 
-.sidebar img {
+/* .sidebar img {
     border-radius: 50%;
     margin-bottom: 15px;
 }
@@ -27,7 +27,7 @@ body {
 .sidebar p {
     font-weight: bold;
     margin: 10px 0 20px 0;
-}
+} */
 
 button {
     width: 100%;
@@ -38,6 +38,7 @@ button {
     cursor: pointer;
     border-radius: 8px;
     transition: background-color 0.3s, border-color 0.3s;
+    font-family: "miller-text", serif;
 }
 
 button:hover {
@@ -49,15 +50,15 @@ a {
     width: 100%;
     text-decoration: none;
 }
-
+/* 
 .content {
     flex: 1;
     padding: 0;
     height: 100vh;
     display: flex;
     flex-direction: column;
-}
-
+} */
+/* 
 .header {
     background-color: #002d72;
     color: white;
@@ -67,6 +68,94 @@ a {
     align-items: center;
     font-size: 1.2em;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+} */
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Font and general styles to match the model */
+body {
+    height: 100%;
+    width: 100%;
+    font-family: "miller-text", serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 32px;
+    color: #4F5971;
+    background-color: #fff;
+}
+
+.page_wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Banner styling exactly like the model */
+.banner {
+    background-color: #002f86;
+    color: white;
+    padding: 15px 0;
+    width: 100%;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+    justify-content: space-between;
+}
+
+/* New: group logout + hamburger on the right */
+.right-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* spacing between logout and hamburger */
+}
+
+
+.hamburger-menu {
+    cursor: pointer;
+    font-size: 24px;
+    background-color: white;
+    color: #002f86;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+}
+
+.logo-section h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-right: 15px;
+    color: white;
+}
+
+.separator {
+    font-size: 20px;
+    margin-right: 15px;
+    color: white;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: white;
 }
 
 .container {
@@ -114,3 +203,101 @@ input {
         width: 25vw;
     }
 }
+
+
+.logout-button {
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* space between hamburger and logout */
+}
+
+.logout-button.active #logoutBtn {
+    display: block;
+}
+
+#logoutBtn {
+    /* display: none; */
+    background-color: #002f86;
+    color: white;
+    border: none;
+    padding: 0 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 17px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateX(20px); /* Slide out to the left */
+    opacity: 0;
+}
+
+
+#logoutBtn:hover {
+    text-decoration: underline;
+}
+
+.logout-button.active #logoutBtn {
+    /* display: block; */
+    visibility: visible;
+    transform: translateX(0); /* Slide into view */
+    opacity: 1;
+}
+
+
+/* Profile button styling matching logout button */
+.profile-button {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* space between hamburger and profile */
+}
+
+
+#profileBtn {
+    /* display: none; */
+    background-color: #002f86;
+    color: white;
+    border: none;
+    padding: 0 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 17px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateX(20px); /* Slide out to the left */
+    opacity: 0;
+}
+
+#profileBtn:hover {
+    text-decoration: underline;
+}
+
+.profile-button.active #profileBtn {
+    /* display: block; */
+    visibility: visible;
+    transform: translateX(0); /* Slide into view */
+    opacity: 1;
+    transition-delay: 0.2s;
+}
+
+/* Hamburger rotation animation */
+.hamburger-menu {
+    cursor: pointer;
+    font-size: 24px;
+    background-color: white;
+    color: #002f86;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+/* Rotate 180 degrees when active */
+.hamburger-menu.active {
+    transform: rotate(-180deg);
+}
+
