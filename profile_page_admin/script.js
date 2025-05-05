@@ -1,9 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const signoutLink = document.getElementById("signout-link");
-    signoutLink.addEventListener("click", () => {
-        sessionStorage.clear();
-    });
-});
+// document.addEventListener("DOMContentLoaded", () => {
+//     const signoutLink = document.getElementById("signout-link");
+//     signoutLink.addEventListener("click", () => {
+//         sessionStorage.clear();
+//     });
+// });
 
 document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const profileBtn = document.getElementById("profileBtn");
     if (profileBtn) {
         profileBtn.addEventListener("click", () => {
-            window.location.href = "../Admin_Page/millstone2_initial.html"; // Adjust path if needed
+            window.location.href = "../Student_Page/student.html"; // Adjust path if needed
         });
     }
 });
@@ -35,4 +35,37 @@ document.addEventListener("DOMContentLoaded", () => {
         hamburger.classList.toggle('active');
     });
 });
+
+const editBtn = document.getElementById('editProfileBtn');
+const inputs = document.querySelectorAll('.section input');
+
+let isEditing = false;
+
+editBtn.addEventListener('click', () => {
+  isEditing = !isEditing;
+
+  // Toggle readonly attribute
+  inputs.forEach(input => {
+    input.readOnly = !isEditing;
+    // Optional: add a border highlight when editing
+    input.style.borderColor = isEditing ? '#002f86' : '#ccc';
+    input.style.backgroundColor = isEditing ? '#f9f9ff' : 'white';
+  });
+
+  // Change button text
+  editBtn.textContent = isEditing ? 'Save Profile' : 'Edit Profile';
+
+  // (Optional) if saving, you can run save logic here
+  if (!isEditing) {
+    saveProfile(); // Define your save logic if you want
+  }
+});
+
+// Example save function
+function saveProfile() {
+  inputs.forEach(input => {
+    console.log(`${input.placeholder}: ${input.value}`);
+  });
+  alert('Profile saved!');
+}
 

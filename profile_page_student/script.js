@@ -1,11 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const signoutLink = document.getElementById("signout-link");
-    signoutLink.addEventListener("click", () => {
-        sessionStorage.clear();
-    });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
@@ -35,4 +28,37 @@ document.addEventListener("DOMContentLoaded", () => {
         hamburger.classList.toggle('active');
     });
 });
+
+const editBtn = document.getElementById('editProfileBtn');
+const inputs = document.querySelectorAll('.section input');
+
+let isEditing = false;
+
+editBtn.addEventListener('click', () => {
+  isEditing = !isEditing;
+
+  // Toggle readonly attribute
+  inputs.forEach(input => {
+    input.readOnly = !isEditing;
+    // Optional: add a border highlight when editing
+    input.style.borderColor = isEditing ? '#002f86' : '#ccc';
+    input.style.backgroundColor = isEditing ? '#f9f9ff' : 'white';
+  });
+
+  // Change button text
+  editBtn.textContent = isEditing ? 'Save Profile' : 'Edit Profile';
+
+  // (Optional) if saving, you can run save logic here
+  if (!isEditing) {
+    saveProfile(); // Define your save logic if you want
+  }
+});
+
+// Example save function
+function saveProfile() {
+  inputs.forEach(input => {
+    console.log(`${input.placeholder}: ${input.value}`);
+  });
+  alert('Profile saved!');
+}
 
