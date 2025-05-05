@@ -295,7 +295,7 @@ function populateCalendar() {
     const row = document.createElement("tr");
     semesters.forEach(sem => {
         const td = document.createElement("td");
-        td.id = `cell-${sem}`;
+        td.id = `cell-${sem.toUpperCase()}`;
         row.appendChild(td);
     });
     body.appendChild(row);
@@ -305,14 +305,14 @@ function populateCalendar() {
         const allCourses = data[0].data.courses;
 
         currentStudent.plannedCourses.forEach(course => {
-            const cell = document.getElementById(`cell-${course.semester}`);
+            const cell = document.getElementById(`cell-${course.semester.toUpperCase()}`);
             if (cell) {
                 const div = document.createElement("div");
                 div.className = "calendar-course";
                 div.textContent = course.title;
 
                 // Get course info from the database
-                const courseInfo = allCourses.find(c => c.title === course.title);
+                const courseInfo = allCourses.find(c => c.title.toUpperCase() === course.title.toUpperCase());
 
                 // Default tracks and majors if not found
                 let trackInfo = [];
@@ -356,13 +356,13 @@ function populateCalendar() {
 function addCourse() {
     getDatabase().then(data => {
         const title = document.getElementById("courseInput").value.trim().toUpperCase();
-        const semester = document.getElementById("semesterSelect").value;
+        const semester = document.getElementById("semesterSelect").value.trim().toUpperCase();
 
         if (!title || !semester) return showMessage("Missing course title or semester.");
 
-        if (data[0].data.courses.some(c => c.title === title)) {
+        if (data[0].data.courses.some(c => c.title.toUpperCase() === title)) {
             // If the course is already in the student's list, then they can't plan it again.
-            if (currentStudent.plannedCourses.some(c => c.title === title)) {
+            if (currentStudent.plannedCourses.some(c => c.title.toUpperCase() === title)) {
                 return showMessage("Course already planned.");
             }
             // Can't take if they don't meet the prerequisistes.
@@ -384,8 +384,8 @@ function addCourse() {
 // Removes a course from the student's list of courses.
 function removeCourse() {
     const title = document.getElementById("courseInput").value.trim().toUpperCase();
-    const semester = document.getElementById("semesterSelect").value;
-    const index = currentStudent.plannedCourses.findIndex(c => c.title === title && c.semester === semester);
+    const semester = document.getElementById("semesterSelect").value.toUpperCase();
+    const index = currentStudent.plannedCourses.findIndex(c => c.title.toUpperCase() === title && c.semester.toUpperCase() === semester);
 
     if (index === -1) return showMessage("Course not found in that semester.");
 
