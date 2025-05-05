@@ -230,19 +230,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Create a clone of the course object
                 const courseCopy = { ...course };
 
-                if (semesterSearch) {
-                    // Count only for the specified semester
-                    let count = 0;
-                    allStudents.forEach(student => {
-                        const hasCourse = student.plannedCourses.some(
-                            plannedCourse => plannedCourse.title === course.title &&
-                                plannedCourse.semester.toUpperCase().includes(semesterSearch)
-                        );
-                        if (hasCourse) count++;
-                    });
-                    courseCopy.studentCount = count;
-                }
-                // For empty semester search, use the existing count
+                // Count only for the specified semester
+                let count = 0;
+                allStudents.forEach(student => {
+                    const hasCourse = student.plannedCourses.some(
+                        plannedCourse => plannedCourse.title.toUpperCase() === course.title.toUpperCase() &&
+                            plannedCourse.semester.toUpperCase().includes(semesterSearch)
+                    );
+                    if (hasCourse) count++;
+                });
+                courseCopy.studentCount = count;
 
                 return courseCopy;
             });
@@ -1305,7 +1302,7 @@ function exportCourseEnrollmentToCSV() {
         students.forEach(student => {
             if (student.plannedCourses) {
                 student.plannedCourses.forEach(course => {
-                    allSemesters.add(course.semester);
+                    allSemesters.add(course.semester.toUpperCase());
                 });
             }
         });
@@ -1318,7 +1315,7 @@ function exportCourseEnrollmentToCSV() {
             const bYear = parseInt(b.split(' ')[1]);
 
             if (aYear !== bYear) return aYear - bYear;
-            return aSeason === 'Spring' && bSeason === 'Fall' ? -1 : 1;
+            return aSeason === 'SPRING' && bSeason === 'FALL' ? -1 : 1;
         });
 
         // Initialize CSV header row with course info columns
@@ -1343,8 +1340,8 @@ function exportCourseEnrollmentToCSV() {
             students.forEach(student => {
                 if (student.plannedCourses) {
                     student.plannedCourses.forEach(plannedCourse => {
-                        if (plannedCourse.title === course.title) {
-                            semesterCounts[plannedCourse.semester]++;
+                        if (plannedCourse.title.toUpperCase() === course.title.toUpperCase()) {
+                            semesterCounts[plannedCourse.semester.toUpperCase()]++;
                             totalStudents++;
                         }
                     });
@@ -1352,7 +1349,7 @@ function exportCourseEnrollmentToCSV() {
             });
 
             // Add course info to CSV
-            csvContent += `"${course.title}","${course.department || ''}",${totalStudents}`;
+            csvContent += `"${course.title.toUpperCase()}","${course.department || ''}",${totalStudents}`;
 
             // Add semester counts
             sortedSemesters.forEach(semester => {
