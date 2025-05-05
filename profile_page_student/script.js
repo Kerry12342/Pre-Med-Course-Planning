@@ -1,3 +1,6 @@
+// window.onload = loadStudent;
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
