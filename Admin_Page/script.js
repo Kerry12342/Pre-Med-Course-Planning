@@ -5,8 +5,38 @@
  features to add and remove tracks, majors, and students.
  */
 
+// Fetches database information.
+function getDatabase() {
+    return fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/get-json')
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error:', error);
+            return []; // Return an empty array in case of an error
+        });
+}
+
+// Saves database information. Takes updated database as a parameter.
+function saveDatabase(database) {
+
+    fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ data: database })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
+
     // --- 1) Create the GLOBAL tooltip at the body level ---
     const globalTooltip = document.createElement('div');
     globalTooltip.id = 'globalTooltip';
@@ -69,38 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    // Saves database information. Takes updated database as a parameter.
-    function saveDatabase(database) {
-
-        fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ data: database })
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-
-
-
-    // Fetches database information.
-    function getDatabase() {
-        return fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/get-json')
-            .then(response => response.json())
-            .catch(error => {
-                console.error('Error:', error);
-                return []; // Return an empty array in case of an error
-            });
-    }
-
-
 
     // Toggle + headings
     const toggleButton = document.getElementById("toggleCourse");
@@ -108,6 +106,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const studentInterfaceButton = document.querySelector("a[href='./../student-interface-demo/interface.html'] button");
     const allButtons = document.querySelectorAll("button:not(#toggleCourse):not(.student-interface-button)");
 
+
+
+
+        // Course enrollment button
+    const exportEnrollmentBtn = document.getElementById("exportEnrollmentBtn");
+    if (exportEnrollmentBtn) {
+        exportEnrollmentBtn.addEventListener("click", exportCourseEnrollmentToCSV);
+    } else {
+        // If the button doesn't exist yet, create it
+        const exportBtnsContainer = document.querySelector('.export-buttons') ||
+            document.querySelector('.modal-content .buttons') ||
+            document.querySelector('.modal-content');
+
+        if (exportBtnsContainer) {
+            const newBtn = document.createElement("button");
+            newBtn.id = "exportEnrollmentBtn";
+            newBtn.className = "btn";
+            newBtn.textContent = "Export Course Enrollment";
+            newBtn.addEventListener("click", exportCourseEnrollmentToCSV);
+            exportBtnsContainer.appendChild(newBtn);
+        }
+    }
 
 
     // Show error in modal or fallback
@@ -1272,6 +1292,87 @@ document.querySelectorAll(".tab").forEach(button => {
         });
     });
 });
+
+// Exports all courses with their enrollment counts per semester
+function exportCourseEnrollmentToCSV() {
+    // Get database information
+    getDatabase().then(data => {
+        const courses = data[0].data.courses;
+        const students = data[0].data.students;
+
+        // Get all unique semesters across all student plans
+        const allSemesters = new Set();
+        students.forEach(student => {
+            if (student.plannedCourses) {
+                student.plannedCourses.forEach(course => {
+                    allSemesters.add(course.semester);
+                });
+            }
+        });
+
+        // Convert to array and sort semesters chronologically
+        const sortedSemesters = Array.from(allSemesters).sort((a, b) => {
+            const aSeason = a.split(' ')[0];
+            const aYear = parseInt(a.split(' ')[1]);
+            const bSeason = b.split(' ')[0];
+            const bYear = parseInt(b.split(' ')[1]);
+
+            if (aYear !== bYear) return aYear - bYear;
+            return aSeason === 'Spring' && bSeason === 'Fall' ? -1 : 1;
+        });
+
+        // Initialize CSV header row with course info columns
+        let csvContent = "Course Title,Department,Total Students";
+
+        // Add semester columns to header
+        sortedSemesters.forEach(semester => {
+            csvContent += `,${semester}`;
+        });
+        csvContent += "\r\n";
+
+        // Process each course
+        courses.forEach(course => {
+            // Initialize enrollment counts for each semester
+            const semesterCounts = {};
+            sortedSemesters.forEach(semester => {
+                semesterCounts[semester] = 0;
+            });
+
+            // Count enrollments per semester
+            let totalStudents = 0;
+            students.forEach(student => {
+                if (student.plannedCourses) {
+                    student.plannedCourses.forEach(plannedCourse => {
+                        if (plannedCourse.title === course.title) {
+                            semesterCounts[plannedCourse.semester]++;
+                            totalStudents++;
+                        }
+                    });
+                }
+            });
+
+            // Add course info to CSV
+            csvContent += `"${course.title}","${course.department || ''}",${totalStudents}`;
+
+            // Add semester counts
+            sortedSemesters.forEach(semester => {
+                csvContent += `,${semesterCounts[semester]}`;
+            });
+            csvContent += "\r\n";
+        });
+
+        // Create and download the CSV file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "course_enrollment_report.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+}
 
 
 // Exports a student's schedule to a CSV file.
