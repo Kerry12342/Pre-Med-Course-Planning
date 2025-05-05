@@ -167,12 +167,14 @@ body {
     overflow-y: auto;
 }
 
-.section {
-    width: 45%;
-    background-color: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+section {
+    filter: drop-shadow(0 3mm 4mm rgb(150, 150, 150));
+    border-radius: 20px;
+    flex: 1;
+    padding: 10px;
+    border: 0px groove lightgrey;
+    background-color: #f4f4f4;
+    margin: 0;
 }
 
 h3 {
