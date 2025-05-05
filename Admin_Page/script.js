@@ -199,10 +199,35 @@ document.addEventListener("DOMContentLoaded", function () {
             const courseSearch = document.getElementById('searchCourse').value.toUpperCase();
             const majorSearch = document.getElementById('searchMajor').value.toUpperCase();
             const trackSearch = document.getElementById('searchTrack').value.toUpperCase();
+            const semesterSearch = document.getElementById('searchSemesterPlanned') ?
+                document.getElementById('searchSemesterPlanned').value.toUpperCase() : '';
 
-            const dbCourses = data[0].data.courses
+            const dbCourses = data[0].data.courses;
+            const allStudents = data[0].data.students;
 
-            const filteredCourses = dbCourses.filter(course => {
+            // Create a copy of the courses array to avoid modifying the database
+            const coursesWithCounts = dbCourses.map(course => {
+                // Create a clone of the course object
+                const courseCopy = { ...course };
+
+                if (semesterSearch) {
+                    // Count only for the specified semester
+                    let count = 0;
+                    allStudents.forEach(student => {
+                        const hasCourse = student.plannedCourses.some(
+                            plannedCourse => plannedCourse.title === course.title &&
+                                plannedCourse.semester.toUpperCase().includes(semesterSearch)
+                        );
+                        if (hasCourse) count++;
+                    });
+                    courseCopy.studentCount = count;
+                }
+                // For empty semester search, use the existing count
+
+                return courseCopy;
+            });
+
+            const filteredCourses = coursesWithCounts.filter(course => {
                 const courseMatch = course.title.toUpperCase().includes(courseSearch);
 
                 // Check if any major matches the search term
@@ -226,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
             displayCourses(filteredCourses);
             return filteredCourses.length > 0;
         });
-    }
+    } 
 
 
 
@@ -418,7 +443,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Set up event listeners for search inputs (course/semester/major/track)
     const courseSearchInput = document.getElementById('searchCourse');
-    const semesterSearchInput = document.getElementById('searchSemester');
     const trackSearchInput = document.getElementById('searchTrack');
     const majorSearchInput = document.getElementById('searchMajor');
 
@@ -439,6 +463,14 @@ document.addEventListener("DOMContentLoaded", function () {
     if (trackSearchInput) {
         trackSearchInput.removeEventListener('input', function() { filterCourses(false); });
         trackSearchInput.addEventListener('input', function() {
+            filterCourses(false);
+        });
+    }
+
+    const semesterSearchInput = document.getElementById('searchSemesterPlanned');
+    if (semesterSearchInput) {
+        semesterSearchInput.removeEventListener('input', function () { filterCourses(false); });
+        semesterSearchInput.addEventListener('input', function () {
             filterCourses(false);
         });
     }
@@ -953,26 +985,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    // Update student counts for each class.
-    function updateStudentCounts() {
-        getDatabase().then(data => {
-            data[0].data.courses.forEach(course => {
-            const courseTitle = course.title;
-            let count = 0;
-
-            data[0].data.students.forEach(student => {
-                const hasCourse = student.plannedCourses.some(plannedCourse => plannedCourse.title === courseTitle);
-                if (hasCourse) count++;
-            });
-
-            course.studentCount = count;
-            saveDatabase(data[0].data);
-            });
-        });
-    }
-
-
-
     // Submit handler
     const submitButton = document.getElementById('courseSubmitBtn');
     if (submitButton) {
@@ -1032,11 +1044,6 @@ document.addEventListener("DOMContentLoaded", function () {
     remStudentButton.addEventListener('click', function() {
         deleteStudent();
     });
-
-
-
-    // Update the student counts for each course in the database
-    updateStudentCounts();
 
     // Initialize with empty course list
     displayCourses([]);
