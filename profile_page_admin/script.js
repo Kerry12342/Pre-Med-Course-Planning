@@ -1,10 +1,3 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//     const signoutLink = document.getElementById("signout-link");
-//     signoutLink.addEventListener("click", () => {
-//         sessionStorage.clear();
-//     });
-// });
-
 document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
@@ -19,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const profileBtn = document.getElementById("profileBtn");
     if (profileBtn) {
         profileBtn.addEventListener("click", () => {
-            window.location.href = "../Student_Page/student.html"; // Adjust path if needed
+            window.location.href = "../Admin_page/millstone2_initial.html"; // Adjust path if needed
         });
     }
 });
