@@ -1,5 +1,3 @@
-
-
 // Database functions.
 // Save database. Takes the updated database as an argument.
 function saveDatabase(database) {
@@ -68,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         email: student.email,
                         role: 'student'
                     }));
+                    sessionStorage.setItem("studentEmail", student.email); //
                     window.location.href = "./../Student_Page/student.html";
                 }
                 else {
