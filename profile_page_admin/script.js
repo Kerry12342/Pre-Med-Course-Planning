@@ -105,8 +105,8 @@ function loadAdminProfile() {
       document.getElementById("email").value = currentAdmin.email || "";
       document.getElementById("Pronouns").value = currentAdmin.Pronouns || "";
       document.getElementById("advisee").value = currentAdmin.advisee || "";
-      document.getElementById("track").value = currentAdmin.track || "";
-      document.getElementById("classYear").value = currentAdmin.classYear || "";
+      document.getElementById("department").value = currentAdmin.department || "";
+      document.getElementById("notes").value = currentAdmin.notes || "";
   });
 }
 
@@ -118,8 +118,8 @@ function saveProfile() {
       const email = document.getElementById("email").value.trim();
       const Pronouns = document.getElementById("Pronouns").value.trim();
       const advisee = document.getElementById("advisee").value.trim();
-      const track = document.getElementById("track").value.trim();
-      const classYear = document.getElementById("classYear").value.trim();
+      const department = document.getElementById("department").value.trim();
+      const notes = document.getElementById("notes").value.trim();
 
       const adminIndex = admin.findIndex(s => s.email.toLowerCase() === email.toLowerCase());
 
@@ -135,8 +135,8 @@ function saveProfile() {
           email,
           Pronouns,
           advisee,
-          track,
-          classYear
+          department,
+          notes
       };
 
       saveDatabase(data[0].data);
