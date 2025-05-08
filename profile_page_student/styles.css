@@ -1,34 +1,3 @@
-/* body {
-    font-family: Georgia, serif; /* more academic feel
-    margin: 0;
-    padding: 0;
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    background-color: #f9f9f9;
-}
-
-.sidebar {
-    width: 20vw;
-    height: 100vh;
-    background-color: #e6e6e6;
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-} */
-
-/* .sidebar img {
-    border-radius: 50%;
-    margin-bottom: 15px;
-}
-
-.sidebar p {
-    font-weight: bold;
-    margin: 10px 0 20px 0;
-} */
-
 button:not(#profileBtn):not(#logoutBtn) {
     width: 100%;
     padding: 5px 12px;
@@ -43,21 +12,6 @@ button:not(#profileBtn):not(#logoutBtn) {
     line-height: 24px;
 }
 
-
-/* button,
-button#editProfileBtn,
-button#changePasswordBtn {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    background-color: white;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s, border-color 0.3s;
-    font-family: "miller-text", serif;
-} */
-
 button:not(#profileBtn):not(#logoutBtn):hover {
     background-color: #f0f0f0;
     border-color: #999;
@@ -67,25 +21,6 @@ a {
     width: 100%;
     text-decoration: none;
 }
-/* 
-.content {
-    flex: 1;
-    padding: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-} */
-/* 
-.header {
-    background-color: #002d72;
-    color: white;
-    padding: 20px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.2em;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-} */
 
 /* General Reset */
 * {
@@ -322,3 +257,46 @@ input {
     transform: rotate(-180deg);
 }
 
+/* Password Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    max-width: 90%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .modal-content input {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .modal-buttons button {
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  

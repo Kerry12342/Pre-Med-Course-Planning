@@ -38,11 +38,10 @@
             <h3>Basic Information</h3>
             <input type="text" id="fullName" placeholder="Full Name" readonly>
             <input type="email" id="email" placeholder="Email" readonly>
-            <input type="text" id="pronouns" placeholder="Pronouns" readonly>
             
             <h3>Additional Information</h3>
             <input type="text" id="Pronouns" placeholder="Pronouns" readonly>
-            <input type="text" id="majors" placeholder="Major(s)" readonly>
+            <input type="text" id="advisee" placeholder="Advisee" readonly>
             <input type="text" id="track" placeholder="Track" readonly>
             <input type="text" id="classYear" placeholder="Class Year" readonly>
         </div>
@@ -54,3 +53,18 @@
     </div>
 </body>
 </html>
+
+<!-- Password Change Modal -->
+<div id="passwordModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h3>Change Password</h3>
+      <input type="password" id="currentPasswordInput" placeholder="Current Password">
+      <input type="password" id="newPasswordInput" placeholder="New Password (min 6 chars)">
+      <input type="password" id="confirmPasswordInput" placeholder="Confirm New Password">
+      <div class="modal-buttons">
+        <button id="submitPasswordChange">Submit</button>
+        <button id="cancelPasswordChange">Cancel</button>
+      </div>
+    </div>
+  </div>
+  

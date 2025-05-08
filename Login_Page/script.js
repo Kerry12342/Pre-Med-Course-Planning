@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         email: admin.email,
                         role: 'admin'
                     }));
+                    sessionStorage.setItem("adminEmail", admin.email); //
                     window.location.href = "./../Admin_Page/millstone2_initial.html";
                 }
                 else if (student && student.password == password) {

@@ -4,19 +4,29 @@ document.addEventListener("DOMContentLoaded", () => {
   // Logout Button
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
-          sessionStorage.clear();
-          window.location.href = "../Login_Page/login_page.html"; // Adjust path if needed
-      });
+    logoutBtn.addEventListener("click", () => {
+      if (isDirty) {
+        const proceed = confirm("You have unsaved changes. Are you sure you want to log out without saving?");
+        if (!proceed) return;
+      }
+      sessionStorage.clear();
+      window.location.href = "../Login_Page/login_page.html"; // Adjust path if needed
+    });
   }
+  
 
   // Profile Button
   const profileBtn = document.getElementById("profileBtn");
   if (profileBtn) {
-      profileBtn.addEventListener("click", () => {
-          window.location.href = "../Student_Page/student.html"; // Adjust path if needed
-      });
+    profileBtn.addEventListener("click", () => {
+      if (isDirty) {
+        const proceed = confirm("You have unsaved changes. Are you sure you want to go back without saving?");
+        if (!proceed) return;
+      }
+      window.location.href = "../Student_Page/student.html"; // Adjust path if needed
+    });
   }
+  
 
   // Hamburger Menu
   const hamburger = document.getElementById("hamburgerMenu");
@@ -37,18 +47,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const editBtn = document.getElementById('editProfileBtn');
 const inputs = document.querySelectorAll('.section input');
+inputs.forEach(input => {
+  input.addEventListener('input', () => {
+    if (isEditing) {
+      isDirty = true;
+    }
+  });
+});
+
 
 let isEditing = false;
+let isDirty = false;
 
 if (editBtn) {
   editBtn.addEventListener('click', () => {
       isEditing = !isEditing;
 
       inputs.forEach(input => {
-          input.readOnly = !isEditing;
-          input.style.borderColor = isEditing ? '#002f86' : '#ccc';
-          input.style.backgroundColor = isEditing ? '#f9f9ff' : 'white';
-      });
+        if (input.id === "fullName" || input.id === "email") {
+          input.readOnly = true; // Always readonly
+          return;
+        }
+        input.readOnly = !isEditing;
+        input.style.borderColor = isEditing ? '#002f86' : '#ccc';
+        input.style.backgroundColor = isEditing ? '#f9f9ff' : 'white';
+      });      
 
       editBtn.textContent = isEditing ? 'Save Profile' : 'Edit Profile';
 
@@ -80,7 +103,6 @@ function loadStudentProfile() {
       // Populate fields
       document.getElementById("fullName").value = currentStudent.name || "";
       document.getElementById("email").value = currentStudent.email || "";
-      document.getElementById("pronouns").value = currentStudent.pronouns || "";
       document.getElementById("advisors").value = currentStudent.advisors || "";
       document.getElementById("majors").value = currentStudent.majors || "";
       document.getElementById("track").value = currentStudent.track || "";
@@ -94,7 +116,6 @@ function saveProfile() {
 
       const fullName = document.getElementById("fullName").value.trim();
       const email = document.getElementById("email").value.trim();
-      const pronouns = document.getElementById("pronouns").value.trim();
       const advisors = document.getElementById("advisors").value.trim();
       const majors = document.getElementById("majors").value.trim();
       const track = document.getElementById("track").value.trim();
@@ -112,7 +133,6 @@ function saveProfile() {
           ...students[studentIndex],
           fullName,
           email,
-          pronouns,
           advisors,
           majors,
           track,
@@ -122,6 +142,8 @@ function saveProfile() {
       saveDatabase(data[0].data);
       alert('Profile saved!');
   });
+  
+  isDirty = false;
 }
 
 // Saves database information
@@ -148,4 +170,86 @@ function getDatabase() {
           console.error('Error fetching database:', error);
           return []; 
       });
+}
+
+
+// Change Password Modal Setup
+const changePasswordBtn = document.getElementById("changePassword");
+const passwordModal = document.getElementById("passwordModal");
+const submitPasswordChange = document.getElementById("submitPasswordChange");
+const cancelPasswordChange = document.getElementById("cancelPasswordChange");
+
+if (changePasswordBtn) {
+  changePasswordBtn.addEventListener("click", () => {
+    openPasswordModal();
+  });
+}
+
+function openPasswordModal() {
+  // Clear previous input
+  document.getElementById("currentPasswordInput").value = "";
+  document.getElementById("newPasswordInput").value = "";
+  document.getElementById("confirmPasswordInput").value = "";
+
+  passwordModal.style.display = "flex";
+}
+
+cancelPasswordChange.addEventListener("click", () => {
+  passwordModal.style.display = "none";
+});
+
+submitPasswordChange.addEventListener("click", () => {
+  handlePasswordSubmit();
+});
+
+function handlePasswordSubmit() {
+  const currentPassword = document.getElementById("currentPasswordInput").value.trim();
+  const newPassword = document.getElementById("newPasswordInput").value.trim();
+  const confirmPassword = document.getElementById("confirmPasswordInput").value.trim();
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return alert("Please fill in all fields.");
+  }
+
+  if (newPassword.length < 6) {
+    return alert("New password must be at least 6 characters.");
+  }
+
+  if (newPassword !== confirmPassword) {
+    return alert("New password and confirmation do not match.");
+  }
+
+  // Proceed to update password
+  updatePassword(currentPassword, newPassword);
+  passwordModal.style.display = "none";
+}
+
+
+function updatePassword(currentPassword, newPassword) {
+  const studentEmail = sessionStorage.getItem("studentEmail");
+  if (!studentEmail) {
+    return alert("No student session found. Please log in.");
+  }
+
+  getDatabase().then(data => {
+    const students = data[0].data.students;
+    const studentIndex = students.findIndex(s => s.email.toLowerCase() === studentEmail.toLowerCase());
+
+    if (studentIndex === -1) {
+      return alert("Student not found in database.");
+    }
+
+    const student = students[studentIndex];
+
+    // Simple password check (assuming you store plain text password, though in real apps this should be hashed)
+    if (student.password !== currentPassword) {
+      return alert("Current password is incorrect.");
+    }
+
+    // Update password
+    students[studentIndex].password = newPassword;
+
+    saveDatabase(data[0].data);
+    alert("Password changed successfully!");
+  });
 }

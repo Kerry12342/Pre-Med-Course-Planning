@@ -34,10 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-
-
-
-
     function saveDatabase(database) {
 
         fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
