@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
             displayCourses(filteredCourses);
             return filteredCourses.length > 0;
         });
-    } 
+    }
 
 
 
@@ -582,9 +582,55 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Delete a course with the selected name and update dropdown
+    function deleteCourse() {
+        getDatabase().then(data => {
+            const titleInput = document.getElementById('courseName');
+            const title = titleInput.value.trim();
 
+            if (!title) {
+                showError("Please enter a course title to delete");
+                return;
+            }
+            const courseIndex = data[0].data.courses.findIndex(c =>
+                c.title.toLowerCase() === title.toLowerCase()
+            );
+            if (courseIndex === -1) {
+                showError("Course not found");
+                return;
+            }
+            data[0].data.courses.splice(courseIndex, 1);
 
-    // Add a new course with the selected name, track, major, and prereqs.
+            // Save the database and THEN update the interface when the save is complete
+            fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: data[0].data })
+            })
+            .then(response => response.json())
+            .then(() => {
+                // Clear the input
+                titleInput.value = '';
+
+                // Update the course-related dropdowns AFTER the save is complete
+                populateDropdowns();
+
+                // Update the course display
+                displayCourses(data[0].data.courses);
+
+                // Show success message
+                showSuccess("Course deleted successfully");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError("Error saving changes");
+            });
+        });
+    }
+
+    // AddCourse function add a course and update dropdowns after addition
     function addCourse() {
         getDatabase().then(data => {
             const titleInput = document.getElementById('courseName');
@@ -642,60 +688,51 @@ document.addEventListener("DOMContentLoaded", function () {
                 corequisites: corequisites
             };
             data[0].data.courses.push(newCourse);
-            saveDatabase(data[0].data);
 
-            // Clear selections
-            titleInput.value = '';
-            for (let i = 0; i < trackSelect.options.length; i++) {
-                trackSelect.options[i].selected = false;
-            }
-            for (let i = 0; i < majorSelect.options.length; i++) {
-                majorSelect.options[i].selected = false;
-            }
-            for (let i = 0; i < prerequisitesSelect.options.length; i++) {
-                prerequisitesSelect.options[i].selected = false;
-            }
-            for (let i = 0; i < corequisitesSelect.options.length; i++) {
-                corequisitesSelect.options[i].selected = false;
-            }
+            // Save the database and THEN update the interface when the save is complete
+            fetch('https://hamiltoncollegeprehealthplanning.duckdns.org:3000/store-json', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: data[0].data })
+            })
+            .then(response => response.json())
+            .then(() => {
+                // Clear selections
+                titleInput.value = '';
+                for (let i = 0; i < trackSelect.options.length; i++) {
+                    trackSelect.options[i].selected = false;
+                }
+                for (let i = 0; i < majorSelect.options.length; i++) {
+                    majorSelect.options[i].selected = false;
+                }
+                for (let i = 0; i < prerequisitesSelect.options.length; i++) {
+                    prerequisitesSelect.options[i].selected = false;
+                }
+                for (let i = 0; i < corequisitesSelect.options.length; i++) {
+                    corequisitesSelect.options[i].selected = false;
+                }
 
-            // Reset the dropdown appearance
-            trackSelect.blur();
-            majorSelect.blur();
-            prerequisitesSelect.blur();
-            corequisitesSelect.blur();
+                // Reset the dropdown appearance
+                trackSelect.blur();
+                majorSelect.blur();
+                prerequisitesSelect.blur();
+                corequisitesSelect.blur();
 
-            displayCourses(data[0].data.courses);
-            showSuccess("Course added successfully");
-        });
-    }
+                // Update the dropdowns
+                populateDropdowns();
 
+                // Update the course display
+                displayCourses(data[0].data.courses);
 
-
-    // Delete a course with the selected name
-    function deleteCourse() {
-        getDatabase().then(data => {
-            const titleInput = document.getElementById('courseName');
-            const title = titleInput.value.trim();
-
-            if (!title) {
-                showError("Please enter a course title to delete");
-                return;
-            }
-            const courseIndex = data[0].data.courses.findIndex(c =>
-                c.title.toLowerCase() === title.toLowerCase()
-            );
-            if (courseIndex === -1) {
-                showError("Course not found");
-                return;
-            }
-            data[0].data.courses.splice(courseIndex, 1);
-            saveDatabase(data[0].data);
-
-            titleInput.value = '';
-            displayCourses(data[0].data.courses);
-
-            showSuccess("Course deleted successfully");
+                // Show success message
+                showSuccess("Course added successfully");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError("Error saving changes");
+            });
         });
     }
 
