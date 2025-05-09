@@ -356,13 +356,13 @@ function populateCalendar() {
 function addCourse() {
     getDatabase().then(data => {
         const title = document.getElementById("courseInput").value.trim().toUpperCase();
-        const semester = document.getElementById("semesterSelect").value.trim().toUpperCase();
+        const semester = document.getElementById("semesterSelect").value;
 
         if (!title || !semester) return showMessage("Missing course title or semester.");
 
-        if (data[0].data.courses.some(c => c.title.toUpperCase() === title)) {
+        if (data[0].data.courses.some(c => c.title === title)) {
             // If the course is already in the student's list, then they can't plan it again.
-            if (currentStudent.plannedCourses.some(c => c.title.toUpperCase() === title)) {
+            if (currentStudent.plannedCourses.some(c => c.title === title)) {
                 return showMessage("Course already planned.");
             }
             // Can't take if they don't meet the prerequisistes.
