@@ -177,10 +177,30 @@ function filterCourses(showErrorMessage = false) {
         const majorSearch = document.getElementById('searchMajor').value.toUpperCase();
         const trackSearch = document.getElementById('searchTrack').value.toUpperCase();
 
-        const dbCourses = data[0].data.courses
-        //
+        const dbCourses = data[0].data.courses;
+        const allStudents = data[0].data.students;
 
-        const filteredCourses = dbCourses.filter(course => {
+        // Create a copy of the courses array with student counts
+        const coursesWithCounts = dbCourses.map(course => {
+            // Create a clone of the course object
+            const courseCopy = { ...course };
+
+            // Count students planning this course
+            let count = 0;
+            allStudents.forEach(student => {
+                if (student.plannedCourses) {
+                    const hasCourse = student.plannedCourses.some(
+                        plannedCourse => plannedCourse.title.toUpperCase() === course.title.toUpperCase()
+                    );
+                    if (hasCourse) count++;
+                }
+            });
+            courseCopy.studentCount = count;
+
+            return courseCopy;
+        });
+
+        const filteredCourses = coursesWithCounts.filter(course => {
             const courseMatch = course.title.toUpperCase().includes(courseSearch);
 
             // Check if any major matches the search term
@@ -199,7 +219,7 @@ function filterCourses(showErrorMessage = false) {
         });
 
         if (showErrorMessage && filteredCourses.length === 0 && courseSearch !== '') {
-            showError("No courses found matching your search criteria");
+            showMessage("No courses found matching your search criteria");
         }
         displayCourses(filteredCourses);
         return filteredCourses.length > 0;
@@ -355,30 +375,45 @@ function populateCalendar() {
 // Adds a course to the student's current list of courses.
 function addCourse() {
     getDatabase().then(data => {
-        const title = document.getElementById("courseInput").value.trim().toUpperCase();
+        const titleInput = document.getElementById("courseInput").value.trim();
+        const title = titleInput.toUpperCase();
         const semester = document.getElementById("semesterSelect").value;
 
         if (!title || !semester) return showMessage("Missing course title or semester.");
 
-        if (data[0].data.courses.some(c => c.title === title)) {
-            // If the course is already in the student's list, then they can't plan it again.
-            if (currentStudent.plannedCourses.some(c => c.title === title)) {
-                return showMessage("Course already planned.");
-            }
-            // Can't take if they don't meet the prerequisistes.
-            if (!prerequisitesMet(title, semester)) {
-                return showMessage("Missing prerequisites.");
-            }
-        }
-        else {
-            return showMessage("Course does not exist.");
+        // Check if course exists in the database
+        const courseExists = data[0].data.courses.some(c =>
+            c.title.toUpperCase() === title
+        );
+
+        if (!courseExists) {
+            return showMessage("Course does not exist in the database.");
         }
 
-        currentStudent.plannedCourses.push({ title, semester });
+        // Check if course is already in student's plan
+        if (currentStudent.plannedCourses.some(c =>
+            c.title.toUpperCase() === title &&
+            c.semester.toUpperCase() === semester.toUpperCase()
+        )) {
+            return showMessage("Course already planned for this semester.");
+        }
+
+        // Check prerequisites (the function is currently always returning true)
+        if (!prerequisitesMet(title, semester)) {
+            return showMessage("Missing prerequisites for this course.");
+        }
+
+        // Add the course using the original case from the input
+        currentStudent.plannedCourses.push({
+            title: titleInput,
+            semester: semester
+        });
+
         populateCalendar();
-        showMessage("Course added.", true);
+        showMessage("Course added successfully.", true);
     });
 }
+
 
 
 // Removes a course from the student's list of courses.
