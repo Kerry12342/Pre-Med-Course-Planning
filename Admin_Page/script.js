@@ -37,6 +37,8 @@ function saveDatabase(database) {
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    requireLogin();
+
     // --- 1) Create the GLOBAL tooltip at the body level ---
     const globalTooltip = document.createElement('div');
     globalTooltip.id = 'globalTooltip';
@@ -1279,3 +1281,11 @@ document.addEventListener("DOMContentLoaded", () => {
         hamburger.classList.toggle('active');
     });
 });
+
+function requireLogin() {
+    const user = sessionStorage.getItem('user');
+    if (!user) {
+        alert("No admin session found. Please log in.");
+        window.location.href = "../Login_Page/login_page.html"; // Adjust path if needed
+    }
+}
